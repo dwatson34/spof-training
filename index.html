@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC Technology | Xuber Angular Training Series</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f7f5fb;color:#1a1a1a;min-height:100vh}
+.hdr{background:#330072;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.logo{display:flex;align-items:baseline;gap:.4rem}
+.logo-dxc{font-size:1.5rem;font-weight:900;color:#fff;font-family:'Arial Black',Arial,sans-serif}
+.logo-tech{font-size:.65rem;color:#c5b8e8;text-transform:uppercase;letter-spacing:.14em}
+.hdr-right{font-size:.75rem;color:#c5b8e8;font-weight:600}
+.hero{background:linear-gradient(135deg,#1a0a2e 0%,#330072 55%,#5F249F 100%);padding:4rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.03)}
+.hero::after{content:'';position:absolute;bottom:-60px;left:-60px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.03)}
+.spof-badge{display:inline-block;background:#c0392b;color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .9rem;border-radius:20px;margin-bottom:1.2rem}
+.hero h1{font-size:2.4rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:1rem;font-family:'Arial Black',Arial,sans-serif}
+.hero h1 span{color:#00b5c8}
+.hero-sub{color:#c5b8e8;font-size:1.05rem;line-height:1.7;max-width:620px;margin:0 auto 2rem}
+.hero-stats{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap}
+.hero-stat .n{font-size:2rem;font-weight:900;color:#fff;line-height:1}
+.hero-stat .l{font-size:.72rem;color:#c5b8e8;text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.main{max-width:900px;margin:0 auto;padding:3rem 1.5rem}
+.section-title{font-size:.72rem;font-weight:700;color:#6b6b7b;text-transform:uppercase;letter-spacing:.12em;margin-bottom:1.25rem}
+.modules{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:3rem}
+.module-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(51,0,114,.1);transition:transform .2s,box-shadow .2s;text-decoration:none;display:block}
+.module-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(51,0,114,.18)}
+.card-top{padding:1.5rem 1.5rem 1.2rem}
+.card-num{font-size:.65rem;font-weight:700;color:#969696;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.6rem}
+.card-title{font-size:1.15rem;font-weight:800;color:#330072;margin-bottom:.5rem;line-height:1.25}
+.card-sub{font-size:.82rem;color:#6b6b7b;line-height:1.5;margin-bottom:1rem}
+.card-topics{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.topic{display:inline-block;background:#f0ebfa;color:#5F249F;font-size:.65rem;font-weight:700;padding:.2rem .55rem;border-radius:10px}
+.card-bottom{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.5rem;border-top:1px solid #e0d9ee}
+.card-meta{font-size:.75rem;color:#6b6b7b}
+.card-cta{display:inline-flex;align-items:center;gap:.35rem;background:#5F249F;color:#fff;font-size:.8rem;font-weight:700;padding:.5rem 1.1rem;border-radius:7px;transition:background .2s}
+.module-card:hover .card-cta{background:#8B3FD4}
+.card-stripe{height:5px}
+.alert{background:#fff8e6;border-left:4px solid #e8a000;border-radius:0 10px 10px 0;padding:1rem 1.25rem;margin-bottom:2rem;display:flex;gap:.75rem;align-items:flex-start}
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:#1a1a1a;display:block;margin-bottom:.25rem}
+.alert-body p{font-size:.85rem;color:#6b6b7b;line-height:1.5}
+.info-strip{background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:2rem;border:1px solid #e0d9ee}
+.info-strip h3{font-size:.9rem;font-weight:700;color:#330072;margin-bottom:.75rem}
+.info-row{display:flex;gap:1.5rem;flex-wrap:wrap}
+.info-item{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:#6b6b7b}
+.info-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+footer{text-align:center;padding:2rem;font-size:.78rem;color:#969696;border-top:1px solid #e0d9ee;background:#fff;margin-top:2rem}
+@media(max-width:640px){
+  .modules{grid-template-columns:1fr}
+  .hero h1{font-size:1.7rem}
+  .hero-stats{gap:1.5rem}
+  .main{padding:2rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo"><span class="logo-dxc">DXC</span><span class="logo-tech">Technology</span></div>
+  <span class="hdr-right">Xuber Enterprise Practice</span>
+</header>
+
+<div class="hero">
+  <div class="spof-badge">&#9888; Critical SPOF Remediation</div>
+  <h1>Xuber HTMLUI<br><span>Angular Training Series</span></h1>
+  <div class="hero-sub">Four modules taking every XE team member from zero Angular knowledge to confident, productive development on the Xuber HTMLUI platform.</div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="n">4</div><div class="l">Modules</div></div>
+    <div class="hero-stat"><div class="n">12</div><div class="l">Hours total</div></div>
+    <div class="hero-stat"><div class="n">40</div><div class="l">Quiz questions</div></div>
+    <div class="hero-stat"><div class="n">70%</div><div class="l">Pass mark</div></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="alert">
+    <span class="alert-icon">&#9888;&#65039;</span>
+    <div class="alert-body">
+      <strong>Why this training exists</strong>
+      <p>The XE team skills matrix identified the Xuber HTMLUI Angular Part as the single most critical unmitigated SPOF — <strong>0 out of 28 team members</strong> have any Angular knowledge. This series directly addresses that risk. Complete all four modules and log your score in the Skills Matrix.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Training Modules — complete in order</div>
+
+  <div class="modules">
+
+    <a href="DXC_Angular_Module1_Interactive_Training.html" class="module-card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#330072,#5F249F)"></div>
+      <div class="card-top">
+        <div class="card-num">Module 1 of 4 &nbsp;&middot;&nbsp; Foundation &nbsp;&middot;&nbsp; ~3 hours</div>
+        <div class="card-title">Angular Foundation</div>
+        <div class="card-sub">Start here. Everything you need to understand and work with the Xuber HTMLUI Angular layer — from architecture to your first API call.</div>
+        <div class="card-topics">
+          <span class="topic">Architecture</span>
+          <span class="topic">Components</span>
+          <span class="topic">NgModules</span>
+          <span class="topic">Data Binding</span>
+          <span class="topic">Services &amp; DI</span>
+          <span class="topic">Router</span>
+          <span class="topic">HttpClient &amp; RxJS</span>
+        </div>
+      </div>
+      <div class="card-bottom">
+        <span class="card-meta">11 slides &nbsp;&middot;&nbsp; 10-question quiz</span>
+        <span class="card-cta">Start &#8594;</span>
+      </div>
+    </a>
+
+    <a href="DXC_Module2_Training.html" class="module-card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#5F249F,#006975)"></div>
+      <div class="card-top">
+        <div class="card-num">Module 2 of 4 &nbsp;&middot;&nbsp; Advanced &nbsp;&middot;&nbsp; ~3 hours</div>
+        <div class="card-title">Angular Advanced</div>
+        <div class="card-sub">Build on Module 1. Reactive state management, complex forms, lazy loading, and the RxJS patterns used throughout the Xuber codebase.</div>
+        <div class="card-topics">
+          <span class="topic">Signals &amp; State</span>
+          <span class="topic">Reactive Forms</span>
+          <span class="topic">Lazy Loading</span>
+          <span class="topic">RxJS Operators</span>
+          <span class="topic">Error Handling</span>
+          <span class="topic">OnPush CD</span>
+        </div>
+      </div>
+      <div class="card-bottom">
+        <span class="card-meta">8 slides &nbsp;&middot;&nbsp; 10-question quiz</span>
+        <span class="card-cta">Start &#8594;</span>
+      </div>
+    </a>
+
+    <a href="DXC_Module3_Training.html" class="module-card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#006975,#330072)"></div>
+      <div class="card-top">
+        <div class="card-num">Module 3 of 4 &nbsp;&middot;&nbsp; In Practice &nbsp;&middot;&nbsp; ~3 hours</div>
+        <div class="card-title">Xuber HTMLUI in Practice</div>
+        <div class="card-sub">Get hands-on with the real codebase. Set up your local environment, debug like a pro, and follow the team's PR and deployment workflow.</div>
+        <div class="card-topics">
+          <span class="topic">Codebase Tour</span>
+          <span class="topic">Local Dev Setup</span>
+          <span class="topic">Debugging</span>
+          <span class="topic">Xuber API</span>
+          <span class="topic">Git &amp; PRs</span>
+          <span class="topic">Azure Pipelines</span>
+          <span class="topic">Coding Patterns</span>
+        </div>
+      </div>
+      <div class="card-bottom">
+        <span class="card-meta">9 slides &nbsp;&middot;&nbsp; 10-question quiz</span>
+        <span class="card-cta">Start &#8594;</span>
+      </div>
+    </a>
+
+    <a href="DXC_Module4_Training.html" class="module-card">
+      <div class="card-stripe" style="background:linear-gradient(90deg,#330072,#1a7a4a)"></div>
+      <div class="card-top">
+        <div class="card-num">Module 4 of 4 &nbsp;&middot;&nbsp; Testing &amp; CI &nbsp;&middot;&nbsp; ~3 hours</div>
+        <div class="card-title">Testing &amp; CI</div>
+        <div class="card-sub">The final module. Write unit tests with Jasmine and Angular Testing Library, measure code coverage, and understand the Azure CI pipeline.</div>
+        <div class="card-topics">
+          <span class="topic">Jasmine</span>
+          <span class="topic">TestBed</span>
+          <span class="topic">HTTP Testing</span>
+          <span class="topic">Angular Testing Library</span>
+          <span class="topic">Code Coverage</span>
+          <span class="topic">Azure Pipelines</span>
+        </div>
+      </div>
+      <div class="card-bottom">
+        <span class="card-meta">8 slides &nbsp;&middot;&nbsp; 10-question quiz</span>
+        <span class="card-cta">Start &#8594;</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="info-strip">
+    <h3>&#128203; After completing all four modules</h3>
+    <div class="info-row">
+      <div class="info-item"><div class="info-dot" style="background:#1a7a4a"></div>Log your quiz scores in the DXC Skills Matrix</div>
+      <div class="info-item"><div class="info-dot" style="background:#5F249F"></div>You should reach at least Intermediate (2) on the Xuber HTMLUI Angular row</div>
+      <div class="info-item"><div class="info-dot" style="background:#006975"></div>Book a pairing session with a senior team member to apply skills on a real Xuber ticket</div>
+      <div class="info-item"><div class="info-dot" style="background:#330072"></div>Target Advanced (3) within 3 months through hands-on work</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2025 DXC Technology &nbsp;&middot;&nbsp; Xuber Enterprise Practice &nbsp;&middot;&nbsp; CONFIDENTIAL &nbsp;&middot;&nbsp; For internal training use only
+</footer>
+
+</body>
+</html>

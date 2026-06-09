@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC Technology | Angular Advanced — Module 2</title>
+<style>
+:root{--dp:#330072;--dm:#5F249F;--db:#8B3FD4;--dd:#1a0a2e;--teal:#006975;--green:#1a7a4a;--red:#c0392b;--white:#fff;--off:#f7f5fb;--text:#1a1a1a;--muted:#6b6b7b;--border:#e0d9ee;--code-bg:#1e1e2e;--r:10px;--skw:#569CD6;--sstr:#CE9178;--sfn:#DCDCAA;--styp:#4EC9B0;--svar:#9CDCFE;--scmt:#6A9955;--snum:#B5CEA8;--sbase:#D4D4D4}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--off);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{background:var(--dp);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{font-size:1.4rem;font-weight:900;color:var(--white);font-family:'Arial Black',Arial,sans-serif;letter-spacing:-.02em}
+.logo-tech{font-size:.62rem;color:#c5b8e8;text-transform:uppercase;letter-spacing:.14em}
+.hdr-r{display:flex;align-items:center;gap:1rem}
+.hdr-title{font-size:.75rem;color:#c5b8e8;font-weight:600}
+.hdr-mode{font-size:.7rem;background:var(--teal);color:var(--white);padding:.2rem .6rem;border-radius:12px;font-weight:700}
+
+/* PROGRESS */
+.prog-track{height:4px;background:var(--border)}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--dm));transition:width .4s ease;width:0%}
+
+/* LAYOUT */
+.app{display:flex;flex:1;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--white);border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.nav-section{padding:.4rem 1rem .2rem;font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+/* Nav buttons — reset button styles, make them look like nav items */
+button.nav-item{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;font-size:.82rem;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .15s;user-select:none;width:100%;background:none;border-top:none;border-right:none;border-bottom:none;text-align:left;font-family:inherit}
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{background:#f0ebfa;color:var(--dm);border-left-color:var(--dm);font-weight:600}
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .3s}
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border)}
+.quiz-launch-btn{width:100%;background:var(--dm);color:var(--white);border:none;padding:.7rem 1rem;border-radius:7px;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+.quiz-launch-btn:hover{background:var(--db)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto}
+.slide{display:none}
+.slide.active{display:block;animation:fs .3s ease}
+@keyframes fs{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--dd) 0%,var(--dp) 55%,var(--dm) 100%);padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04)}
+.badge{display:inline-block;background:var(--teal);color:var(--white);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .75rem;border-radius:20px;margin-bottom:1rem}
+.badge.red{background:var(--red)}
+.badge.quiz{background:var(--dm)}
+.hero h1{font-size:2rem;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:.75rem}
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+.hero-meta{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.hero-meta span{font-size:.78rem;color:#c5b8e8}
+
+/* BODY */
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+/* CARDS */
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.2rem 1.2rem 1.4rem;border-left:4px solid var(--dm);box-shadow:0 2px 8px rgba(51,0,114,.06)}
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+.tag{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.68rem;font-weight:700;padding:.15rem .5rem;border-radius:10px;margin-bottom:.5rem;font-family:Consolas,monospace}
+.tag.t{background:#e6f4f5;color:var(--teal)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--white);border-radius:var(--r);padding:1.2rem;text-align:center;border:1px solid var(--border)}
+.stat .n{font-size:2.4rem;font-weight:900;line-height:1}
+.stat .n.red{color:var(--red)}.stat .n.pur{color:var(--dm)}.stat .n.drk{color:var(--dp)}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem}
+
+/* ALERT */
+.alert{display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:var(--r);margin-bottom:1.5rem;align-items:flex-start}
+.alert.warn{background:#fff8e6;border-left:4px solid #e8a000}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+/* CODE */
+.code{background:var(--code-bg);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.code-fn{font-size:.75rem;color:#888;font-family:Consolas,monospace}
+.code-lg{font-size:.65rem;background:var(--dm);color:var(--white);padding:.15rem .5rem;border-radius:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.code-body{padding:1.2rem;overflow-x:auto}
+.code-body pre{font-family:Consolas,'Courier New',monospace;font-size:.85rem;line-height:1.7;color:var(--sbase);margin:0;white-space:pre}
+.kw{color:var(--skw)}.str{color:var(--sstr)}.fn{color:var(--sfn)}.typ{color:var(--styp)}.var{color:var(--svar)}.cmt{color:var(--scmt)}.num{color:var(--snum)}
+
+/* TWO COL */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.two.hl{grid-template-columns:3fr 2fr}
+.two.hr{grid-template-columns:2fr 3fr}
+
+/* STACK */
+.stack{display:flex;flex-direction:column;gap:.5rem}
+.stk{padding:.7rem 1rem;border-radius:7px;text-align:center;font-size:.88rem;font-weight:600;color:var(--white)}
+
+/* BINDING */
+.bindings{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem}
+.binding{background:var(--white);border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.binding-hd{display:flex;align-items:center;padding:.6rem 1rem;gap:.75rem}
+.binding-type{font-size:.9rem;font-weight:700;color:var(--white);flex:1}
+.binding-dir{font-size:.75rem;color:rgba(255,255,255,.8);font-family:Consolas,monospace}
+.binding-bd{padding:.75rem 1rem}
+.binding-syn{font-family:Consolas,monospace;font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.binding-desc{font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:.5rem}
+.binding-ex{background:var(--code-bg);padding:.4rem .7rem;border-radius:6px;font-family:Consolas,monospace;font-size:.8rem;color:var(--sstr)}
+
+/* DI */
+.di{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin-bottom:1.5rem}
+.di-col{display:flex;flex-direction:column;gap:.6rem}
+.di-box{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-size:.85rem;font-weight:600}
+.di-box.s{border-left:4px solid var(--teal)}
+.di-box.c{border-left:4px solid var(--dm)}
+.di-mid{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.4rem;color:var(--muted);font-size:.8rem}
+
+/* ROUTES */
+.rtable{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.88rem}
+.rtable th{background:var(--dp);color:var(--white);padding:.6rem 1rem;text-align:left;font-weight:700}
+.rtable td{padding:.55rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.rtable tr:last-child td{border-bottom:none}
+.rtable tr:nth-child(even) td{background:var(--off)}
+.rpill{display:inline-block;background:var(--code-bg);color:var(--sstr);font-family:Consolas,monospace;font-size:.8rem;padding:.2rem .55rem;border-radius:5px}
+.cpill{display:inline-block;padding:.2rem .55rem;border-radius:5px;font-size:.8rem;font-weight:600;color:var(--white)}
+
+/* GUARDS */
+.guards{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem}
+.guard{background:var(--white);border-radius:var(--r);padding:1rem;border:1px solid var(--border)}
+.guard-name{font-family:Consolas,monospace;font-size:.9rem;font-weight:700;color:var(--dm);margin-bottom:.4rem}
+.guard-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+/* RxJS ops */
+.ops{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.op{display:flex;align-items:flex-start;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem}
+.op-name{font-family:Consolas,monospace;font-size:.85rem;font-weight:700;min-width:130px;color:var(--teal);flex-shrink:0}
+.op-desc{font-size:.85rem;color:var(--text);line-height:1.5}
+
+/* LAB */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1.5rem}
+.lab-step{display:flex;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.lab-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.lab-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.3rem}
+.lab-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.lab-time{font-size:.7rem;font-weight:700;margin-top:.3rem}
+
+/* CALLOUT */
+.callout{background:#f0ebfa;border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.6}
+.callout strong{color:var(--dp)}
+
+/* BOTTOM NAV */
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2.5rem;border-top:1px solid var(--border);margin-top:.5rem}
+.nb{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.nb.prev{background:var(--off);color:var(--text);border:1px solid var(--border)}
+.nb.prev:hover{background:var(--border)}
+.nb.next{background:var(--dm);color:var(--white)}
+.nb.next:hover{background:var(--db)}
+.nb:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.8rem;color:var(--muted);font-weight:600}
+
+/* ═══ QUIZ ═══════════════════════════════════════════ */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.q-cnt{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.q-topic{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:20px}
+.q-text{font-size:1.1rem;font-weight:700;color:var(--dp);line-height:1.5;margin-bottom:1.2rem}
+.opts{display:flex;flex-direction:column;gap:.6rem}
+button.opt{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 1rem;border:2px solid var(--border);border-radius:9px;cursor:pointer;background:var(--white);text-align:left;width:100%;font-size:.9rem;line-height:1.5;color:var(--text);transition:border-color .15s,background .15s,transform .1s;font-family:inherit}
+button.opt:hover:not(:disabled){border-color:var(--dm);background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--off);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;color:var(--muted);transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:var(--dm);border-color:var(--dm);color:var(--white)}
+button.opt.correct{border-color:var(--green);background:#edf7f1}
+button.opt.correct .opt-l{background:var(--green);border-color:var(--green);color:var(--white)}
+button.opt.wrong{border-color:var(--red);background:#fdf0ee}
+button.opt.wrong .opt-l{background:var(--red);border-color:var(--red);color:var(--white)}
+.fb{display:none;margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid var(--green);color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid var(--red);color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background .3s}
+.dot.c{background:var(--green)}.dot.w{background:var(--red)}.dot.cur{background:var(--dm)}
+
+/* RESULTS */
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring-wrap{display:inline-flex;flex-direction:column;align-items:center;margin-bottom:1.2rem}
+.ring{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:7px solid}
+.ring.pass{border-color:var(--green);background:#f0faf5}
+.ring.fail{border-color:var(--red);background:#fdf4f3}
+.ring-pct{font-size:2.2rem;font-weight:900;line-height:1}
+.ring.pass .ring-pct{color:var(--green)}.ring.fail .ring-pct{color:var(--red)}
+.ring-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.res-status{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.res-status.pass{color:var(--green)}.res-status.fail{color:var(--red)}
+.res-msg{color:var(--muted);font-size:.88rem;max-width:460px;margin:0 auto 1rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.2rem;height:28px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--white);opacity:.35;transition:opacity .3s;text-align:center;line-height:1.2}
+.bseg.on{opacity:1}
+.be{background:var(--green);flex:2}.bp{background:var(--teal);flex:2}.bd{background:var(--dm);flex:3}.bf{background:var(--red);flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.2rem}
+.sb{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center}
+.sb .sv{font-size:1.5rem;font-weight:800}.sv.g{color:var(--green)}.sv.r{color:var(--red)}
+.sb .sl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.ri{border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer;user-select:none;background:var(--white);transition:background .15s}
+.rq:hover{background:var(--off)}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:var(--green)}.rdot.w{background:var(--red)}
+.rqt{font-size:.82rem;font-weight:600;flex:1;color:var(--text)}
+.rbadge{font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:var(--green)}.rbadge.w{background:#fdf0ee;color:var(--red)}
+.rchev{font-size:.65rem;color:var(--muted);transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.65rem .9rem .85rem;background:var(--off);border-top:1px solid var(--border);font-size:.82rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:var(--red);font-weight:600}.ra{color:var(--green);font-weight:600}
+.expl{color:var(--muted);margin-top:.35rem}
+.res-acts{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* SHARED BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.5rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn.p{background:var(--dm);color:var(--white)}.btn.p:hover{background:var(--db);transform:translateY(-1px)}
+.btn.s{background:transparent;color:var(--dm);border:2px solid var(--dm)}.btn.s:hover{background:#f0ebfa}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .two,.two.hl,.two.hr,.grid.g2,.grid.g3{grid-template-columns:1fr}
+  .stats,.guards{grid-template-columns:1fr 1fr}
+  .lab{grid-template-columns:1fr}
+  .body,.res-body{padding:1.2rem}
+  .hero{padding:1.8rem 1.2rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.2rem}
+  .di{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="logo"><span class="logo-dxc">DXC</span><span class="logo-tech">Technology</span></div>
+  <div class="hdr-r"><span class="hdr-title">Angular Advanced — Module 2</span><span class="hdr-mode" id="hdrMode">Training</span></div>
+</header>
+<div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-section">Module 2 &#8212; Advanced</div>
+        <button class="nav-item" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Introduction</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">Signals & State</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">Reactive Forms</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">Lazy Loading</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">RxJS Operators</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="5"><div class="nav-dot"></div><span class="nav-lbl">Error Handling</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="6"><div class="nav-dot"></div><span class="nav-lbl">Hands-On Lab</span><span class="nav-chk">&#10003;</span></button>
+
+    <div class="nav-section" style="margin-top:.5rem">Assessment</div>
+    <button class="nav-item" data-slide="7"><div class="nav-dot"></div><span class="nav-lbl">Knowledge Quiz</span><span class="nav-chk">&#10003;</span></button>
+    <div class="sidebar-footer"><button class="quiz-launch-btn" id="quizLaunchBtn">Take the Quiz &#8594;</button></div>
+  </nav>
+  <div class="content" id="contentArea">
+    
+<div class="slide active" id="slide-0">
+  <div class="hero"><div class="badge">Module 2 of 4</div><h1>Angular Advanced Training</h1><div class="hero-sub">State Management &middot; Reactive Forms &middot; Lazy Loading &middot; RxJS &middot; Error Handling</div></div>
+  <div class="body">
+<div class="callout"><strong>Prerequisites:</strong> Module 1 &mdash; Angular Foundation. This module builds directly on Components, Services, and the Router. Make sure you have passed the Module 1 quiz before continuing.</div>
+<h2>What you'll cover</h2>
+<div class="grid g3">
+  <div class="card"><div class="tag">State</div><h3>Signals &amp; State</h3><p>Angular 17+ reactive primitives for fine-grained, performant state management.</p></div>
+  <div class="card t"><div class="tag t">Forms</div><h3>Reactive Forms</h3><p>Type-safe, testable forms built in TypeScript with FormBuilder and validators.</p></div>
+  <div class="card"><div class="tag">Performance</div><h3>Lazy Loading</h3><p>Split the app into chunks that load on demand &mdash; keeping the initial bundle small.</p></div>
+  <div class="card t"><div class="tag t">RxJS</div><h3>Operators in Practice</h3><p>switchMap, combineLatest, debounceTime and catchError in real Xuber patterns.</p></div>
+  <div class="card"><div class="tag">Comms</div><h3>Component Comms</h3><p>@Output/EventEmitter for child-to-parent and shared services for sibling comms.</p></div>
+  <div class="card t"><div class="tag t">Errors</div><h3>Error Handling</h3><p>HTTP Interceptors, catchError, retry strategies, and user-facing error messages.</p></div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" disabled>&#8592; Previous</button><span class="slide-pos">1 / 8</span><button class="nb next" data-goto="1">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-1">
+  <div class="hero"><div class="badge">Concept 1</div><h1>Signals &amp; Component State</h1><div class="hero-sub">Angular 17+ reactive primitives for fine-grained, automatic state management</div></div>
+  <div class="body">
+<p class="intro">Signals are Angular's modern reactive primitive. A signal holds a value; any template or computed expression that reads it re-runs automatically when it changes &mdash; no manual subscriptions.</p>
+<div class="two hl">
+  <div>
+    <h2>The three signal APIs</h2>
+    <div class="grid g2" style="margin-top:1rem">
+      <div class="card"><div class="tag">signal()</div><h3>Writable signal</h3><p>Creates a reactive value. Read it by calling it: <code>count()</code>. Update with <code>count.set(5)</code> or <code>count.update(v =&gt; v+1)</code>.</p></div>
+      <div class="card t"><div class="tag t">computed()</div><h3>Derived signal</h3><p>Read-only. Angular recalculates it only when its dependencies change &mdash; like a memoised getter.</p></div>
+      <div class="card"><div class="tag">effect()</div><h3>Side effect</h3><p>Runs a side effect whenever signals it reads change. Useful for logging or syncing to localStorage.</p></div>
+      <div class="card t"><div class="tag t">OnPush</div><h3>Change detection</h3><p>Pair signals with <code>ChangeDetectionStrategy.OnPush</code> for maximum performance on large Xuber grids.</p></div>
+    </div>
+  </div>
+  <div>
+    <div class="code"><div class="code-hdr"><span class="code-fn">policy-list.component.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="var">policies</span> = <span class="fn">signal</span>&lt;<span class="typ">Policy</span>[]&gt;([]);
+
+<span class="var">activeCount</span> = <span class="fn">computed</span>(() =&gt;
+  <span class="kw">this</span>.<span class="var">policies</span>()
+    .filter(p =&gt; p.status === <span class="str">'Active'</span>)
+    .length
+);
+
+<span class="fn">constructor</span>() {
+  <span class="fn">effect</span>(() =&gt; {
+    console.log(
+      <span class="str">`Active: ${<span class="kw">this</span>.<span class="var">activeCount</span>()}`</span>
+    );
+  });
+}</pre></div></div>
+    <div class="callout"><strong>vs Observables:</strong> Signals are synchronous and simpler for local component state. Use Observables (HttpClient) for async API calls, and signals for derived UI state.</div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="0">&#8592; Previous</button><span class="slide-pos">2 / 8</span><button class="nb next" data-goto="2">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-2">
+  <div class="hero"><div class="badge">Concept 2</div><h1>Reactive Forms</h1><div class="hero-sub">Type-safe, testable forms built entirely in TypeScript using FormBuilder</div></div>
+  <div class="body">
+<p class="intro">Reactive Forms define the form structure in the component class. Unlike Template-Driven forms, all validation and state live in TypeScript &mdash; making them easier to test and dynamically modify.</p>
+<div class="two">
+  <div>
+    <h2>Form building blocks</h2>
+    <div style="display:flex;flex-direction:column;gap:.7rem;margin-top:1rem;margin-bottom:1.5rem">
+      <div class="card"><div class="tag">FormGroup</div><h3>Groups controls</h3><p>Represents the whole form or a section. Tracks validity of all contained controls as a unit.</p></div>
+      <div class="card t"><div class="tag t">FormControl</div><h3>Single input</h3><p>Represents one field. Tracks value, validity, <code>touched</code>, and <code>dirty</code> state.</p></div>
+      <div class="card"><div class="tag">FormArray</div><h3>Dynamic list</h3><p>A list of controls &mdash; ideal for repeating sections like multiple policy endorsements.</p></div>
+      <div class="card t"><div class="tag t">Validators</div><h3>Validation rules</h3><p>Built-in: <code>required</code>, <code>minLength</code>, <code>email</code>, <code>min</code>. Or write custom validators.</p></div>
+    </div>
+  </div>
+  <div>
+    <div class="code"><div class="code-hdr"><span class="code-fn">claim-form.component.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="var">claimForm</span> = <span class="kw">this</span>.<span class="var">fb</span>.group({
+  claimRef: [<span class="str">''</span>, [
+    Validators.required,
+    Validators.minLength(<span class="num">6</span>)
+  ]],
+  amount: [<span class="num">0</span>, [
+    Validators.required,
+    Validators.min(<span class="num">0</span>)
+  ]],
+  description: [<span class="str">''</span>]
+});
+
+<span class="cmt">// Template:</span>
+<span class="cmt">// &lt;form [formGroup]="claimForm"&gt;</span>
+<span class="cmt">// &lt;input formControlName="claimRef"&gt;</span></pre></div></div>
+    <div class="callout"><strong>Show validation errors:</strong> Use <code>claimForm.get('claimRef').hasError('required')</code> in the template with <code>*ngIf</code> to show inline error messages.</div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="1">&#8592; Previous</button><span class="slide-pos">3 / 8</span><button class="nb next" data-goto="3">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-3">
+  <div class="hero"><div class="badge">Concept 3</div><h1>Lazy Loading</h1><div class="hero-sub">Load feature modules on demand to keep the initial bundle small and fast</div></div>
+  <div class="body">
+<p class="intro">By default Angular bundles everything together. Lazy loading splits the app into separate JavaScript chunks &mdash; each feature module is only downloaded when the user navigates to that route for the first time.</p>
+<div class="compare">
+  <div class="comp-box">
+    <div class="comp-head" style="background:var(--red)">Without lazy loading &mdash; slow first load</div>
+    <div class="comp-body">
+      <div class="stack">
+        <div class="stk" style="background:var(--dp)">AppModule</div>
+        <div class="stk" style="background:var(--red)">PolicyModule &mdash; loaded upfront</div>
+        <div class="stk" style="background:var(--red)">ClaimsModule &mdash; loaded upfront</div>
+        <div class="stk" style="background:var(--red)">LmmModule &mdash; loaded upfront</div>
+      </div>
+    </div>
+  </div>
+  <div class="comp-box">
+    <div class="comp-head" style="background:var(--green)">With lazy loading &mdash; fast first load</div>
+    <div class="comp-body">
+      <div class="stack">
+        <div class="stk" style="background:var(--dp)">AppModule (tiny)</div>
+        <div class="stk" style="background:var(--teal)">PolicyModule &mdash; downloaded on /policies</div>
+        <div class="stk" style="background:var(--teal)">ClaimsModule &mdash; downloaded on /claims</div>
+        <div class="stk" style="background:var(--teal)">LmmModule &mdash; downloaded on /lmm</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="code"><div class="code-hdr"><span class="code-fn">app-routing.module.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre>{
+  path: <span class="str">'claims'</span>,
+  loadChildren: () =&gt; <span class="kw">import</span>(
+    <span class="str">'./claims/claims.module'</span>
+  ).then(m =&gt; m.<span class="typ">ClaimsModule</span>)
+  <span class="cmt">// Angular downloads claims chunk only when</span>
+  <span class="cmt">// the user navigates to /claims</span>
+}</pre></div></div>
+<div class="callout"><strong>Rule of thumb:</strong> Every Xuber feature module (Policy, Claims, LMM) should be lazy-loaded. Only truly shared code (SharedModule, CoreModule) should be in the initial bundle.</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="2">&#8592; Previous</button><span class="slide-pos">4 / 8</span><button class="nb next" data-goto="4">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-4">
+  <div class="hero"><div class="badge">Concept 4</div><h1>RxJS Operators in Practice</h1><div class="hero-sub">Five operators that appear constantly in the Xuber Angular codebase</div></div>
+  <div class="body">
+<p class="intro">Beyond the basics, these operators solve specific real-world problems when building responsive, robust Xuber UI features. Each removes a class of bug.</p>
+<div class="ops">
+  <div class="op"><span class="op-name">debounceTime(300)</span><span class="op-desc"><strong>Use case:</strong> Search-as-you-type &mdash; wait 300ms after last keystroke before calling the API. Prevents dozens of unnecessary requests.<br><code style="font-size:.8rem;color:var(--dm)">input$.pipe(debounceTime(300), switchMap(q =&gt; api.search(q)))</code></span></div>
+  <div class="op"><span class="op-name">switchMap()</span><span class="op-desc"><strong>Use case:</strong> Cancel the previous HTTP call when a new one starts. Prevents stale responses from earlier queries overwriting newer ones.<br><code style="font-size:.8rem;color:var(--dm)">route.params.pipe(switchMap(p =&gt; policyService.get(p.id)))</code></span></div>
+  <div class="op"><span class="op-name">combineLatest()</span><span class="op-desc"><strong>Use case:</strong> Combine two streams (e.g. active filters + policy data) and emit whenever either changes &mdash; perfect for Xuber filter bars.<br><code style="font-size:.8rem;color:var(--dm)">combineLatest([filters$, policies$]).pipe(map(([f,p]) =&gt; applyFilter(f,p)))</code></span></div>
+  <div class="op"><span class="op-name">catchError()</span><span class="op-desc"><strong>Use case:</strong> Intercept errors, log them, and return a safe fallback Observable so the UI doesn't crash.<br><code style="font-size:.8rem;color:var(--dm)">http.get('/api/policies').pipe(catchError(e =&gt; of([])))</code></span></div>
+  <div class="op"><span class="op-name">takeUntilDestroyed()</span><span class="op-desc"><strong>Use case:</strong> Auto-unsubscribe when the component is destroyed. Replaces manual ngOnDestroy cleanup entirely.<br><code style="font-size:.8rem;color:var(--dm)">this.svc.data$.pipe(takeUntilDestroyed()).subscribe(...)</code></span></div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="3">&#8592; Previous</button><span class="slide-pos">5 / 8</span><button class="nb next" data-goto="5">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-5">
+  <div class="hero"><div class="badge">Concept 5</div><h1>HTTP Error Handling</h1><div class="hero-sub">Interceptors, catchError, retry strategies, and user-facing feedback</div></div>
+  <div class="body">
+<p class="intro">Unhandled HTTP errors cause blank screens in the Xuber UI. Angular provides two layers of protection: per-request <code>catchError</code> in services, and global HTTP Interceptors that catch everything.</p>
+<div class="two">
+  <div>
+    <h2>The two-layer strategy</h2>
+    <div class="stack" style="margin-top:1rem">
+      <div class="stk" style="background:var(--teal)">HTTP Request leaves Angular</div>
+      <div class="stk" style="background:var(--dm)">HTTP Interceptor<br><small style="font-weight:400">Add auth headers, log, retry, handle 401/500</small></div>
+      <div class="stk" style="background:#5a3090">Service catchError()<br><small style="font-weight:400">Per-call fallback and error mapping</small></div>
+      <div class="stk" style="background:var(--dp)">Component template<br><small style="font-weight:400">Show loading / error state with *ngIf</small></div>
+      <div class="stk" style="background:var(--green)">User sees toast / inline message</div>
+    </div>
+  </div>
+  <div>
+    <div class="code"><div class="code-hdr"><span class="code-fn">error-interceptor.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="fn">intercept</span>(req, next) {
+  <span class="kw">return</span> next.handle(req).pipe(
+    <span class="fn">retry</span>({ count: <span class="num">2</span>, delay: <span class="num">1000</span> }),
+    <span class="fn">catchError</span>(err =&gt; {
+      <span class="kw">if</span> (err.status === <span class="num">401</span>)
+        <span class="kw">this</span>.<span class="var">auth</span>.logout();
+      <span class="kw">this</span>.<span class="var">toast</span>.show(
+        err.message
+      );
+      <span class="kw">return</span> <span class="fn">throwError</span>(
+        () =&gt; err
+      );
+    })
+  );
+}</pre></div></div>
+    <div class="callout"><strong>Register the interceptor</strong> in AppModule providers:<br><code>{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }</code></div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="4">&#8592; Previous</button><span class="slide-pos">6 / 8</span><button class="nb next" data-goto="6">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-6">
+  <div class="hero"><div class="badge">Hands-On Lab</div><h1>Lab Exercise</h1><div class="hero-sub">Building a reactive Claim Submission form &mdash; 60-minute guided exercise</div></div>
+  <div class="body">
+<div class="alert ok"><span class="alert-icon">&#128295;</span><div class="alert-body"><strong>Before you start</strong><p>You'll need the Xuber sandbox environment from Module 1. This lab builds on the Policy Viewer component you created there.</p></div></div>
+<div class="lab">
+  <div class="lab-step"><div class="lab-num" style="background:var(--dm)">1</div><div class="lab-body"><h4>Build the FormGroup</h4><p>Use FormBuilder to create claimForm with claimRef (required, minLength 6), amount (required, min 0), and description fields.</p><div class="lab-time" style="color:var(--dm)">10 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--teal)">2</div><div class="lab-body"><h4>Add inline validation</h4><p>Display validation error messages below each field using <code>*ngIf</code> and the control's <code>.errors</code> object. Test required and minLength.</p><div class="lab-time" style="color:var(--teal)">10 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--dp)">3</div><div class="lab-body"><h4>Emit on submit</h4><p>Add an <code>(ngSubmit)</code> handler that emits the form value via <code>@Output() EventEmitter</code> to a parent PolicyDetailComponent.</p><div class="lab-time" style="color:var(--dp)">10 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:#006060">4</div><div class="lab-body"><h4>Handle API errors</h4><p>Call claimService.submit() and handle 400/500 errors with catchError, displaying a banner message in the template.</p><div class="lab-time" style="color:#006060">15 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--red)">5</div><div class="lab-body"><h4>Add OnPush</h4><p>Switch the component to <code>ChangeDetectionStrategy.OnPush</code>. Observe what breaks and fix it using signals or async pipe.</p><div class="lab-time" style="color:var(--red)">10 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--dm)">6</div><div class="lab-body"><h4>Review &amp; discuss</h4><p>Trainer walkthrough. Compare Template-Driven vs Reactive Forms. Q&amp;A on OnPush gotchas.</p><div class="lab-time" style="color:var(--dm)">5 min</div></div></div>
+</div>
+<div class="alert info"><span class="alert-icon">&#128221;</span><div class="alert-body"><strong>Ready for the quiz?</strong><p>Take the Module 2 Knowledge Quiz when you're done. You need 70% to pass.</p></div></div>
+<button class="btn p" data-goto="7">Take the Quiz &#8594;</button></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="5">&#8592; Previous</button><span class="slide-pos">7 / 8</span><button class="nb next" data-goto="7">Take Quiz &#8594;</button></div>
+</div>
+    <div class="slide" id="slide-7">
+  <div id="qIntro">
+    <div class="hero"><div class="badge quiz">Module 2 Assessment</div><h1>Knowledge Quiz</h1>
+    <div class="hero-sub">10 questions covering all module concepts. Score 70% or more to pass.</div></div>
+    <div class="body">
+      <div class="grid g3" style="margin-bottom:1.5rem">
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Questions</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">70%</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Pass Mark</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">~10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Minutes</div></div>
+      </div>
+      <div class="callout" style="margin-bottom:1.5rem"><strong>How it works:</strong> Select your answer for instant feedback. At the end you see a full score breakdown. If you don't pass, click Retry to attempt only the incorrect questions.</div>
+      <button class="btn p" id="startQuizBtn">Start Quiz &#8594;</button>
+    </div>
+  </div>
+  <div id="qScreen" style="display:none">
+    <div class="hero" style="padding:1.5rem 2.5rem">
+      <div class="q-hdr"><span class="q-cnt" id="qCnt"></span><span class="q-topic" id="qTop"></span></div>
+      <div class="q-text" id="qTxt"></div>
+    </div>
+    <div class="body">
+      <div class="opts" id="optsC"></div>
+      <div class="fb" id="fbBox"><span id="fbIcon" style="font-size:1rem;flex-shrink:0;margin-top:.1rem"></span><span id="fbTxt"></span></div>
+      <div class="q-foot"><div class="dots" id="dotRow"></div><button class="btn p" id="btnNext" style="display:none">Next &#8594;</button></div>
+    </div>
+  </div>
+  <div id="qResults" style="display:none">
+    <div class="res-hero">
+      <div class="ring" id="ring"><div class="ring-pct" id="rPct">--</div><div class="ring-lbl">Score</div></div>
+      <div class="res-status" id="rStatus"></div><div class="res-msg" id="rMsg"></div>
+    </div>
+    <div class="res-body">
+      <div class="band-bar"><div class="bseg be" id="bE">Expert 90-100%</div><div class="bseg bp" id="bP">Proficient 80-89%</div><div class="bseg bd" id="bD">Developing 70-79%</div><div class="bseg bf" id="bF">Foundation &lt;70%</div></div>
+      <div class="sg"><div class="sb"><div class="sv g" id="stC">-</div><div class="sl">Correct</div></div><div class="sb"><div class="sv r" id="stW">-</div><div class="sl">Incorrect</div></div></div>
+      <div class="rev-lbl">Question Review - click to expand</div>
+      <div id="revList"></div><div class="res-acts" id="resAct"></div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+<script>document.addEventListener('DOMContentLoaded', function() {
+  var current=0, TOTAL=8;
+  function goSlide(n) {
+    document.getElementById('slide-'+current).classList.remove('active');
+    document.getElementById('slide-'+n).classList.add('active');
+    document.querySelectorAll('button.nav-item').forEach(function(b) {
+      var s=parseInt(b.getAttribute('data-slide'),10);
+      b.classList.remove('active');
+      if(s===n) b.classList.add('active');
+      if(s<n)   b.classList.add('done');
+    });
+    current=n;
+    document.getElementById('pf').style.width=((n/(TOTAL-1))*100)+'%';
+    document.getElementById('hdrMode').textContent=n===TOTAL-1?'Quiz':'Training';
+    var ca=document.getElementById('contentArea'); if(ca) ca.scrollTop=0;
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('button.nav-item').forEach(function(b) {
+    b.addEventListener('click',function() { goSlide(parseInt(b.getAttribute('data-slide'),10)); });
+  });
+  document.querySelectorAll('button[data-goto]').forEach(function(b) {
+    b.addEventListener('click',function() { goSlide(parseInt(b.getAttribute('data-goto'),10)); });
+  });
+  var ql=document.getElementById('quizLaunchBtn'); if(ql) ql.addEventListener('click',function(){goSlide(TOTAL-1);});
+  var sq=document.getElementById('startQuizBtn');  if(sq) sq.addEventListener('click',function(){startQuiz();});
+  var bn=document.getElementById('btnNext');        if(bn) bn.addEventListener('click',nextQ);
+
+  var QS=[{"topic": "Signals", "q": "In Angular, what does signal() return and how do you read its current value?", "opts": ["An Observable; subscribe with .subscribe()", "A writable reactive primitive; call it as a function: mySignal()", "A BehaviorSubject; call .getValue()", "A Promise; await it"], "a": 1, "exp": "signal() creates a writable reactive primitive. Read its current value by calling it as a function: count()."}, {"topic": "Reactive Forms", "q": "Which FormBuilder method creates a group of related FormControls with optional validators?", "opts": ["this.fb.control()", "this.fb.array()", "this.fb.group()", "this.fb.build()"], "a": 2, "exp": "FormBuilder.group() creates a FormGroup containing named FormControls and optional validator arrays."}, {"topic": "Lazy Loading", "q": "What Angular Router property enables lazy loading of a feature module?", "opts": ["lazyLoad:", "loadChildren:", "loadModule:", "deferLoad:"], "a": 1, "exp": "loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule) enables lazy loading."}, {"topic": "RxJS", "q": "You have a search input. As the user types you call an API. You want to cancel the previous API call when a new character is typed. Which operator?", "opts": ["mergeMap() \u2014 all emissions concurrently", "concatMap() \u2014 queues one at a time", "switchMap() \u2014 cancels previous inner Observable", "exhaustMap() \u2014 ignores new while one active"], "a": 2, "exp": "switchMap cancels the previous inner Observable when a new emission arrives \u2014 ideal for search-as-you-type."}, {"topic": "Error Handling", "q": "What is the purpose of an Angular HTTP Interceptor?", "opts": ["Replaces HttpClientModule in unit tests", "Intercepts all HTTP requests and responses globally to add headers, log, retry, or handle errors", "A Route Guard that blocks navigation if unauthenticated", "Lazy-loads modules when HTTP requests arrive"], "a": 1, "exp": "Interceptors process all HTTP requests/responses globally \u2014 auth headers, logging, retry, and error handling."}, {"topic": "Change Detection", "q": "A component uses ChangeDetectionStrategy.OnPush. You push an item into a policies array with policies.push(item). The template does not update. Why?", "opts": ["OnPush components never re-render after init", "Angular cannot detect array mutations; replace the reference: policies = [...policies, item]", "OnPush only works with Signals, not arrays", "You must call detectChanges() before every mutation"], "a": 1, "exp": "OnPush uses reference equality. Mutating an array doesn't change its reference, so Angular skips change detection."}, {"topic": "RxJS lifecycle", "q": "Which RxJS operator auto-unsubscribes from an Observable when an Angular component is destroyed?", "opts": ["takeWhile(() => true)", "takeUntilDestroyed()", "finalize()", "complete()"], "a": 1, "exp": "takeUntilDestroyed() (Angular 16+) subscribes to the component destroy lifecycle and unsubscribes automatically."}, {"topic": "RxJS", "q": "You want to combine activeFilters$ and policyList$ and emit a new value whenever either changes. Which operator?", "opts": ["zip()", "forkJoin()", "combineLatest()", "concat()"], "a": 2, "exp": "combineLatest([a$, b$]) emits the latest values from both sources as an array whenever either emits."}, {"topic": "Reactive Forms", "q": "How do you programmatically update one field without affecting other fields?", "opts": ["this.form.setValue({ field: value })", "this.form.get('field').patchValue(value)", "this.form.reset({ field: value })", "this.form.update('field', value)"], "a": 1, "exp": "patchValue() on a single control updates only that control. setValue() on the group requires all controls to be provided."}, {"topic": "Signals", "q": "What is a computed() signal?", "opts": ["A writable signal that triggers an HTTP call when set", "A read-only derived signal that recalculates when its dependencies change", "An effect that runs once on component init", "A subject that combines multiple BehaviorSubjects"], "a": 1, "exp": "computed() creates a memoised read-only signal derived from other signals, recalculating only when dependencies change."}];
+  var qSet=[],qIdx=0,answers={},answered=false,isRetry=false;
+  function startQuiz(retryIdx) {
+    isRetry=!!retryIdx; qSet=[]; answered=false;
+    var src=retryIdx||QS.map(function(_,i){return i;});
+    for(var i=0;i<src.length;i++){var q=Object.assign({},QS[src[i]]);q.orig=src[i];qSet.push(q);}
+    qIdx=0;
+    document.getElementById('qIntro').style.display='none';
+    document.getElementById('qScreen').style.display='block';
+    document.getElementById('qResults').style.display='none';
+    renderQ();
+  }
+  function renderQ() {
+    var q=qSet[qIdx],L=['A','B','C','D'];
+    document.getElementById('qCnt').textContent='Question '+(qIdx+1)+' of '+qSet.length+(isRetry?' (Retry)':'');
+    document.getElementById('qTop').textContent=q.topic;
+    document.getElementById('qTxt').textContent=q.q;
+    var c=document.getElementById('optsC'); c.innerHTML='';
+    for(var i=0;i<q.opts.length;i++){
+      (function(idx){
+        var b=document.createElement('button');b.className='opt';
+        b.innerHTML='<span class="opt-l">'+L[idx]+'</span><span>'+q.opts[idx]+'</span>';
+        b.addEventListener('click',function(){pick(idx);});c.appendChild(b);
+      })(i);
+    }
+    document.getElementById('fbBox').className='fb';
+    document.getElementById('btnNext').style.display='none';
+    renderDots();
+  }
+  function pick(chosen) {
+    if(answered) return; answered=true;
+    var q=qSet[qIdx],ok=chosen===q.a,L=['A','B','C','D'];
+    answers[q.orig]={chosen:chosen,correct:ok};
+    document.querySelectorAll('button.opt').forEach(function(b,i){
+      b.disabled=true;
+      if(i===q.a) b.classList.add('correct');
+      if(i===chosen&&!ok) b.classList.add('wrong');
+    });
+    var fb=document.getElementById('fbBox'),icon=document.getElementById('fbIcon'),txt=document.getElementById('fbTxt');
+    if(ok){fb.className='fb cfb show';icon.textContent='\u2713';txt.textContent='Correct! '+q.exp;}
+    else{fb.className='fb wfb show';icon.textContent='\u2717';txt.innerHTML='<strong>Incorrect.</strong> The right answer is <strong>'+L[q.a]+': '+q.opts[q.a]+'</strong>. '+q.exp;}
+    renderDots();
+    var btn=document.getElementById('btnNext');
+    btn.style.display='inline-flex';
+    btn.textContent=qIdx<qSet.length-1?'Next →':'See Results →';
+  }
+  function nextQ() { qIdx++; if(qIdx>=qSet.length) showResults(); else{answered=false;renderQ();} }
+  function renderDots() {
+    var row=document.getElementById('dotRow');row.innerHTML='';
+    for(var i=0;i<qSet.length;i++){
+      var d=document.createElement('div');d.className='dot';
+      var a=answers[qSet[i].orig];
+      if(i===qIdx) d.classList.add('cur');
+      else if(a&&a.correct) d.classList.add('c');
+      else if(a&&!a.correct) d.classList.add('w');
+      row.appendChild(d);
+    }
+  }
+  function cumCorrect(){var n=0,k=Object.keys(answers);for(var i=0;i<k.length;i++) if(answers[k[i]].correct) n++;return n;}
+  function showResults() {
+    var total=QS.length,correct=cumCorrect(),pct=Math.round((correct/total)*100),pass=pct>=70;
+    document.getElementById('qScreen').style.display='none';
+    document.getElementById('qResults').style.display='block';
+    var ring=document.getElementById('ring');ring.className='ring '+(pass?'pass':'fail');
+    document.getElementById('rPct').textContent=pct+'%';
+    var st=document.getElementById('rStatus');st.textContent=pass?'🎉 Pass':'✗ Not yet';st.className='res-status '+(pass?'pass':'fail');
+    document.getElementById('rMsg').textContent=pass?'You scored '+correct+' out of '+total+'. Well done - module complete.':'You scored '+correct+' out of '+total+'. You need '+Math.ceil(total*0.7)+' to pass. Review below and retry.';
+    ['bE','bP','bD','bF'].forEach(function(id){document.getElementById(id).classList.remove('on');});
+    if(pct>=90) document.getElementById('bE').classList.add('on');
+    else if(pct>=80) document.getElementById('bP').classList.add('on');
+    else if(pct>=70) document.getElementById('bD').classList.add('on');
+    else document.getElementById('bF').classList.add('on');
+    document.getElementById('stC').textContent=correct;
+    document.getElementById('stW').textContent=total-correct;
+    buildReview();
+    var act=document.getElementById('resAct');act.innerHTML='';
+    if(!pass){
+      var wrong=[],ak=Object.keys(answers);
+      for(var k=0;k<ak.length;k++) if(!answers[ak[k]].correct) wrong.push(parseInt(ak[k],10));
+      var rb=document.createElement('button');rb.className='btn p';
+      rb.textContent='Retry '+wrong.length+' incorrect question'+(wrong.length>1?'s':'')+' →';
+      (function(w){rb.addEventListener('click',function(){startQuiz(w);})})(wrong);
+      act.appendChild(rb);
+    }
+    var rs=document.createElement('button');rs.className=pass?'btn p':'btn s';
+    rs.textContent='↺ Restart from scratch';
+    rs.addEventListener('click',function(){answers={};document.getElementById('qResults').style.display='none';document.getElementById('qIntro').style.display='block';});
+    act.appendChild(rs);
+    if(pass){var bk=document.createElement('button');bk.className='btn s';bk.textContent='← Back to training';bk.addEventListener('click',function(){goSlide(0);});act.appendChild(bk);}
+  }
+  function buildReview() {
+    var list=document.getElementById('revList');list.innerHTML='';
+    for(var i=0;i<QS.length;i++){
+      var a=answers[i];if(!a) continue;
+      var sc=a.correct?'c':'w',L=['A','B','C','D'];
+      var item=document.createElement('div');item.className='ri';
+      var wh=!a.correct?'<div>Your answer: <span class="ya">'+L[a.chosen]+': '+QS[i].opts[a.chosen]+'</span></div>':'';
+      item.innerHTML='<div class="rq"><div class="rdot '+sc+'"></div><div class="rqt">Q'+(i+1)+': '+QS[i].q+'</div><span class="rbadge '+sc+'">'+(a.correct?'&#10003; Correct':'&#10007; Wrong')+'</span><span class="rchev">&#9660;</span></div>'
+        +'<div class="rdetail">'+wh+'<div>Correct answer: <span class="ra">'+L[QS[i].a]+': '+QS[i].opts[QS[i].a]+'</span></div><div class="expl">'+QS[i].exp+'</div></div>';
+      item.querySelector('.rq').addEventListener('click',function(){this.closest('.ri').classList.toggle('open');});
+      list.appendChild(item);
+    }
+  }
+});</script>
+</body>
+</html>

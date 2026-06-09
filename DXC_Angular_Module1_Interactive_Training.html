@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC Technology | Angular Foundation Training — Module 1</title>
+<style>
+:root{--dp:#330072;--dm:#5F249F;--db:#8B3FD4;--dd:#1a0a2e;--teal:#006975;--green:#1a7a4a;--red:#c0392b;--white:#fff;--off:#f7f5fb;--text:#1a1a1a;--muted:#6b6b7b;--border:#e0d9ee;--code-bg:#1e1e2e;--r:10px;--skw:#569CD6;--sstr:#CE9178;--sfn:#DCDCAA;--styp:#4EC9B0;--svar:#9CDCFE;--scmt:#6A9955;--snum:#B5CEA8;--sbase:#D4D4D4}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--off);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{background:var(--dp);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{font-size:1.4rem;font-weight:900;color:var(--white);font-family:'Arial Black',Arial,sans-serif;letter-spacing:-.02em}
+.logo-tech{font-size:.62rem;color:#c5b8e8;text-transform:uppercase;letter-spacing:.14em}
+.hdr-r{display:flex;align-items:center;gap:1rem}
+.hdr-title{font-size:.75rem;color:#c5b8e8;font-weight:600}
+.hdr-mode{font-size:.7rem;background:var(--teal);color:var(--white);padding:.2rem .6rem;border-radius:12px;font-weight:700}
+
+/* PROGRESS */
+.prog-track{height:4px;background:var(--border)}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--dm));transition:width .4s ease;width:0%}
+
+/* LAYOUT */
+.app{display:flex;flex:1;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--white);border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.nav-section{padding:.4rem 1rem .2rem;font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+/* Nav buttons — reset button styles, make them look like nav items */
+button.nav-item{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;font-size:.82rem;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .15s;user-select:none;width:100%;background:none;border-top:none;border-right:none;border-bottom:none;text-align:left;font-family:inherit}
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{background:#f0ebfa;color:var(--dm);border-left-color:var(--dm);font-weight:600}
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .3s}
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border)}
+.quiz-launch-btn{width:100%;background:var(--dm);color:var(--white);border:none;padding:.7rem 1rem;border-radius:7px;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+.quiz-launch-btn:hover{background:var(--db)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto}
+.slide{display:none}
+.slide.active{display:block;animation:fs .3s ease}
+@keyframes fs{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--dd) 0%,var(--dp) 55%,var(--dm) 100%);padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04)}
+.badge{display:inline-block;background:var(--teal);color:var(--white);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .75rem;border-radius:20px;margin-bottom:1rem}
+.badge.red{background:var(--red)}
+.badge.quiz{background:var(--dm)}
+.hero h1{font-size:2rem;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:.75rem}
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+.hero-meta{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.hero-meta span{font-size:.78rem;color:#c5b8e8}
+
+/* BODY */
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+/* CARDS */
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.2rem 1.2rem 1.4rem;border-left:4px solid var(--dm);box-shadow:0 2px 8px rgba(51,0,114,.06)}
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+.tag{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.68rem;font-weight:700;padding:.15rem .5rem;border-radius:10px;margin-bottom:.5rem;font-family:Consolas,monospace}
+.tag.t{background:#e6f4f5;color:var(--teal)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--white);border-radius:var(--r);padding:1.2rem;text-align:center;border:1px solid var(--border)}
+.stat .n{font-size:2.4rem;font-weight:900;line-height:1}
+.stat .n.red{color:var(--red)}.stat .n.pur{color:var(--dm)}.stat .n.drk{color:var(--dp)}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem}
+
+/* ALERT */
+.alert{display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:var(--r);margin-bottom:1.5rem;align-items:flex-start}
+.alert.warn{background:#fff8e6;border-left:4px solid #e8a000}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+/* CODE */
+.code{background:var(--code-bg);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.code-fn{font-size:.75rem;color:#888;font-family:Consolas,monospace}
+.code-lg{font-size:.65rem;background:var(--dm);color:var(--white);padding:.15rem .5rem;border-radius:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.code-body{padding:1.2rem;overflow-x:auto}
+.code-body pre{font-family:Consolas,'Courier New',monospace;font-size:.85rem;line-height:1.7;color:var(--sbase);margin:0;white-space:pre}
+.kw{color:var(--skw)}.str{color:var(--sstr)}.fn{color:var(--sfn)}.typ{color:var(--styp)}.var{color:var(--svar)}.cmt{color:var(--scmt)}.num{color:var(--snum)}
+
+/* TWO COL */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.two.hl{grid-template-columns:3fr 2fr}
+.two.hr{grid-template-columns:2fr 3fr}
+
+/* STACK */
+.stack{display:flex;flex-direction:column;gap:.5rem}
+.stk{padding:.7rem 1rem;border-radius:7px;text-align:center;font-size:.88rem;font-weight:600;color:var(--white)}
+
+/* BINDING */
+.bindings{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem}
+.binding{background:var(--white);border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.binding-hd{display:flex;align-items:center;padding:.6rem 1rem;gap:.75rem}
+.binding-type{font-size:.9rem;font-weight:700;color:var(--white);flex:1}
+.binding-dir{font-size:.75rem;color:rgba(255,255,255,.8);font-family:Consolas,monospace}
+.binding-bd{padding:.75rem 1rem}
+.binding-syn{font-family:Consolas,monospace;font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.binding-desc{font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:.5rem}
+.binding-ex{background:var(--code-bg);padding:.4rem .7rem;border-radius:6px;font-family:Consolas,monospace;font-size:.8rem;color:var(--sstr)}
+
+/* DI */
+.di{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin-bottom:1.5rem}
+.di-col{display:flex;flex-direction:column;gap:.6rem}
+.di-box{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-size:.85rem;font-weight:600}
+.di-box.s{border-left:4px solid var(--teal)}
+.di-box.c{border-left:4px solid var(--dm)}
+.di-mid{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.4rem;color:var(--muted);font-size:.8rem}
+
+/* ROUTES */
+.rtable{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.88rem}
+.rtable th{background:var(--dp);color:var(--white);padding:.6rem 1rem;text-align:left;font-weight:700}
+.rtable td{padding:.55rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.rtable tr:last-child td{border-bottom:none}
+.rtable tr:nth-child(even) td{background:var(--off)}
+.rpill{display:inline-block;background:var(--code-bg);color:var(--sstr);font-family:Consolas,monospace;font-size:.8rem;padding:.2rem .55rem;border-radius:5px}
+.cpill{display:inline-block;padding:.2rem .55rem;border-radius:5px;font-size:.8rem;font-weight:600;color:var(--white)}
+
+/* GUARDS */
+.guards{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem}
+.guard{background:var(--white);border-radius:var(--r);padding:1rem;border:1px solid var(--border)}
+.guard-name{font-family:Consolas,monospace;font-size:.9rem;font-weight:700;color:var(--dm);margin-bottom:.4rem}
+.guard-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+/* RxJS ops */
+.ops{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.op{display:flex;align-items:flex-start;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem}
+.op-name{font-family:Consolas,monospace;font-size:.85rem;font-weight:700;min-width:130px;color:var(--teal);flex-shrink:0}
+.op-desc{font-size:.85rem;color:var(--text);line-height:1.5}
+
+/* LAB */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1.5rem}
+.lab-step{display:flex;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.lab-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.lab-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.3rem}
+.lab-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.lab-time{font-size:.7rem;font-weight:700;margin-top:.3rem}
+
+/* CALLOUT */
+.callout{background:#f0ebfa;border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.6}
+.callout strong{color:var(--dp)}
+
+/* BOTTOM NAV */
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2.5rem;border-top:1px solid var(--border);margin-top:.5rem}
+.nb{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.nb.prev{background:var(--off);color:var(--text);border:1px solid var(--border)}
+.nb.prev:hover{background:var(--border)}
+.nb.next{background:var(--dm);color:var(--white)}
+.nb.next:hover{background:var(--db)}
+.nb:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.8rem;color:var(--muted);font-weight:600}
+
+/* ═══ QUIZ ═══════════════════════════════════════════ */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.q-cnt{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.q-topic{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:20px}
+.q-text{font-size:1.1rem;font-weight:700;color:var(--dp);line-height:1.5;margin-bottom:1.2rem}
+.opts{display:flex;flex-direction:column;gap:.6rem}
+button.opt{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 1rem;border:2px solid var(--border);border-radius:9px;cursor:pointer;background:var(--white);text-align:left;width:100%;font-size:.9rem;line-height:1.5;color:var(--text);transition:border-color .15s,background .15s,transform .1s;font-family:inherit}
+button.opt:hover:not(:disabled){border-color:var(--dm);background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--off);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;color:var(--muted);transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:var(--dm);border-color:var(--dm);color:var(--white)}
+button.opt.correct{border-color:var(--green);background:#edf7f1}
+button.opt.correct .opt-l{background:var(--green);border-color:var(--green);color:var(--white)}
+button.opt.wrong{border-color:var(--red);background:#fdf0ee}
+button.opt.wrong .opt-l{background:var(--red);border-color:var(--red);color:var(--white)}
+.fb{display:none;margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid var(--green);color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid var(--red);color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background .3s}
+.dot.c{background:var(--green)}.dot.w{background:var(--red)}.dot.cur{background:var(--dm)}
+
+/* RESULTS */
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring-wrap{display:inline-flex;flex-direction:column;align-items:center;margin-bottom:1.2rem}
+.ring{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:7px solid}
+.ring.pass{border-color:var(--green);background:#f0faf5}
+.ring.fail{border-color:var(--red);background:#fdf4f3}
+.ring-pct{font-size:2.2rem;font-weight:900;line-height:1}
+.ring.pass .ring-pct{color:var(--green)}.ring.fail .ring-pct{color:var(--red)}
+.ring-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.res-status{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.res-status.pass{color:var(--green)}.res-status.fail{color:var(--red)}
+.res-msg{color:var(--muted);font-size:.88rem;max-width:460px;margin:0 auto 1rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.2rem;height:28px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--white);opacity:.35;transition:opacity .3s;text-align:center;line-height:1.2}
+.bseg.on{opacity:1}
+.be{background:var(--green);flex:2}.bp{background:var(--teal);flex:2}.bd{background:var(--dm);flex:3}.bf{background:var(--red);flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.2rem}
+.sb{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center}
+.sb .sv{font-size:1.5rem;font-weight:800}.sv.g{color:var(--green)}.sv.r{color:var(--red)}
+.sb .sl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.ri{border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer;user-select:none;background:var(--white);transition:background .15s}
+.rq:hover{background:var(--off)}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:var(--green)}.rdot.w{background:var(--red)}
+.rqt{font-size:.82rem;font-weight:600;flex:1;color:var(--text)}
+.rbadge{font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:var(--green)}.rbadge.w{background:#fdf0ee;color:var(--red)}
+.rchev{font-size:.65rem;color:var(--muted);transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.65rem .9rem .85rem;background:var(--off);border-top:1px solid var(--border);font-size:.82rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:var(--red);font-weight:600}.ra{color:var(--green);font-weight:600}
+.expl{color:var(--muted);margin-top:.35rem}
+.res-acts{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* SHARED BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.5rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn.p{background:var(--dm);color:var(--white)}.btn.p:hover{background:var(--db);transform:translateY(-1px)}
+.btn.s{background:transparent;color:var(--dm);border:2px solid var(--dm)}.btn.s:hover{background:#f0ebfa}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .two,.two.hl,.two.hr,.grid.g2,.grid.g3{grid-template-columns:1fr}
+  .stats,.guards{grid-template-columns:1fr 1fr}
+  .lab{grid-template-columns:1fr}
+  .body,.res-body{padding:1.2rem}
+  .hero{padding:1.8rem 1.2rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.2rem}
+  .di{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo"><span class="logo-dxc">DXC</span><span class="logo-tech">Technology</span></div>
+  <div class="hdr-r">
+    <span class="hdr-title">Angular Foundation — Module 1</span>
+    <span class="hdr-mode" id="hdrMode">Training</span>
+  </div>
+</header>
+<div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+
+<div class="app">
+  <!-- SIDEBAR: all <button> elements so Edge treats them as interactive -->
+  <nav class="sidebar" id="sidebar">
+    <div class="nav-section">Module 1 — Foundation</div>
+    <button class="nav-item active" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Introduction</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">Why This Training?</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">Learning Objectives</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">What is Angular?</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">Components</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="5"><div class="nav-dot"></div><span class="nav-lbl">NgModules</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="6"><div class="nav-dot"></div><span class="nav-lbl">Data Binding</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="7"><div class="nav-dot"></div><span class="nav-lbl">Services &amp; DI</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="8"><div class="nav-dot"></div><span class="nav-lbl">Angular Router</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="9"><div class="nav-dot"></div><span class="nav-lbl">HttpClient &amp; RxJS</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="10"><div class="nav-dot"></div><span class="nav-lbl">Hands-On Lab</span><span class="nav-chk">✓</span></button>
+    <div class="nav-section" style="margin-top:.5rem">Assessment</div>
+    <button class="nav-item" data-slide="11"><div class="nav-dot"></div><span class="nav-lbl">Knowledge Quiz</span><span class="nav-chk">✓</span></button>
+    <div class="sidebar-footer">
+      <button class="quiz-launch-btn" id="quizLaunchBtn">Take the Quiz →</button>
+    </div>
+  </nav>
+
+  <div class="content" id="contentArea">
+
+<!-- ════════════════════════════════════ SLIDE 0: INTRO -->
+<div class="slide active" id="slide-0">
+  <div class="hero">
+    <div class="badge">Module 1 of 4</div>
+    <h1>Angular Foundation<br>Training</h1>
+    <div class="hero-sub">Everything you need to understand and work with the Xuber HTMLUI Angular layer — from first principles to hands-on practice.</div>
+    <div class="hero-meta"><span>⏱ ~3 hours</span><span>📊 Foundation level</span><span>👤 Xuber Enterprise Practice</span></div>
+  </div>
+  <div class="body">
+    <div class="callout"><strong>Welcome.</strong> Work through each section using the sidebar or the Next buttons. Complete the Knowledge Quiz at the end — you need <strong>70% or more to pass</strong>.</div>
+    <h2>What you'll cover</h2>
+    <div class="grid g3">
+      <div class="card"><div class="tag">Architecture</div><h3>What is Angular?</h3><p>How Angular fits in the Xuber HTMLUI stack and why it matters.</p></div>
+      <div class="card t"><div class="tag t">Core</div><h3>Components &amp; Modules</h3><p>The building blocks of every Angular app — creating, registering, and wiring them up.</p></div>
+      <div class="card"><div class="tag">Templates</div><h3>Data Binding</h3><p>All four binding types with real Xuber examples.</p></div>
+      <div class="card t"><div class="tag t">Patterns</div><h3>Services &amp; DI</h3><p>How Dependency Injection keeps code testable and logic out of components.</p></div>
+      <div class="card"><div class="tag">Navigation</div><h3>Router</h3><p>Configure routes, navigate programmatically, and protect pages with Guards.</p></div>
+      <div class="card t"><div class="tag t">API</div><h3>HttpClient &amp; RxJS</h3><p>Call the Xuber REST API and handle async data with Observables.</p></div>
+    </div>
+  </div>
+  <div class="slide-nav">
+    <button class="nb prev" disabled>← Previous</button>
+    <span class="slide-pos">1 / 12</span>
+    <button class="nb next" data-goto="1">Next →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 1: SPOF -->
+<div class="slide" id="slide-1">
+  <div class="hero"><div class="badge red">Critical SPOF</div><h1>Why This Training?</h1><div class="hero-sub">The XE team skills matrix identified the Xuber HTMLUI Angular Part as the single most critical unmitigated risk in the practice.</div></div>
+  <div class="body">
+    <div class="alert warn"><span class="alert-icon">⚠️</span><div class="alert-body"><strong>CRITICAL SPOF: Xuber HTMLUI — Angular Part</strong><p>Every member of the 28-person XE team scores 0 on Angular knowledge. This is the worst-rated skill in the matrix — and it underpins the most-used part of the Xuber UI.</p></div></div>
+    <div class="stats">
+      <div class="stat"><div class="n red">0</div><div class="l">Team members with any Angular knowledge</div></div>
+      <div class="stat"><div class="n pur">28</div><div class="l">Team members currently exposed to this risk</div></div>
+      <div class="stat"><div class="n drk">42</div><div class="l">Total CRITICAL SPOF areas across the XE team</div></div>
+    </div>
+    <div class="two">
+      <div>
+        <h2>What this means in practice</h2>
+        <div class="grid g2" style="margin-top:1rem">
+          <div class="card r"><h3>No cover available</h3><p>If the one person with any HTMLUI context leaves, the team cannot support or modify the UI layer.</p></div>
+          <div class="card r"><h3>Bug resolution blocked</h3><p>Front-end defects cannot be diagnosed or fixed without Angular knowledge. Support SLAs are at risk.</p></div>
+          <div class="card r"><h3>Feature delivery stalls</h3><p>Any new Xuber UI feature requires Angular. The team currently cannot deliver these.</p></div>
+          <div class="card g"><h3>This training fixes it</h3><p>This four-module series is designed to bring every XE team member to at least Intermediate (2) on the skills matrix.</p></div>
+        </div>
+      </div>
+      <div>
+        <h2>The Xuber HTMLUI layer</h2>
+        <div class="stack" style="margin-top:1rem">
+          <div class="stk" style="background:var(--teal)">Browser (User)</div>
+          <div class="stk" style="background:var(--dm);font-weight:800">⚠ Angular SPA ← You are here<br><small style="font-weight:400;font-size:.78rem">HTML + TypeScript + CSS — SPOF area</small></div>
+          <div class="stk" style="background:#5a3090">Xuber API Layer (.NET / REST)</div>
+          <div class="stk" style="background:var(--dp)">Business Logic (Policy, Claims, LMM)</div>
+          <div class="stk" style="background:#1a1a1a">Database (SQL Server / DB2)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="0">← Previous</button><span class="slide-pos">2 / 12</span><button class="nb next" data-goto="2">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 2: OBJECTIVES -->
+<div class="slide" id="slide-2">
+  <div class="hero"><div class="badge">Learning Objectives</div><h1>By the end of this module<br>you will be able to...</h1></div>
+  <div class="body">
+    <div class="grid g2">
+      <div class="card"><div class="tag">1 — Architecture</div><h3>Understand Angular's role</h3><p>Explain where Angular sits in the Xuber HTMLUI stack and how it differs from the .NET API layer.</p></div>
+      <div class="card t"><div class="tag t">2 — Components</div><h3>Work with Components</h3><p>Create, register, and render Angular components; understand templates, selectors, and @Input.</p></div>
+      <div class="card"><div class="tag">3 — Modules</div><h3>Understand NgModules</h3><p>Describe what NgModules do, how to declare and import components, and where AppModule fits.</p></div>
+      <div class="card t"><div class="tag t">4 — Services</div><h3>Apply Services &amp; DI</h3><p>Create and inject an Angular service; understand why DI promotes testability and reuse.</p></div>
+      <div class="card"><div class="tag">5 — Routing</div><h3>Navigate with the Router</h3><p>Configure basic routes, navigate programmatically, and protect routes using Guards.</p></div>
+      <div class="card t"><div class="tag t">6 — API</div><h3>Consume REST APIs</h3><p>Make HTTP GET/POST calls from an Angular service and display data using Observables.</p></div>
+    </div>
+    <div class="alert info"><span class="alert-icon">📋</span><div class="alert-body"><strong>Assessment</strong><p>Complete the Knowledge Quiz at the end of this module. Score 70% or above to pass. You can retake — only incorrect answers are re-tested.</p></div></div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="1">← Previous</button><span class="slide-pos">3 / 12</span><button class="nb next" data-goto="3">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 3: ANGULAR -->
+<div class="slide" id="slide-3">
+  <div class="hero"><div class="badge">Core Concept 1</div><h1>What is Angular?</h1><div class="hero-sub">A TypeScript-based framework for building scalable Single-Page Applications — and the technology powering the Xuber HTMLUI.</div></div>
+  <div class="body">
+    <p class="intro">Angular is an open-source front-end framework maintained by Google. Unlike a library, Angular is a full framework — it provides routing, forms, HTTP, testing, and a component model out of the box. In Xuber, it is the entire browser-facing layer.</p>
+    <div class="two hl">
+      <div>
+        <h2>Four defining characteristics</h2>
+        <div class="grid g2" style="margin-top:1rem">
+          <div class="card"><h3>⚙️ Component-Based</h3><p>The UI is broken into self-contained, reusable components. Each has its own HTML, CSS, and TypeScript. Example: PolicyHeaderComponent, ClaimsGridComponent.</p></div>
+          <div class="card t"><h3>🔷 TypeScript First</h3><p>Designed for TypeScript — strong typing, interfaces, decorators, and IntelliSense. Xuber benefits from type-safe API calls across the codebase.</p></div>
+          <div class="card"><h3>📦 NgModules</h3><p>Related components and services are grouped into modules. This keeps large apps like Xuber organised and allows features to load lazily.</p></div>
+          <div class="card t"><h3>🔗 Two-Way Binding</h3><p>Changes in the TypeScript class update the view, and user input updates the class. Eliminates manual DOM manipulation for form-heavy Xuber screens.</p></div>
+        </div>
+      </div>
+      <div>
+        <h2>Where Angular fits in Xuber</h2>
+        <div class="stack" style="margin-top:1rem">
+          <div class="stk" style="background:var(--teal)">Browser (User)</div>
+          <div class="stk" style="background:var(--dm);font-weight:700">Angular SPA<br><small style="font-weight:400;font-size:.78rem">HTML + TypeScript + CSS</small></div>
+          <div class="stk" style="background:#5a3090">Xuber API Layer<br><small style="font-weight:400;font-size:.78rem">(.NET / REST)</small></div>
+          <div class="stk" style="background:var(--dp)">Business Logic<br><small style="font-weight:400;font-size:.78rem">Policy, Claims, LMM</small></div>
+          <div class="stk" style="background:#1a1a1a">Database<br><small style="font-weight:400;font-size:.78rem">SQL Server / DB2</small></div>
+        </div>
+        <div class="callout" style="margin-top:1rem"><strong>Key point:</strong> Angular never talks to the database directly. It calls the Xuber REST API, which handles business logic. Angular's job is purely to render the UI and manage user interaction.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="2">← Previous</button><span class="slide-pos">4 / 12</span><button class="nb next" data-goto="4">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 4: COMPONENTS -->
+<div class="slide" id="slide-4">
+  <div class="hero"><div class="badge">Core Concept 2</div><h1>Components</h1><div class="hero-sub">The fundamental building block of every Angular application — Template + Class + Styles.</div></div>
+  <div class="body">
+    <p class="intro">Think of a component as a reusable UI brick. A PolicyHeaderComponent, a ClaimsListComponent, a NavigationBarComponent — each is self-contained with its own appearance and behaviour.</p>
+    <div class="two hl">
+      <div>
+        <h2>Anatomy of a component</h2>
+        <div class="code"><div class="code-hdr"><span class="code-fn">policy-header.component.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="kw">import</span> { Component, Input } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+
+<span class="fn">@Component</span>({
+  selector: <span class="str">'app-policy-header'</span>,
+  templateUrl: <span class="str">'./policy-header.component.html'</span>,
+  styleUrls: [<span class="str">'./policy-header.component.css'</span>]
+})
+<span class="kw">export class</span> <span class="typ">PolicyHeaderComponent</span> {
+  <span class="fn">@Input()</span> <span class="var">policyNumber</span>: <span class="kw">string</span> = <span class="str">''</span>;
+  <span class="fn">@Input()</span> <span class="var">status</span>: <span class="kw">string</span> = <span class="str">'Active'</span>;
+}</pre></div></div>
+        <div class="code"><div class="code-hdr"><span class="code-fn">Using the component in a parent template</span><span class="code-lg">HTML</span></div><div class="code-body"><pre>&lt;<span class="typ">app-policy-header</span>
+  [<span class="var">policyNumber</span>]=<span class="str">"selectedPolicy.ref"</span>
+  [<span class="var">status</span>]=<span class="str">"selectedPolicy.status"</span>&gt;
+&lt;/<span class="typ">app-policy-header</span>&gt;</pre></div></div>
+      </div>
+      <div>
+        <h2>Key concepts</h2>
+        <div style="display:flex;flex-direction:column;gap:.75rem;margin-top:1rem">
+          <div class="card"><div class="tag">@Component</div><h3>Decorator</h3><p>Marks a class as a component and attaches its metadata — the selector (HTML tag name), template, and stylesheet.</p></div>
+          <div class="card t"><div class="tag t">selector</div><h3>HTML Tag</h3><p><code>selector: 'app-policy-header'</code> means you embed it as <code>&lt;app-policy-header&gt;</code> anywhere in a parent template.</p></div>
+          <div class="card"><div class="tag">@Input()</div><h3>Receiving Data</h3><p>Marks a property as an input — a parent passes data in via property binding. This is the primary way to pass data <em>down</em> the component tree.</p></div>
+          <div class="card t"><div class="tag t">CLI</div><h3>4 Files Generated</h3><p><code>ng generate component policy-header</code> creates .ts, .html, .css, and .spec.ts automatically and registers the component.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="3">← Previous</button><span class="slide-pos">5 / 12</span><button class="nb next" data-goto="5">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 5: NGMODULES -->
+<div class="slide" id="slide-5">
+  <div class="hero"><div class="badge">Core Concept 3</div><h1>NgModules</h1><div class="hero-sub">Organising components, directives, and services into cohesive units and controlling their visibility.</div></div>
+  <div class="body">
+    <p class="intro">Every Angular app has at least one module — AppModule. Modules declare which components belong to them, import external functionality, and export components for use elsewhere.</p>
+    <div class="two">
+      <div>
+        <h2>Module structure in Xuber</h2>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem;margin-top:1rem">
+          <div style="background:var(--dp);color:var(--white);border-radius:7px;padding:.6rem 1rem;text-align:center;font-weight:700;margin-bottom:.75rem">AppModule (Root)</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+            <div style="background:var(--dm);color:var(--white);border-radius:7px;padding:.5rem .75rem;text-align:center;font-size:.82rem;font-weight:600">PolicyModule</div>
+            <div style="background:var(--dm);color:var(--white);border-radius:7px;padding:.5rem .75rem;text-align:center;font-size:.82rem;font-weight:600">ClaimsModule</div>
+            <div style="background:var(--teal);color:var(--white);border-radius:7px;padding:.5rem .75rem;text-align:center;font-size:.82rem;font-weight:600">LmmModule</div>
+            <div style="background:var(--teal);color:var(--white);border-radius:7px;padding:.5rem .75rem;text-align:center;font-size:.82rem;font-weight:600">SharedModule</div>
+          </div>
+          <div style="margin-top:.75rem;font-size:.8rem;color:var(--muted)">Each feature module is lazy-loaded on navigation — keeping the initial bundle small.</div>
+        </div>
+        <div class="callout" style="margin-top:1rem"><strong>Golden rule:</strong> A component must be <em>declared</em> in exactly ONE module. To use it elsewhere, <em>export</em> it from its module and <em>import</em> that module wherever needed.</div>
+      </div>
+      <div>
+        <h2>The @NgModule decorator</h2>
+        <div class="code" style="margin-top:1rem"><div class="code-hdr"><span class="code-fn">policy.module.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="fn">@NgModule</span>({
+  <span class="cmt">// Components this module owns</span>
+  declarations: [
+    <span class="typ">PolicyListComponent</span>,
+    <span class="typ">PolicyDetailComponent</span>
+  ],
+  <span class="cmt">// External modules needed</span>
+  imports: [
+    <span class="typ">CommonModule</span>,
+    <span class="typ">HttpClientModule</span>,
+    <span class="typ">ReactiveFormsModule</span>
+  ],
+  <span class="cmt">// What other modules can use</span>
+  exports: [<span class="typ">PolicyListComponent</span>]
+})
+<span class="kw">export class</span> <span class="typ">PolicyModule</span> {}</pre></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="4">← Previous</button><span class="slide-pos">6 / 12</span><button class="nb next" data-goto="6">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 6: DATA BINDING -->
+<div class="slide" id="slide-6">
+  <div class="hero"><div class="badge">Core Concept 4</div><h1>Data Binding</h1><div class="hero-sub">Connecting your TypeScript class to your HTML template — four binding types, each with a different direction and purpose.</div></div>
+  <div class="body">
+    <p class="intro">Data binding is how Angular keeps the UI and TypeScript class in sync. Understanding the four types — and when to use each — is fundamental to writing Angular templates.</p>
+    <div class="bindings">
+      <div class="binding"><div class="binding-hd" style="background:var(--dm)"><span class="binding-type">Interpolation</span><span class="binding-dir">Class → Template</span></div><div class="binding-bd"><div class="binding-syn" style="color:var(--dm)">{{ value }}</div><div class="binding-desc">Renders the value of a class property as text. Read-only — the DOM cannot update the class this way.</div><div class="binding-ex">&lt;p&gt;Policy: {{ policyNumber }}&lt;/p&gt;</div></div></div>
+      <div class="binding"><div class="binding-hd" style="background:var(--teal)"><span class="binding-type">Property Binding</span><span class="binding-dir">Class → DOM</span></div><div class="binding-bd"><div class="binding-syn" style="color:var(--teal)">[property]="expression"</div><div class="binding-desc">Dynamically sets a DOM element's property from a TypeScript expression. Use square brackets.</div><div class="binding-ex">&lt;input [disabled]="isReadOnly"&gt;   &lt;button [disabled]="isSaving"&gt;Save&lt;/button&gt;</div></div></div>
+      <div class="binding"><div class="binding-hd" style="background:var(--dp)"><span class="binding-type">Event Binding</span><span class="binding-dir">DOM → Class</span></div><div class="binding-bd"><div class="binding-syn" style="color:var(--dp)">(event)="handler()"</div><div class="binding-desc">Listens for a DOM event and calls a TypeScript method when it fires. Use parentheses.</div><div class="binding-ex">&lt;button (click)="savePolicy()"&gt;Save&lt;/button&gt;</div></div></div>
+      <div class="binding"><div class="binding-hd" style="background:#006060"><span class="binding-type">Two-Way Binding</span><span class="binding-dir">Class ↔ DOM</span></div><div class="binding-bd"><div class="binding-syn" style="color:#006060">[(ngModel)]="property"</div><div class="binding-desc">Combines property and event binding. Changes in the class update the input; typing updates the class. Requires FormsModule.</div><div class="binding-ex">&lt;input [(ngModel)]="policyRef"&gt;  &lt;!-- "banana in a box" --&gt;</div></div></div>
+    </div>
+    <div class="alert info"><span class="alert-icon">💡</span><div class="alert-body"><strong>Memory aid: "banana in a box"</strong><p><code>[(ngModel)]</code> — the parentheses (banana) sit inside the square brackets (box). This is how Angular developers remember two-way binding syntax.</p></div></div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="5">← Previous</button><span class="slide-pos">7 / 12</span><button class="nb next" data-goto="7">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 7: SERVICES -->
+<div class="slide" id="slide-7">
+  <div class="hero"><div class="badge">Core Concept 5</div><h1>Services &amp; Dependency Injection</h1><div class="hero-sub">Sharing logic and data cleanly across the application — without tangling business logic inside components.</div></div>
+  <div class="body">
+    <p class="intro">A Service is a TypeScript class annotated with <code>@Injectable</code> that contains business logic, HTTP calls, or shared state. Angular's DI system provides an instance to any component that requests it — you never call <code>new PolicyService()</code> yourself.</p>
+    <div class="two hl">
+      <div>
+        <h2>Creating and injecting a service</h2>
+        <div class="code"><div class="code-hdr"><span class="code-fn">policy.service.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="fn">@Injectable</span>({ providedIn: <span class="str">'root'</span> })
+<span class="kw">export class</span> <span class="typ">PolicyService</span> {
+
+  <span class="kw">constructor</span>(<span class="kw">private</span> <span class="var">http</span>: <span class="typ">HttpClient</span>) {}
+
+  getPolicies() {
+    <span class="kw">return this</span>.<span class="var">http</span>.get&lt;<span class="typ">Policy</span>[]&gt;(
+      <span class="str">'/api/v2/policies'</span>
+    );
+  }
+}</pre></div></div>
+        <div class="code"><div class="code-hdr"><span class="code-fn">policy-list.component.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="kw">export class</span> <span class="typ">PolicyListComponent</span> {
+  <span class="var">policies</span>: <span class="typ">Policy</span>[] = [];
+
+  <span class="cmt">// Angular injects PolicyService here</span>
+  <span class="kw">constructor</span>(<span class="kw">private</span> <span class="var">svc</span>: <span class="typ">PolicyService</span>) {}
+
+  ngOnInit() {
+    <span class="kw">this</span>.<span class="var">svc</span>.getPolicies()
+      .subscribe(p => <span class="kw">this</span>.<span class="var">policies</span> = p);
+  }
+}</pre></div></div>
+      </div>
+      <div>
+        <h2>How DI works</h2>
+        <div class="di" style="margin-top:1rem">
+          <div class="di-col">
+            <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">Services</div>
+            <div class="di-box s">PolicyService</div>
+            <div class="di-box s">ClaimsService</div>
+            <div class="di-box s">AuthService</div>
+          </div>
+          <div class="di-mid">→<br><small>injected into</small></div>
+          <div class="di-col">
+            <div style="font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem">Components</div>
+            <div class="di-box c">PolicyListComponent</div>
+            <div class="di-box c">PolicyDetailComponent</div>
+            <div class="di-box c">ClaimsGridComponent</div>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card"><div class="tag">providedIn:'root'</div><h3>Singleton</h3><p>One shared instance across the entire app. Use this for most services.</p></div>
+          <div class="card t"><div class="tag t">constructor</div><h3>Injection point</h3><p>Declare the service as a constructor parameter. Angular provides the instance automatically.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="6">← Previous</button><span class="slide-pos">8 / 12</span><button class="nb next" data-goto="8">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 8: ROUTER -->
+<div class="slide" id="slide-8">
+  <div class="hero"><div class="badge">Core Concept 6</div><h1>Angular Router</h1><div class="hero-sub">Navigation without page reloads — mapping URL paths to components and protecting routes with Guards.</div></div>
+  <div class="body">
+    <p class="intro">The Angular Router maps URL paths to components, enabling navigation within Xuber without full page reloads. Route Guards protect pages — for example, requiring authentication before accessing Claims.</p>
+    <div class="two">
+      <div>
+        <h2>Xuber route configuration</h2>
+        <table class="rtable"><thead><tr><th>Path</th><th>Component</th></tr></thead><tbody>
+          <tr><td><span class="rpill">/policies</span></td><td><span class="cpill" style="background:var(--dm)">PolicyListComponent</span></td></tr>
+          <tr><td><span class="rpill">/policies/:id</span></td><td><span class="cpill" style="background:var(--teal)">PolicyDetailComponent</span></td></tr>
+          <tr><td><span class="rpill">/claims</span></td><td><span class="cpill" style="background:var(--dp)">ClaimsListComponent</span></td></tr>
+          <tr><td><span class="rpill">/claims/:id/payments</span></td><td><span class="cpill" style="background:#006060">PaymentsComponent</span></td></tr>
+          <tr><td><span class="rpill">**</span></td><td><span class="cpill" style="background:var(--red)">NotFoundComponent</span></td></tr>
+        </tbody></table>
+        <div class="code"><div class="code-hdr"><span class="code-fn">Programmatic navigation</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="cmt">// Navigate from TypeScript:</span>
+<span class="kw">this</span>.<span class="var">router</span>.navigate([
+  <span class="str">'/policies'</span>, <span class="var">policyId</span>
+]);</pre></div></div>
+      </div>
+      <div>
+        <h2>Route Guards</h2>
+        <div class="guards" style="grid-template-columns:1fr">
+          <div class="guard"><div class="guard-name">CanActivate</div><div class="guard-desc">Runs before navigating to a route. Return true to allow, false to block. Use for auth checks on Xuber policy/claims pages.</div></div>
+          <div class="guard"><div class="guard-name">CanDeactivate</div><div class="guard-desc">Runs when leaving a route. Warn users if they have unsaved changes on a Xuber policy edit form.</div></div>
+          <div class="guard"><div class="guard-name">Resolve</div><div class="guard-desc">Pre-fetches data before a route activates. The component receives ready data — no loading spinner needed.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="7">← Previous</button><span class="slide-pos">9 / 12</span><button class="nb next" data-goto="9">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 9: HTTP -->
+<div class="slide" id="slide-9">
+  <div class="hero"><div class="badge">Core Concept 7</div><h1>HttpClient &amp; RxJS Observables</h1><div class="hero-sub">Consuming the Xuber REST API from Angular — asynchronous data without blocking the UI.</div></div>
+  <div class="body">
+    <p class="intro">Angular's HttpClient returns RxJS Observables. Components subscribe to receive data asynchronously — critical for calling Xuber API endpoints (Policies, Claims, LMM) without freezing the browser.</p>
+    <div class="two hl">
+      <div>
+        <div style="background:var(--off);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+          <div style="font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">Request flow</div>
+          <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;font-size:.8rem">
+            <div style="background:var(--teal);color:var(--white);padding:.35rem .6rem;border-radius:5px;font-weight:600">User action</div>
+            <span style="color:var(--muted)">→</span>
+            <div style="background:var(--dm);color:var(--white);padding:.35rem .6rem;border-radius:5px;font-weight:600">Component calls service</div>
+            <span style="color:var(--muted)">→</span>
+            <div style="background:var(--dp);color:var(--white);padding:.35rem .6rem;border-radius:5px;font-weight:600">HttpClient.get()</div>
+            <span style="color:var(--muted)">→</span>
+            <div style="background:var(--red);color:var(--white);padding:.35rem .6rem;border-radius:5px;font-weight:600">Xuber REST API</div>
+            <span style="color:var(--muted)">→</span>
+            <div style="background:var(--teal);color:var(--white);padding:.35rem .6rem;border-radius:5px;font-weight:600">Observable emits</div>
+            <span style="color:var(--muted)">→</span>
+            <div style="background:var(--dm);color:var(--white);padding:.35rem .6rem;border-radius:5px;font-weight:600">View updates</div>
+          </div>
+        </div>
+        <div class="code"><div class="code-hdr"><span class="code-fn">policy.service.ts + component</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="cmt">// Service</span>
+getPolicy(<span class="var">id</span>: <span class="kw">number</span>): Observable&lt;<span class="typ">Policy</span>&gt; {
+  <span class="kw">return this</span>.<span class="var">http</span>.get&lt;<span class="typ">Policy</span>&gt;(
+    <span class="str">`/api/policies/${id}`</span>
+  );
+}
+
+<span class="cmt">// Component ngOnInit</span>
+<span class="kw">this</span>.<span class="var">policyService</span>
+  .getPolicy(<span class="kw">this</span>.<span class="var">policyId</span>)
+  .subscribe(p => { <span class="kw">this</span>.<span class="var">policy</span> = p; });</pre></div></div>
+      </div>
+      <div>
+        <h2>Useful RxJS operators</h2>
+        <div class="ops">
+          <div class="op"><span class="op-name">map()</span><span class="op-desc">Transform the response — extract <code>.data</code> from a wrapper object.</span></div>
+          <div class="op"><span class="op-name">catchError()</span><span class="op-desc">Handle API errors gracefully — return a fallback Observable instead of crashing.</span></div>
+          <div class="op"><span class="op-name">switchMap()</span><span class="op-desc">Cancel the previous HTTP call when a new one starts — essential for search-as-you-type.</span></div>
+          <div class="op"><span class="op-name">takeUntil()</span><span class="op-desc">Auto-unsubscribe when the component is destroyed — prevents memory leaks.</span></div>
+          <div class="op"><span class="op-name">debounceTime()</span><span class="op-desc">Wait for the user to stop typing before making an API call.</span></div>
+        </div>
+        <div class="callout"><strong>Tip:</strong> In templates, prefer the <code>async</code> pipe:<br><code style="color:var(--dm)">{{ policies$ | async }}</code><br>It handles unsubscription automatically.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="8">← Previous</button><span class="slide-pos">10 / 12</span><button class="nb next" data-goto="10">Next →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 10: LAB -->
+<div class="slide" id="slide-10">
+  <div class="hero"><div class="badge">Hands-On Lab</div><h1>Lab Exercise</h1><div class="hero-sub">Building a mini Policy Viewer — apply all concepts in a guided 60-minute exercise using the Xuber sandbox.</div></div>
+  <div class="body">
+    <div class="alert ok"><span class="alert-icon">🛠</span><div class="alert-body"><strong>Before you start</strong><p>Ensure you have Node 20+, Angular CLI 17+, and access to the Xuber sandbox. Ask your trainer for credentials if needed.</p></div></div>
+    <div class="lab">
+      <div class="lab-step"><div class="lab-num" style="background:var(--dm)">1</div><div class="lab-body"><h4>Scaffold the component</h4><p>Run <code>ng generate component policy-viewer</code>. Observe the four generated files (.ts, .html, .css, .spec.ts) and automatic module registration.</p><div class="lab-time" style="color:var(--dm)">5 min</div></div></div>
+      <div class="lab-step"><div class="lab-num" style="background:var(--teal)">2</div><div class="lab-body"><h4>Add a service</h4><p>Generate PolicyService with <code>ng g service policy</code>. Inject HttpClient and add a <code>getPolicy(id)</code> method calling the Xuber sandbox API.</p><div class="lab-time" style="color:var(--teal)">10 min</div></div></div>
+      <div class="lab-step"><div class="lab-num" style="background:var(--dp)">3</div><div class="lab-body"><h4>Wire up the template</h4><p>Use interpolation to display <code>policyNumber</code> and <code>status</code>. Add a Load button with <code>(click)</code> event binding that calls the service.</p><div class="lab-time" style="color:var(--dp)">10 min</div></div></div>
+      <div class="lab-step"><div class="lab-num" style="background:#006060">4</div><div class="lab-body"><h4>Add a route</h4><p>Configure <code>/policy/:id</code> in <code>app-routing.module.ts</code>. Navigate to the route from the nav component using <code>router.navigate()</code>.</p><div class="lab-time" style="color:#006060">10 min</div></div></div>
+      <div class="lab-step"><div class="lab-num" style="background:var(--red)">5</div><div class="lab-body"><h4>Call the API</h4><p>Subscribe to <code>getPolicies()</code> in <code>ngOnInit()</code>. Handle loading and error states in the template using <code>*ngIf</code>.</p><div class="lab-time" style="color:var(--red)">15 min</div></div></div>
+      <div class="lab-step"><div class="lab-num" style="background:var(--dm)">6</div><div class="lab-body"><h4>Review &amp; discuss</h4><p>Trainer walkthrough of a completed solution. Q&amp;A and knowledge-check questions before moving to the quiz.</p><div class="lab-time" style="color:var(--dm)">10 min</div></div></div>
+    </div>
+    <div class="alert info"><span class="alert-icon">📝</span><div class="alert-body"><strong>Ready for the quiz?</strong><p>Once you've completed the lab, take the Module 1 Knowledge Quiz. You need 70% to pass.</p></div></div>
+    <button class="btn p" id="goToQuizBtn">Take the Quiz →</button>
+  </div>
+  <div class="slide-nav"><button class="nb prev" data-goto="9">← Previous</button><span class="slide-pos">11 / 12</span><button class="nb next" data-goto="11">Take Quiz →</button></div>
+</div>
+
+<!-- ════════════════════════════════════ SLIDE 11: QUIZ -->
+<div class="slide" id="slide-11">
+  <div id="qIntro">
+    <div class="hero"><div class="badge quiz">Module 1 Assessment</div><h1>Knowledge Quiz</h1><div class="hero-sub">10 questions covering all concepts. Score 70% or more to pass. Instant feedback on every answer. Retry just the wrong ones if needed.</div></div>
+    <div class="body">
+      <div class="grid g3" style="margin-bottom:1.5rem">
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Questions</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">70%</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Pass mark</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">~10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Minutes</div></div>
+      </div>
+      <div class="callout" style="margin-bottom:1.5rem"><strong>How it works:</strong> Select your answer — you'll see immediate feedback after each question. At the end you get a full score breakdown. If you don't pass, click "Retry incorrect questions" to attempt only the ones you got wrong. Your score accumulates across retries.</div>
+      <button class="btn p" id="startQuizBtn">Start Quiz →</button>
+    </div>
+  </div>
+  <div id="qScreen" style="display:none">
+    <div class="hero" style="padding:1.5rem 2.5rem">
+      <div class="q-hdr"><span class="q-cnt" id="qCnt">Question 1 of 10</span><span class="q-topic" id="qTop"></span></div>
+      <div class="q-text" id="qTxt"></div>
+    </div>
+    <div class="body">
+      <div class="opts" id="optsC"></div>
+      <div class="fb" id="fbBox"><span id="fbIcon" style="font-size:1rem;flex-shrink:0;margin-top:.1rem"></span><span id="fbTxt"></span></div>
+      <div class="q-foot">
+        <div class="dots" id="dotRow"></div>
+        <button class="btn p" id="btnNext" style="display:none">Next →</button>
+      </div>
+    </div>
+  </div>
+  <div id="qResults" style="display:none">
+    <div class="res-hero">
+      <div class="ring-wrap"><div class="ring" id="ring"><div class="ring-pct" id="rPct">—</div><div class="ring-lbl">Score</div></div></div>
+      <div class="res-status" id="rStatus"></div>
+      <div class="res-msg" id="rMsg"></div>
+    </div>
+    <div class="res-body">
+      <div class="band-bar"><div class="bseg be" id="bE">Expert 90–100%</div><div class="bseg bp" id="bP">Proficient 80–89%</div><div class="bseg bd" id="bD">Developing 70–79%</div><div class="bseg bf" id="bF">Foundation &lt;70%</div></div>
+      <div class="sg"><div class="sb"><div class="sv g" id="stC">—</div><div class="sl">Correct</div></div><div class="sb"><div class="sv r" id="stW">—</div><div class="sl">Incorrect</div></div></div>
+      <div class="rev-lbl">Question Review — click to expand</div>
+      <div id="revList"></div>
+      <div class="res-acts" id="resAct"></div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// All JS runs inside DOMContentLoaded — Edge-safe
+// ═══════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+
+// ── NAVIGATION ─────────────────────────────────────────
+var current = 0;
+var TOTAL = 12;
+
+function goSlide(n) {
+  document.getElementById('slide-' + current).classList.remove('active');
+  document.getElementById('slide-' + n).classList.add('active');
+  // update sidebar nav buttons
+  document.querySelectorAll('button.nav-item').forEach(function(btn) {
+    var s = parseInt(btn.getAttribute('data-slide'), 10);
+    btn.classList.remove('active');
+    if (s === n) btn.classList.add('active');
+    if (s < n)   btn.classList.add('done');
+  });
+  current = n;
+  // progress bar
+  document.getElementById('pf').style.width = ((n / (TOTAL - 1)) * 100) + '%';
+  // mode badge
+  document.getElementById('hdrMode').textContent = n === 11 ? 'Quiz' : 'Training';
+  // scroll content area and window to top
+  var ca = document.getElementById('contentArea');
+  if (ca) ca.scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+// Wire up all sidebar nav buttons
+document.querySelectorAll('button.nav-item').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    goSlide(parseInt(btn.getAttribute('data-slide'), 10));
+  });
+});
+
+// Wire up all slide bottom nav buttons (data-goto attribute)
+document.querySelectorAll('button[data-goto]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    goSlide(parseInt(btn.getAttribute('data-goto'), 10));
+  });
+});
+
+// Quiz launch buttons
+var quizLaunch = document.getElementById('quizLaunchBtn');
+if (quizLaunch) quizLaunch.addEventListener('click', function() { goSlide(11); });
+
+var goToQuiz = document.getElementById('goToQuizBtn');
+if (goToQuiz) goToQuiz.addEventListener('click', function() { goSlide(11); });
+
+var startBtn = document.getElementById('startQuizBtn');
+if (startBtn) startBtn.addEventListener('click', function() { startQuiz(); });
+
+var btnNext = document.getElementById('btnNext');
+if (btnNext) btnNext.addEventListener('click', nextQ);
+
+// ── QUIZ ───────────────────────────────────────────────
+var QS = [
+  {topic:"Architecture", q:"What is Angular's primary role within the Xuber HTMLUI architecture?",
+   opts:["It manages the database and runs SQL queries against Xuber tables","It provides the browser-facing SPA layer (HTML + TypeScript + CSS)","It acts as the .NET REST API that processes business logic","It replaces the AS400 back-end for policy processing"],
+   a:1, exp:"Angular is Layer 2 in the Xuber stack — the browser-facing SPA. The .NET API sits beneath it."},
+  {topic:"Components", q:"Which decorator marks a TypeScript class as an Angular component and attaches metadata such as its selector and templateUrl?",
+   opts:["@NgModule","@Injectable","@Component","@Input"],
+   a:2, exp:"@Component attaches the selector, templateUrl and styleUrls metadata to a class, telling Angular how to render it."},
+  {topic:"@Input", q:"A developer wants to pass a policy number from a parent into a child component. Which Angular mechanism should they use?",
+   opts:["@Output() and EventEmitter","@Input() property on the child component","A shared localStorage value","The Angular Router with query parameters"],
+   a:1, exp:"@Input() on the child lets a parent bind a value in via property binding: <app-child [policyNumber]=\"id\">."},
+  {topic:"NgModules", q:"Which correctly describes the purpose of an NgModule in Angular?",
+   opts:["A TypeScript interface for API response shapes","A class that groups components, directives, pipes, and services, controlling their visibility","The Angular equivalent of a global CSS stylesheet","A built-in service for making HTTP requests"],
+   a:1, exp:"NgModules group related building blocks and control their visibility. AppModule is root; feature modules own their components."},
+  {topic:"Interpolation", q:"A developer writes {{ userName }} in a template. What type of data binding is this?",
+   opts:["Property binding — sets a DOM property dynamically","Two-way binding — syncs input and class","Event binding — listens for a DOM event","Interpolation — renders a class property value as text"],
+   a:3, exp:"{{ }} is interpolation — a one-way binding that renders a TypeScript class property as text in the template."},
+  {topic:"Property Binding", q:"Which syntax would you use to disable a button when isSaving is true?",
+   opts:["(disabled)=\"isSaving\"","{{ isSaving }}","[disabled]=\"isSaving\"","[(disabled)]=\"isSaving\""],
+   a:2, exp:"[disabled]=\"isSaving\" is property binding — square brackets bind a DOM property to a TypeScript expression."},
+  {topic:"Services & DI", q:"What is the key benefit of Angular's Dependency Injection for a service like PolicyService?",
+   opts:["It compiles TypeScript to faster JavaScript","It automatically generates unit tests","Components receive a shared instance without manually calling 'new'","It binds service data directly to HTML templates"],
+   a:2, exp:"DI provides a shared singleton to any component declaring the service in its constructor."},
+  {topic:"Angular Router", q:"In Angular routing, what does the wildcard path ** typically map to?",
+   opts:["The application's home / default route","A route matching all authenticated users","A catch-all route, usually a 404 NotFoundComponent","A lazy-loaded module that loads all other modules"],
+   a:2, exp:"** is the catch-all wildcard. It must be last in the route array and maps to NotFoundComponent."},
+  {topic:"Router Navigation", q:"How should a developer navigate to /claims/42/payments from TypeScript code?",
+   opts:["window.location.href = '/claims/42/payments'","this.router.navigate(['/claims', 42, 'payments'])","RouterLink.go('/claims/42/payments')","document.getElementById('link').click()"],
+   a:1, exp:"this.router.navigate() is the Angular way. window.location.href triggers a full page reload, destroying SPA state."},
+  {topic:"HttpClient & RxJS", q:"What does HttpClient.get() return and how does a component receive the data?",
+   opts:["A Promise; the component awaits it with async/await","A plain JSON object; Angular assigns it automatically","An RxJS Observable; the component calls .subscribe() to receive emitted values","A callback; registered with addEventListener()"],
+   a:2, exp:"HttpClient returns an Observable. Components .subscribe() to receive async data. The async pipe handles unsubscription automatically."}
+];
+
+var qSet = [], qIdx = 0, answers = {}, answered = false, isRetry = false;
+
+function startQuiz(retryIdx) {
+  isRetry = !!retryIdx;
+  if (retryIdx) {
+    qSet = [];
+    for (var i = 0; i < retryIdx.length; i++) {
+      var q = Object.assign({}, QS[retryIdx[i]]);
+      q.orig = retryIdx[i];
+      qSet.push(q);
+    }
+  } else {
+    qSet = [];
+    for (var j = 0; j < QS.length; j++) {
+      var q2 = Object.assign({}, QS[j]);
+      q2.orig = j;
+      qSet.push(q2);
+    }
+  }
+  qIdx = 0;
+  answered = false;
+  document.getElementById('qIntro').style.display = 'none';
+  document.getElementById('qScreen').style.display = 'block';
+  document.getElementById('qResults').style.display = 'none';
+  renderQ();
+}
+
+function renderQ() {
+  var q = qSet[qIdx];
+  document.getElementById('qCnt').textContent = 'Question ' + (qIdx + 1) + ' of ' + qSet.length + (isRetry ? ' (Retry)' : '');
+  document.getElementById('qTop').textContent = q.topic;
+  document.getElementById('qTxt').textContent = q.q;
+  var c = document.getElementById('optsC');
+  c.innerHTML = '';
+  var letters = ['A','B','C','D'];
+  for (var i = 0; i < q.opts.length; i++) {
+    (function(idx) {
+      var b = document.createElement('button');
+      b.className = 'opt';
+      b.innerHTML = '<span class="opt-l">' + letters[idx] + '</span><span>' + q.opts[idx] + '</span>';
+      b.addEventListener('click', function() { pick(idx); });
+      c.appendChild(b);
+    })(i);
+  }
+  document.getElementById('fbBox').className = 'fb';
+  document.getElementById('btnNext').style.display = 'none';
+  renderDots();
+}
+
+function pick(chosen) {
+  if (answered) return;
+  answered = true;
+  var q = qSet[qIdx];
+  var ok = chosen === q.a;
+  answers[q.orig] = { chosen: chosen, correct: ok };
+  var opts = document.querySelectorAll('button.opt');
+  for (var i = 0; i < opts.length; i++) {
+    opts[i].disabled = true;
+    if (i === q.a) opts[i].classList.add('correct');
+    if (i === chosen && !ok) opts[i].classList.add('wrong');
+  }
+  var fb = document.getElementById('fbBox');
+  var icon = document.getElementById('fbIcon');
+  var txt = document.getElementById('fbTxt');
+  if (ok) {
+    fb.className = 'fb cfb show';
+    icon.textContent = '✓';
+    txt.textContent = 'Correct! ' + q.exp;
+  } else {
+    fb.className = 'fb wfb show';
+    icon.textContent = '✗';
+    txt.innerHTML = '<strong>Incorrect.</strong> The right answer is <strong>' + ['A','B','C','D'][q.a] + ': ' + q.opts[q.a] + '</strong>. ' + q.exp;
+  }
+  renderDots();
+  var bn = document.getElementById('btnNext');
+  bn.style.display = 'inline-flex';
+  bn.textContent = qIdx < qSet.length - 1 ? 'Next →' : 'See Results →';
+}
+
+function nextQ() {
+  qIdx++;
+  if (qIdx >= qSet.length) {
+    showResults();
+  } else {
+    answered = false;
+    renderQ();
+  }
+}
+
+function renderDots() {
+  var row = document.getElementById('dotRow');
+  row.innerHTML = '';
+  for (var i = 0; i < qSet.length; i++) {
+    var d = document.createElement('div');
+    d.className = 'dot';
+    var a = answers[qSet[i].orig];
+    if (i === qIdx) d.classList.add('cur');
+    else if (a && a.correct) d.classList.add('c');
+    else if (a && !a.correct) d.classList.add('w');
+    row.appendChild(d);
+  }
+}
+
+function cumCorrect() {
+  var count = 0;
+  var keys = Object.keys(answers);
+  for (var i = 0; i < keys.length; i++) {
+    if (answers[keys[i]].correct) count++;
+  }
+  return count;
+}
+
+function showResults() {
+  var total = QS.length;
+  var correct = cumCorrect();
+  var pct = Math.round((correct / total) * 100);
+  var pass = pct >= 70;
+  document.getElementById('qScreen').style.display = 'none';
+  document.getElementById('qResults').style.display = 'block';
+  var ring = document.getElementById('ring');
+  ring.className = 'ring ' + (pass ? 'pass' : 'fail');
+  document.getElementById('rPct').textContent = pct + '%';
+  var st = document.getElementById('rStatus');
+  st.textContent = pass ? '🎉 Pass' : '✗ Not yet';
+  st.className = 'res-status ' + (pass ? 'pass' : 'fail');
+  document.getElementById('rMsg').textContent = pass
+    ? 'You scored ' + correct + ' out of ' + total + '. Solid Angular foundation demonstrated.'
+    : 'You scored ' + correct + ' out of ' + total + '. You need ' + Math.ceil(total * 0.7) + ' correct to pass. Review below and retry.';
+  var bands = ['bE','bP','bD','bF'];
+  for (var b = 0; b < bands.length; b++) document.getElementById(bands[b]).classList.remove('on');
+  if (pct >= 90)      document.getElementById('bE').classList.add('on');
+  else if (pct >= 80) document.getElementById('bP').classList.add('on');
+  else if (pct >= 70) document.getElementById('bD').classList.add('on');
+  else                document.getElementById('bF').classList.add('on');
+  document.getElementById('stC').textContent = correct;
+  document.getElementById('stW').textContent = total - correct;
+  buildReview();
+  var act = document.getElementById('resAct');
+  act.innerHTML = '';
+  if (!pass) {
+    var wrong = [];
+    var akeys = Object.keys(answers);
+    for (var k = 0; k < akeys.length; k++) {
+      if (!answers[akeys[k]].correct) wrong.push(parseInt(akeys[k], 10));
+    }
+    var rb = document.createElement('button');
+    rb.className = 'btn p';
+    rb.textContent = 'Retry ' + wrong.length + ' incorrect question' + (wrong.length > 1 ? 's' : '') + ' →';
+    (function(w) { rb.addEventListener('click', function() { startQuiz(w); }); })(wrong);
+    act.appendChild(rb);
+  }
+  var restart = document.createElement('button');
+  restart.className = pass ? 'btn p' : 'btn s';
+  restart.textContent = '↺ Restart from scratch';
+  restart.addEventListener('click', function() {
+    answers = {};
+    document.getElementById('qResults').style.display = 'none';
+    document.getElementById('qIntro').style.display = 'block';
+  });
+  act.appendChild(restart);
+  if (pass) {
+    var back = document.createElement('button');
+    back.className = 'btn s';
+    back.textContent = '← Back to training';
+    back.addEventListener('click', function() { goSlide(0); });
+    act.appendChild(back);
+  }
+}
+
+function buildReview() {
+  var list = document.getElementById('revList');
+  list.innerHTML = '';
+  for (var i = 0; i < QS.length; i++) {
+    var a = answers[i];
+    if (!a) continue;
+    var sc = a.correct ? 'c' : 'w';
+    var item = document.createElement('div');
+    item.className = 'ri';
+    var wrongHtml = !a.correct
+      ? '<div>Your answer: <span class="ya">' + ['A','B','C','D'][a.chosen] + ': ' + QS[i].opts[a.chosen] + '</span></div>'
+      : '';
+    item.innerHTML =
+      '<div class="rq"><div class="rdot ' + sc + '"></div>' +
+      '<div class="rqt">Q' + (i+1) + ': ' + QS[i].q + '</div>' +
+      '<span class="rbadge ' + sc + '">' + (a.correct ? '✓ Correct' : '✗ Wrong') + '</span>' +
+      '<span class="rchev">▼</span></div>' +
+      '<div class="rdetail">' + wrongHtml +
+      '<div>Correct answer: <span class="ra">' + ['A','B','C','D'][QS[i].a] + ': ' + QS[i].opts[QS[i].a] + '</span></div>' +
+      '<div class="expl">' + QS[i].exp + '</div></div>';
+    item.querySelector('.rq').addEventListener('click', function() {
+      this.closest('.ri').classList.toggle('open');
+    });
+    list.appendChild(item);
+  }
+}
+
+}); // end DOMContentLoaded
+</script>
+</body>
+</html>
