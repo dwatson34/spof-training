@@ -153,7 +153,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="stat-lbl">Completed</div>
     </div>
     <div class="stat">
-      <div class="stat-val" id="totalCount">15</div>
+      <div class="stat-val" id="totalCount">16</div>
       <div class="stat-lbl">Modules</div>
     </div>
     <div class="overall-ring" title="Overall progress">
@@ -169,7 +169,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
   <div class="hero-meta">
     <div class="meta-pill">&#9679; <span>5</span> Critical SPOFs — XE team</div>
     <div class="meta-pill">&#9679; <span>7</span> Critical/High SPOFs — RM team</div>
-    <div class="meta-pill">&#9679; <span>3</span> Critical/High SPOFs — Genius team</div>
+    <div class="meta-pill">&#9679; <span>4</span> Critical/High SPOFs — Genius team</div>
     <div class="meta-pill">&#9679; 70% to pass each quiz</div>
   </div>
 </div>
@@ -177,7 +177,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
 <div class="prog-section">
   <div class="prog-label">
     <span>Overall progress</span>
-    <strong id="progLabel">0 of 15 modules passed</strong>
+    <strong id="progLabel">0 of 16 modules passed</strong>
   </div>
   <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 </div>
@@ -452,7 +452,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="team-icon" style="background:linear-gradient(135deg,#8a5500,#ED9B33)">GN</div>
       <div>
         <div class="team-title">Genius Team Modules</div>
-        <div class="team-sub">Rating setup, SmartTest regression and Intercept messaging — 2 modules</div>
+        <div class="team-sub">Rating setup, SmartTest regression, Intercept messaging and Bureau processing — 3 modules</div>
       </div>
     </div>
     <div class="module-grid">
@@ -469,6 +469,24 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
         <div class="card-bottom">
           <div class="card-score" id="score-gn_rating">Not started</div>
           <div class="card-status st-notstarted" id="status-gn_rating">
+            <div class="status-dot"></div><span>Not started</span>
+          </div>
+          <span class="card-arrow">&#8594;</span>
+        </div>
+      </a>
+
+      <a class="module-card" href="v2_Genius_Intercept_Training_5.html" data-key="gn_bureau">
+        <div class="card-top">
+          <div class="card-badges">
+            <span class="badge badge-high">High SPOF</span>
+            <span class="badge badge-team-genius">Genius Team</span>
+          </div>
+          <div class="card-title">Genius Bureau Processing</div>
+          <div class="card-desc">The full Bureau pipeline, closings on-line edit, GBCM11 error messages, Bureau claims, ELASS &amp; downloads, configuration and parameters — 2 SMEs.</div>
+        </div>
+        <div class="card-bottom">
+          <div class="card-score" id="score-gn_bureau">Not started</div>
+          <div class="card-status st-notstarted" id="status-gn_bureau">
             <div class="status-dot"></div><span>Not started</span>
           </div>
           <span class="card-arrow">&#8594;</span>
@@ -508,7 +526,7 @@ var KEYS = [
   'xe_api','xe_claims',
   'ang1','ang2','ang3','ang4',
   'rm_aws','rm_iseries','rm_sql','rm_azure','rm_solr','rm_dr','rm_patches',
-  'gn_rating','gn_intercept'
+  'gn_rating','gn_bureau','gn_intercept'
 ];
 var STORE_PREFIX = 'xuber_training_';
 
