@@ -153,7 +153,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="stat-lbl">Completed</div>
     </div>
     <div class="stat">
-      <div class="stat-val" id="totalCount">19</div>
+      <div class="stat-val" id="totalCount">20</div>
       <div class="stat-lbl">Modules</div>
     </div>
     <div class="overall-ring" title="Overall progress">
@@ -177,7 +177,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
 <div class="prog-section">
   <div class="prog-label">
     <span>Overall progress</span>
-    <strong id="progLabel">0 of 19 modules passed</strong>
+    <strong id="progLabel">0 of 20 modules passed</strong>
   </div>
   <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 </div>
@@ -416,8 +416,8 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
             <span class="badge badge-critical">Critical SPOF</span>
             <span class="badge badge-team-rm">RM Team</span>
           </div>
-          <div class="card-title">Azure Pipelines and SmartTest</div>
-          <div class="card-desc">CI/CD pipeline approval and monitoring, pipeline YAML, SmartTest regression testing and result classification — 0 SMEs.</div>
+          <div class="card-title">Azure Pipelines &amp; CI/CD</div>
+          <div class="card-desc">CI/CD pipeline approval and monitoring, pipeline YAML, build stages, deployment gates and release management &#8212; 0 SMEs.</div>
         </div>
         <div class="card-bottom">
           <div class="card-score" id="score-rm_azure">Not started</div>
@@ -491,23 +491,41 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="team-icon" style="background:linear-gradient(135deg,#8a5500,#ED9B33)">GN</div>
       <div>
         <div class="team-title">Genius Team Modules</div>
-        <div class="team-sub">Rating setup, SmartTest regression, Intercept messaging and Bureau processing — 3 modules</div>
+        <div class="team-sub">Rating, SmartTest regression, Bureau processing and Intercept messaging &#8212; 4 modules</div>
       </div>
     </div>
     <div class="module-grid">
 
-      <a class="module-card" href="v2_Genius_Rating_SmartTest_Training.html" data-key="gn_rating">
+      <a class="module-card" href="v2_Genius_Rating_Training.html" data-key="gn_rating">
         <div class="card-top">
           <div class="card-badges">
             <span class="badge badge-critical">Critical SPOF</span>
             <span class="badge badge-team-genius">Genius Team</span>
           </div>
-          <div class="card-title">Genius Admin Rating Setup and SmartTest</div>
-          <div class="card-desc">Rating engine, base rates, factors, loadings, configuring rating structures and running PTF regression — 0 SMEs (Rating), 1 SME (SmartTest).</div>
+          <div class="card-title">Genius Rating</div>
+          <div class="card-desc">Rating tables, factors, routines and how Genius calculates premiums automatically. Covers setup, maintenance, overrides and the underwriting experience &#8212; 0 SMEs.</div>
         </div>
         <div class="card-bottom">
           <div class="card-score" id="score-gn_rating">Not started</div>
           <div class="card-status st-notstarted" id="status-gn_rating">
+            <div class="status-dot"></div><span>Not started</span>
+          </div>
+          <span class="card-arrow">&#8594;</span>
+        </div>
+      </a>
+
+      <a class="module-card" href="v2_Genius_SmartTest_Training.html" data-key="gn_smarttest">
+        <div class="card-top">
+          <div class="card-badges">
+            <span class="badge badge-critical">Critical SPOF</span>
+            <span class="badge badge-team-genius">Genius Team</span>
+          </div>
+          <div class="card-title">Testing Genius using SmartTest</div>
+          <div class="card-desc">Architecture, running scripts, failure triage (6 categories), PTF preparation and capturing. Animated flows and scenario challenges &#8212; 1 SME.</div>
+        </div>
+        <div class="card-bottom">
+          <div class="card-score" id="score-gn_smarttest">Not started</div>
+          <div class="card-status st-notstarted" id="status-gn_smarttest">
             <div class="status-dot"></div><span>Not started</span>
           </div>
           <span class="card-arrow">&#8594;</span>
@@ -565,7 +583,7 @@ var KEYS = [
   'xe_htmlui_beg','xe_htmlui_int','xe_htmlui_exp',
   'ang3','xe_claims','ang1','ang4','ang2',
   'rm_aws','rm_iseries','rm_sql','rm_azure','rm_solr','rm_dr','rm_patches',
-  'gn_rating','gn_bureau','gn_intercept'
+  'gn_rating','gn_smarttest','gn_bureau','gn_intercept'
 ];
 var STORE_PREFIX = 'xuber_training_';
 
