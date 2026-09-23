@@ -153,7 +153,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="stat-lbl">Completed</div>
     </div>
     <div class="stat">
-      <div class="stat-val" id="totalCount">17</div>
+      <div class="stat-val" id="totalCount">19</div>
       <div class="stat-lbl">Modules</div>
     </div>
     <div class="overall-ring" title="Overall progress">
@@ -169,7 +169,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
   <div class="hero-meta">
     <div class="meta-pill">&#9679; <span>5</span> Critical SPOFs — XE team</div>
     <div class="meta-pill">&#9679; <span>7</span> Critical/High SPOFs — RM team</div>
-    <div class="meta-pill">&#9679; <span>5</span> Critical/High SPOFs — Genius team</div>
+    <div class="meta-pill">&#9679; <span>4</span> Critical/High SPOFs — Genius team</div>
     <div class="meta-pill">&#9679; 70% to pass each quiz</div>
   </div>
 </div>
@@ -177,7 +177,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
 <div class="prog-section">
   <div class="prog-label">
     <span>Overall progress</span>
-    <strong id="progLabel">0 of 17 modules passed</strong>
+    <strong id="progLabel">0 of 19 modules passed</strong>
   </div>
   <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 </div>
@@ -190,23 +190,80 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="team-icon" style="background:linear-gradient(135deg,#5F249F,#330072)">XE</div>
       <div>
         <div class="team-title">XE Team Modules</div>
-        <div class="team-sub">API architecture, claims transactions and Angular engineering — 6 modules</div>
+        <div class="team-sub">HTMLUI API (3 levels), claims transactions and Angular engineering — 8 modules</div>
       </div>
     </div>
     <div class="module-grid">
 
-      <a class="module-card" href="v2_XE_HTMLUI_API_Training.html" data-key="xe_api">
+      <a class="module-card" href="v2_XE_HTMLUI_Beginner_Training.html" data-key="xe_htmlui_beg">
+        <div class="card-top">
+          <div class="card-badges">
+            <span class="badge badge-critical">Critical SPOF</span>
+            <span class="badge badge-team-xe">XE Team</span>
+            <span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span>
+          </div>
+          <div class="card-title">Xuber HTMLUI &#8212; Beginner</div>
+          <div class="card-desc">What the HTMLUI is, the real folder structure, how a request works, reading a service file and basic debugging. Start here.</div>
+        </div>
+        <div class="card-bottom">
+          <div class="card-score" id="score-xe_htmlui_beg">Not started</div>
+          <div class="card-status st-notstarted" id="status-xe_htmlui_beg">
+            <div class="status-dot"></div><span>Not started</span>
+          </div>
+          <span class="card-arrow">&#8594;</span>
+        </div>
+      </a>
+
+      <a class="module-card" href="v2_XE_HTMLUI_Intermediate_Training.html" data-key="xe_htmlui_int">
+        <div class="card-top">
+          <div class="card-badges">
+            <span class="badge badge-critical">Critical SPOF</span>
+            <span class="badge badge-team-xe">XE Team</span>
+            <span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span>
+          </div>
+          <div class="card-title">Xuber HTMLUI &#8212; Intermediate</div>
+          <div class="card-desc">XuWebApiManager internals, all service patterns, complete XuClaimsService and XuUnderwritingService endpoint references.</div>
+        </div>
+        <div class="card-bottom">
+          <div class="card-score" id="score-xe_htmlui_int">Not started</div>
+          <div class="card-status st-notstarted" id="status-xe_htmlui_int">
+            <div class="status-dot"></div><span>Not started</span>
+          </div>
+          <span class="card-arrow">&#8594;</span>
+        </div>
+      </a>
+
+      <a class="module-card" href="v2_XE_HTMLUI_Expert_Training.html" data-key="xe_htmlui_exp">
+        <div class="card-top">
+          <div class="card-badges">
+            <span class="badge badge-critical">Critical SPOF</span>
+            <span class="badge badge-team-xe">XE Team</span>
+            <span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span>
+          </div>
+          <div class="card-title">Xuber HTMLUI &#8212; Expert</div>
+          <div class="card-desc">Adding service methods, the 28 real claims components, lazy loading, routing and advanced multi-layer debugging.</div>
+        </div>
+        <div class="card-bottom">
+          <div class="card-score" id="score-xe_htmlui_exp">Not started</div>
+          <div class="card-status st-notstarted" id="status-xe_htmlui_exp">
+            <div class="status-dot"></div><span>Not started</span>
+          </div>
+          <span class="card-arrow">&#8594;</span>
+        </div>
+      </a>
+
+      <a class="module-card" href="v2_Angular_Module3_Training.html" data-key="ang3">
         <div class="card-top">
           <div class="card-badges">
             <span class="badge badge-critical">Critical SPOF</span>
             <span class="badge badge-team-xe">XE Team</span>
           </div>
-          <div class="card-title">Xuber HTMLUI API Part</div>
-          <div class="card-desc">REST architecture, OpenAPI contracts, TypeScript models, JWT auth, HTTP status codes and debugging. 0 of 28 SMEs.</div>
+          <div class="card-title">Xuber HTMLUI in Practice</div>
+          <div class="card-desc">Codebase tour, local dev setup, debugging, Git workflow, build pipeline and deployment procedures.</div>
         </div>
         <div class="card-bottom">
-          <div class="card-score" id="score-xe_api">Not started</div>
-          <div class="card-status st-notstarted" id="status-xe_api">
+          <div class="card-score" id="score-ang3">Not started</div>
+          <div class="card-status st-notstarted" id="status-ang3">
             <div class="status-dot"></div><span>Not started</span>
           </div>
           <span class="card-arrow">&#8594;</span>
@@ -249,42 +306,6 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
         </div>
       </a>
 
-      <a class="module-card" href="v2_Angular_Module2_Training.html" data-key="ang2">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-          </div>
-          <div class="card-title">Angular Advanced</div>
-          <div class="card-desc">Signals, Reactive Forms, advanced RxJS operators (forkJoin, combineLatest, exhaustMap) and state management.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-ang2">Not started</div>
-          <div class="card-status st-notstarted" id="status-ang2">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_Angular_Module3_Training.html" data-key="ang3">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-          </div>
-          <div class="card-title">Xuber HTMLUI in Practice</div>
-          <div class="card-desc">Codebase tour, local dev setup, debugging, Git workflow, build pipeline and deployment procedures.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-ang3">Not started</div>
-          <div class="card-status st-notstarted" id="status-ang3">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
       <a class="module-card" href="v2_Angular_Module4_Training.html" data-key="ang4">
         <div class="card-top">
           <div class="card-badges">
@@ -297,6 +318,24 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
         <div class="card-bottom">
           <div class="card-score" id="score-ang4">Not started</div>
           <div class="card-status st-notstarted" id="status-ang4">
+            <div class="status-dot"></div><span>Not started</span>
+          </div>
+          <span class="card-arrow">&#8594;</span>
+        </div>
+      </a>
+
+      <a class="module-card" href="v2_Angular_Module2_Training.html" data-key="ang2">
+        <div class="card-top">
+          <div class="card-badges">
+            <span class="badge badge-critical">Critical SPOF</span>
+            <span class="badge badge-team-xe">XE Team</span>
+          </div>
+          <div class="card-title">Angular Advanced</div>
+          <div class="card-desc">Signals, Reactive Forms, advanced RxJS operators (forkJoin, combineLatest, exhaustMap) and state management.</div>
+        </div>
+        <div class="card-bottom">
+          <div class="card-score" id="score-ang2">Not started</div>
+          <div class="card-status st-notstarted" id="status-ang2">
             <div class="status-dot"></div><span>Not started</span>
           </div>
           <span class="card-arrow">&#8594;</span>
@@ -452,19 +491,19 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="team-icon" style="background:linear-gradient(135deg,#8a5500,#ED9B33)">GN</div>
       <div>
         <div class="team-title">Genius Team Modules</div>
-        <div class="team-sub">Rating, SmartTest regression, Bureau processing and Intercept messaging — 4 modules</div>
+        <div class="team-sub">Rating setup, SmartTest regression, Intercept messaging and Bureau processing — 3 modules</div>
       </div>
     </div>
     <div class="module-grid">
 
-      <a class="module-card" href="v2_Genius_Rating_Training.html" data-key="gn_rating">
+      <a class="module-card" href="v2_Genius_Rating_SmartTest_Training.html" data-key="gn_rating">
         <div class="card-top">
           <div class="card-badges">
             <span class="badge badge-critical">Critical SPOF</span>
             <span class="badge badge-team-genius">Genius Team</span>
           </div>
-          <div class="card-title">Genius Rating</div>
-          <div class="card-desc">Rating tables, factors, routines and how Genius calculates premiums automatically. Covers setup, maintenance, overrides and the underwriting experience — 0 SMEs.</div>
+          <div class="card-title">Genius Admin Rating Setup and SmartTest</div>
+          <div class="card-desc">Rating engine, base rates, factors, loadings, configuring rating structures and running PTF regression — 0 SMEs (Rating), 1 SME (SmartTest).</div>
         </div>
         <div class="card-bottom">
           <div class="card-score" id="score-gn_rating">Not started</div>
@@ -487,25 +526,6 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
         <div class="card-bottom">
           <div class="card-score" id="score-gn_bureau">Not started</div>
           <div class="card-status st-notstarted" id="status-gn_bureau">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-
-      <a class="module-card" href="v2_Genius_SmartTest_Training.html" data-key="gn_smarttest">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-genius">Genius Team</span>
-          </div>
-          <div class="card-title">Testing Genius using SmartTest</div>
-          <div class="card-desc">Automated regression testing after cumulative PTFs. Architecture, running scripts, failure triage, PTF preparation and capturing — 1 SME.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-gn_smarttest">Not started</div>
-          <div class="card-status st-notstarted" id="status-gn_smarttest">
             <div class="status-dot"></div><span>Not started</span>
           </div>
           <span class="card-arrow">&#8594;</span>
@@ -542,10 +562,10 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
 <script>
 // ── STORAGE KEYS ────────────────────────────────────────────
 var KEYS = [
-  'xe_api','xe_claims',
-  'ang1','ang2','ang3','ang4',
+  'xe_htmlui_beg','xe_htmlui_int','xe_htmlui_exp',
+  'ang3','xe_claims','ang1','ang4','ang2',
   'rm_aws','rm_iseries','rm_sql','rm_azure','rm_solr','rm_dr','rm_patches',
-  'gn_rating','gn_smarttest','gn_bureau','gn_intercept'
+  'gn_rating','gn_bureau','gn_intercept'
 ];
 var STORE_PREFIX = 'xuber_training_';
 
