@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XIAP Framework — Intermediate Training</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 40px);
+}
+.header {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: #fff;
+  padding: 30px;
+  text-align: center;
+}
+.header h1 {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+}
+.header p {
+  font-size: 1.1em;
+  opacity: 0.95;
+}
+.badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.slides {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow-y: auto;
+}
+.slide.active {
+  opacity: 1;
+}
+.slide h2 {
+  color: #f5576c;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+.slide h3 {
+  color: #f093fb;
+  font-size: 1.3em;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+.slide p, .slide li {
+  font-size: 1.05em;
+  line-height: 1.8;
+  margin-bottom: 12px;
+  color: #555;
+}
+.slide ul {
+  margin-left: 25px;
+}
+.slide code {
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #c7254e;
+}
+.slide pre {
+  background: #2d3436;
+  color: #00ff00;
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 15px 0;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+.flow-step {
+  background: #fff0f5;
+  border-left: 4px solid #f5576c;
+  padding: 12px 15px;
+  margin: 12px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.flow-step:hover {
+  background: #ffe6ec;
+  transform: translateX(4px);
+}
+.flow-step-num {
+  display: inline-block;
+  background: #f5576c;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 28px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+.table-compact {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 0.95em;
+}
+.table-compact th {
+  background: #f5576c;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+}
+.table-compact td {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
+}
+.table-compact tr:hover {
+  background: #f5f5f5;
+}
+.sidebar {
+  width: 280px;
+  background: #f5f5f5;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+  padding: 20px;
+}
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #f5576c;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
+}
+button:hover {
+  background: #f093fb;
+}
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.slide-counter {
+  text-align: center;
+  font-size: 0.9em;
+  color: #666;
+  margin: 10px 0;
+}
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  margin: 15px 0;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f093fb, #f5576c);
+  width: 0%;
+  transition: width 0.3s;
+}
+.quiz-section {
+  margin-top: 20px;
+}
+.quiz-section h3 {
+  color: #f5576c;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+.quiz-q {
+  background: #fff9e6;
+  border-left: 4px solid #ffc107;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 4px;
+}
+.quiz-q-num {
+  font-weight: bold;
+  color: #f5576c;
+  margin-bottom: 8px;
+}
+.quiz-opt {
+  margin: 8px 0;
+  padding: 8px 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.quiz-opt:hover {
+  background: #ffe6ec;
+}
+.quiz-opt input[type="radio"] {
+  margin-right: 8px;
+}
+.scenario {
+  background: #ffe6f0;
+  border: 2px solid #c2185b;
+  padding: 15px;
+  border-radius: 6px;
+  margin: 15px 0;
+}
+.scenario h4 {
+  color: #c2185b;
+  margin-bottom: 8px;
+}
+.note {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 12px 15px;
+  margin: 12px 0;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>XIAP Framework — Intermediate Training</h1>
+    <p>Deep dive into plugin patterns, interfaces, and implementation</p>
+    <span class="badge">Level 2 — Intermediate</span>
+    <span class="badge">High SPOF — XE Team</span>
+  </div>
+
+  <div class="main">
+    <div class="slides">
+      <!-- Slide 0: Welcome -->
+      <div class="slide active">
+        <h2>Welcome to Level 2 — Intermediate</h2>
+        <p style="font-size: 1.15em; margin-top: 30px;">This module assumes you've completed <strong>Level 1 (Beginner)</strong>. We now go deeper into code patterns and real implementation.</p>
+        <h3>What You'll Learn</h3>
+        <ul>
+          <li>The ITransactionPlugin interface and method signature</li>
+          <li>The IComponentPlugin interface and methods</li>
+          <li>How to access transaction context and business components</li>
+          <li>Error handling and raising errors/warnings</li>
+          <li>Process Handler patterns (K2 integration)</li>
+          <li>Real code examples from Xuber</li>
+          <li>4 scenario challenges</li>
+        </ul>
+        <div class="note">
+          <strong>Challenge:</strong> This level includes 4 scenario challenges that test your understanding. Try to solve them before checking the answer.
+        </div>
+        <p style="margin-top: 40px; text-align: center; color: #999;">Click <strong>Next</strong> to begin →</p>
+      </div>
+
+      <!-- Slide 1: ITransactionPlugin Interface -->
+      <div class="slide">
+        <h2>ITransactionPlugin Interface</h2>
+        <p>Every transaction plugin implements this interface with a single method:</p>
+        <pre>public interface ITransactionPlugin
+{
+    ProcessResultsCollection ProcessTransaction(
+        IBusinessTransaction businessTransaction,
+        TransactionInvocationPoint point,
+        int pluginId,
+        params object[] parameters);
+}</pre>
+        <h3>Method Parameters Explained</h3>
+        <table class="table-compact">
+          <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Purpose</th>
+          </tr>
+          <tr>
+            <td><code>businessTransaction</code></td>
+            <td>IBusinessTransaction</td>
+            <td>The transaction instance. Access root component, context, etc.</td>
+          </tr>
+          <tr>
+            <td><code>point</code></td>
+            <td>TransactionInvocationPoint</td>
+            <td>Which lifecycle point the plugin is running at (PreCreate, PostComplete, etc.)</td>
+          </tr>
+          <tr>
+            <td><code>pluginId</code></td>
+            <td>int</td>
+            <td>Unique ID for this plugin instance (rarely used)</td>
+          </tr>
+          <tr>
+            <td><code>parameters</code></td>
+            <td>object[]</td>
+            <td>Additional parameters (internal use)</td>
+          </tr>
+        </table>
+        <h3>Return Value</h3>
+        <p><code>ProcessResultsCollection</code> — used to return errors/warnings. Return <code>null</code> if no errors.</p>
+      </div>
+
+      <!-- Slide 2: Accessing Transaction Context -->
+      <div class="slide">
+        <h2>Accessing Transaction Context</h2>
+        <p>From within a plugin, access the transaction state via the <code>Context</code> property:</p>
+        <pre>IBusinessTransaction businessTransaction = /* parameter */;
+
+// Get the transaction context
+TransactionContext context = businessTransaction.Context;
+
+// Check if this is a display or edit transaction
+bool isDisplayTransaction = context.IsDisplayTransaction;
+
+// Get current user
+SecurityUser currentUser = context.CurrentUser;
+
+// Get root business component (what we're editing)
+IBusinessComponent rootComponent = 
+    businessTransaction.RootBusinessComponent;</pre>
+        <h3>Key Context Properties</h3>
+        <ul>
+          <li><strong>IsDisplayTransaction</strong> — boolean. True if read-only, false if editing.</li>
+          <li><strong>CurrentUser</strong> — SecurityUser. Who is running this transaction.</li>
+          <li><strong>ProcessResults</strong> — Validation messages collection.</li>
+          <li><strong>ComponentsToBeDeleted</strong> — Components marked for deletion.</li>
+        </ul>
+        <h3>Real Example from Xuber</h3>
+        <pre>if (!context.IsDisplayTransaction)
+{
+    // Only execute on edit transactions
+    var claimHeader = businessTransaction.RootBusinessComponent 
+        as ClaimHeader;
+    if (claimHeader != null)
+    {
+        claimHeader.LastModifiedBy = context.CurrentUser.DisplayName;
+        claimHeader.LastModifiedDate = DateTime.Now;
+    }
+}</pre>
+      </div>
+
+      <!-- Slide 3: IComponentPlugin Interface -->
+      <div class="slide">
+        <h2>IComponentPlugin Interface</h2>
+        <p>Component plugins implement this interface with multiple methods:</p>
+        <pre>public interface IComponentPlugin
+{
+    // Main processing method
+    ProcessResultsCollection ProcessComponent(
+        IBusinessComponent component,
+        ProcessInvocationPoint point,
+        int pluginId);
+
+    // Field-specific processing (for FieldRetrieval point)
+    ProcessResultsCollection FieldRetrieval(
+        IBusinessComponent component,
+        ProcessInvocationPoint point,
+        ref Field field,
+        int pluginId);
+}</pre>
+        <h3>Method Usage</h3>
+        <ul>
+          <li><strong>ProcessComponent</strong> — Called for most lifecycle points (Created, ComponentChange, Validation, etc.)</li>
+          <li><strong>FieldRetrieval</strong> — Called only at FieldRetrieval point to modify field metadata (read-only, hidden, etc.)</li>
+        </ul>
+        <h3>AbstractComponentPlugin Base Class</h3>
+        <p>Don't implement IComponentPlugin directly. Instead, inherit from <code>AbstractComponentPlugin</code>:</p>
+        <pre>public class MyComponentPlugin : AbstractComponentPlugin
+{
+    public override ProcessResultsCollection ProcessComponent(
+        IBusinessComponent component,
+        ProcessInvocationPoint point,
+        int pluginId)
+    {
+        // Your code here
+        return null; // No errors
+    }
+}</pre>
+      </div>
+
+      <!-- Slide 4: Error and Warning Handling -->
+      <div class="slide">
+        <h2>Error and Warning Handling</h2>
+        <p>Plugins communicate errors/warnings back via <code>ProcessResultsCollection</code>:</p>
+        <pre>using Xiap.Framework.ProcessHandling;
+
+ProcessResultsCollection results = new ProcessResultsCollection();
+
+// Raise an error (stops transaction/prevents saving)
+results.AddError("ERROR_CODE", 
+    "Claim amount cannot exceed policy limit");
+
+// Raise a warning (shown to user, doesn't stop)
+results.AddWarning("WARNING_CODE", 
+    "This claim is unusually large for this policy");
+
+return results;</pre>
+        <h3>Using PluginHelper for Complex Messages</h3>
+        <p>For messages with parameters and template text:</p>
+        <pre>PluginHelper&lt;ClaimHeader&gt; pluginHelper = 
+    new PluginHelper&lt;ClaimHeader&gt;(point, (ClaimHeader)component);
+
+pluginHelper.AddError("ERROR_CLAIM_LOCKED",
+    pluginHelper.Component.ClaimRef);
+
+pluginHelper.AddWarning("WARNING_LARGE_AMOUNT",
+    pluginHelper.Component.ClaimAmount.ToString());
+
+return pluginHelper.ProcessResults;</pre>
+        <h3>Error vs Warning</h3>
+        <ul>
+          <li><strong>Error</strong> — Prevents transaction completion. User cannot proceed.</li>
+          <li><strong>Warning</strong> — Shown to user but transaction can continue.</li>
+        </ul>
+      </div>
+
+      <!-- Slide 5: Process Handlers & K2 Integration -->
+      <div class="slide">
+        <h2>Process Handlers — K2 BPM Integration</h2>
+        <p>Process Handlers are a special type of Component Plugin that orchestrate K2 workflows:</p>
+        <pre>public class EventProcessHandler : IProcessHandler
+{
+    private readonly IProcessHandlerHelper _processHandlerHelper;
+
+    public EventProcessHandler(IProcessHandlerHelper helper)
+    {
+        _processHandlerHelper = helper;
+    }
+
+    public ProcessResultsCollection ProcessHandler(
+        IBusinessComponent component,
+        ProcessInvocationPoint point,
+        int pluginId,
+        ProcessParameters processParameters)
+    {
+        // Use ProcessHandlerHelper to start a K2 process
+        var processHelper = ObjectFactory.Resolve&lt;IProcessHandlerHelper&gt;();
+        
+        processHelper.InstantiateProcess(
+            "EventProcess",  // K2 process name
+            "Event-001",     // folio
+            new Dictionary&lt;string,object&gt;(),  // properties
+            new List&lt;IBusinessComponent&gt;());   // linked components
+        
+        return null;
+    }
+}</pre>
+        <h3>Key Points</h3>
+        <ul>
+          <li>Process Handlers run at the <strong>Virtual</strong> invocation point</li>
+          <li>They start K2 BPM workflows with business components as input</li>
+          <li>Use <code>IProcessHandlerHelper.InstantiateProcess</code> to start workflows</li>
+          <li>Configured via ProcessParameters (alias, etc.)</li>
+        </ul>
+      </div>
+
+      <!-- Slide 6: Plugin Predicates and Decision Tables -->
+      <div class="slide">
+        <h2>Plugin Predicates and Decision Tables</h2>
+        <p>Control <strong>when</strong> a plugin executes using Predicates and Decision Tables:</p>
+        <h3>Configuration-Based Predicates</h3>
+        <pre>&lt;BPProcess businessProcess="Xiap.UW.BusinessTransaction.AmendQuote"
+ point="PostComplete"
+ sequence="60"
+ type="Xiap.Framework.Common.EventProcessHandlerPlugin,..."
+ predicateType="UwProductCode" predicate="PROD01,PROD02" /&gt;</pre>
+        <h3>Decision Table Predicates</h3>
+        <p>Use a database decision table to determine if plugin runs:</p>
+        <pre>&lt;Component component="Xiap.Claims.BusinessComponent.ClaimHeader"
+ point="Created"
+ sequence="10"
+ type="Xiap.Claims.BusinessLogic.ClaimHeaderPlugin,..."
+ predicateType="UwDecisionTable" predicate="AssumedRIBase" /&gt;</pre>
+        <p>The decision table is looked up in Design Studio. Based on Product Code, the predicate group determines if the plugin runs.</p>
+        <h3>Predicate Types</h3>
+        <ul>
+          <li><code>ClaimProductCode</code> — Run only for specific claims product codes</li>
+          <li><code>UWProductCode</code> — Run only for specific underwriting product codes</li>
+          <li><code>ClaimsDecisionTable</code> — Run based on claims decision table lookup</li>
+          <li><code>UwDecisionTable</code> — Run based on UW decision table lookup</li>
+        </ul>
+      </div>
+
+      <!-- Slide 7: Real Code Example - Complete Plugin -->
+      <div class="slide">
+        <h2>Real Example — A Complete Plugin</h2>
+        <p>A realistic plugin that validates claim amounts against policy limits:</p>
+        <pre>public class ClaimAmountValidationPlugin : AbstractComponentPlugin
+{
+    public override ProcessResultsCollection ProcessComponent(
+        IBusinessComponent component,
+        ProcessInvocationPoint point,
+        int pluginId)
+    {
+        // Only validate on the Validation point
+        if (point != ProcessInvocationPoint.Validation)
+            return null;
+
+        var claimDetail = component as ClaimDetail;
+        if (claimDetail == null) return null;
+
+        PluginHelper&lt;ClaimDetail&gt; helper = 
+            new PluginHelper&lt;ClaimDetail&gt;(point, claimDetail);
+
+        // Get the parent claim header
+        var claimHeader = claimDetail.ClaimHeader;
+        
+        // Validate amount doesn't exceed limit
+        if (claimDetail.ClaimAmount > claimHeader.CoverageLimit)
+        {
+            helper.AddError("CLAIM_EXCEEDS_LIMIT",
+                $"Claim amount {claimDetail.ClaimAmount} " +
+                $"exceeds policy limit {claimHeader.CoverageLimit}");
+        }
+
+        return helper.ProcessResults;
+    }
+}</pre>
+        <p>This plugin runs at the Validation point and prevents saving if amount exceeds limit.</p>
+      </div>
+
+      <!-- Slide 8: Scenario Challenges -->
+      <div class="slide">
+        <h2>Scenario Challenge 1</h2>
+        <div class="scenario">
+          <h4>Challenge: Audit Trail Plugin</h4>
+          <p><strong>Requirement:</strong> Create a transaction plugin that logs every transaction completion with the user who made the change.</p>
+          <p><strong>Questions:</strong></p>
+          <ol style="margin-left: 20px;">
+            <li>Which transaction lifecycle point should you run at? (PostComplete or PostRollback?)</li>
+            <li>How do you access the current user from within the plugin?</li>
+            <li>How would you log the transaction details (ID, user, timestamp)?</li>
+          </ol>
+          <p style="margin-top: 15px; font-size: 0.95em; color: #666;"><strong>Answer:</strong> PostComplete point (plugins can't modify at PostRollback, but logging still works). Access user via <code>businessTransaction.Context.CurrentUser</code>. Log to database or file with transaction ID, user name, and DateTime.Now.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar">
+      <div class="nav-buttons">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+      </div>
+      <div class="slide-counter">
+        <span id="slideNum">1</span> / <span id="totalSlides">8</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <h3 style="color: #f5576c; font-size: 1.1em; margin: 20px 0 15px;">Quiz — 10 Questions</h3>
+      <div class="quiz-section">
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q1. What is the return type of ProcessTransaction method?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="a"> bool
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="b"> void
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="c"> ProcessResultsCollection
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="d"> string
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q2. How do you access the current user in a transaction plugin?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="a"> XiapSecurity.GetUser()
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="b"> businessTransaction.Context.CurrentUser
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="c"> businessTransaction.CurrentUser
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="d"> System.Security.Principal.WindowsIdentity
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q3. When should a component plugin run to set default values?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="a"> PreCreateValidation
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="b"> Created
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="c"> PreValidationDefaulting
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="d"> Validation
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q4. What base class should component plugins inherit from?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="a"> IComponentPlugin
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="b"> AbstractComponentPlugin
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="c"> ComponentPluginBase
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="d"> PluginBase
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q5. What's the difference between AddError and AddWarning?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="a"> No difference, they're interchangeable
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="b"> Error prevents transaction, warning allows it to continue
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="c"> Warning prevents transaction, error allows it
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="d"> Errors are logged, warnings are not
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q6. At which lifecycle point do Process Handlers run?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="a"> PreComplete
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="b"> PostComplete
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="c"> Virtual
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="d"> Created
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q7. What is K2 in the context of XIAP?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="a"> A database system
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="b"> A third-party BPM engine that XIAP integrates with
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="c"> A configuration file format
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="d"> An authentication system
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q8. What is the purpose of PluginHelper?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="a"> To compile plugins
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="b"> To simplify raising errors/warnings with templated messages
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="c"> To deploy plugins to the web server
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="d"> To test plugins offline
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q9. How do you control whether a plugin runs using predicates?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="a"> Write conditional logic inside the plugin
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="b"> Use predicateType and predicate attributes in Processes.config
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="c"> Create separate plugins for each condition
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="d"> Configure in Unity.config instead
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q10. What method do you call on IProcessHandlerHelper to start a K2 workflow?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="a"> StartProcess
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="b"> RunProcess
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="c"> InstantiateProcess
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="d"> CreateProcess
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+document.getElementById('totalSlides').textContent = totalSlides;
+
+function showSlide(n) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[n].classList.add('active');
+  document.getElementById('slideNum').textContent = n + 1;
+  document.getElementById('prevBtn').disabled = (n === 0);
+  document.getElementById('nextBtn').disabled = (n === totalSlides - 1);
+  
+  const progress = ((n + 1) / totalSlides) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+}
+
+function changeSlide(direction) {
+  const newSlide = currentSlide + direction;
+  if (newSlide >= 0 && newSlide < totalSlides) {
+    currentSlide = newSlide;
+    showSlide(currentSlide);
+  }
+}
+
+showSlide(0);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') changeSlide(-1);
+  if (e.key === 'ArrowRight') changeSlide(1);
+});
+</script>
+
+</body>
+</html>

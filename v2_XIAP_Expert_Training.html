@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XIAP Framework — Expert Training</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 40px);
+}
+.header {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: #fff;
+  padding: 30px;
+  text-align: center;
+}
+.header h1 {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+}
+.header p {
+  font-size: 1.1em;
+  opacity: 0.95;
+}
+.badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.slides {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  overflow-y: auto;
+}
+.slide.active {
+  opacity: 1;
+}
+.slide h2 {
+  color: #00f2fe;
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+.slide h3 {
+  color: #4facfe;
+  font-size: 1.3em;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+.slide h4 {
+  color: #4facfe;
+  font-size: 1.1em;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+.slide p, .slide li {
+  font-size: 1.05em;
+  line-height: 1.8;
+  margin-bottom: 12px;
+  color: #555;
+}
+.slide ul, .slide ol {
+  margin-left: 25px;
+}
+.slide code {
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: #c7254e;
+}
+.slide pre {
+  background: #2d3436;
+  color: #00ff00;
+  padding: 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 15px 0;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+.table-compact {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  font-size: 0.95em;
+}
+.table-compact th {
+  background: #4facfe;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+}
+.table-compact td {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
+}
+.table-compact tr:hover {
+  background: #f5f5f5;
+}
+.sidebar {
+  width: 280px;
+  background: #f5f5f5;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+  padding: 20px;
+}
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: #4facfe;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
+}
+button:hover {
+  background: #00f2fe;
+}
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.slide-counter {
+  text-align: center;
+  font-size: 0.9em;
+  color: #666;
+  margin: 10px 0;
+}
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  margin: 15px 0;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  width: 0%;
+  transition: width 0.3s;
+}
+.quiz-section {
+  margin-top: 20px;
+}
+.quiz-section h3 {
+  color: #4facfe;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+.quiz-q {
+  background: #fff9e6;
+  border-left: 4px solid #ffc107;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+.quiz-q-num {
+  font-weight: bold;
+  color: #4facfe;
+  margin-bottom: 8px;
+}
+.quiz-opt {
+  margin: 8px 0;
+  padding: 8px 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 0.95em;
+}
+.quiz-opt:hover {
+  background: #e8f4f8;
+}
+.quiz-opt input[type="radio"] {
+  margin-right: 8px;
+}
+.scenario {
+  background: #fff0f5;
+  border: 2px solid #4facfe;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+  font-size: 0.95em;
+}
+.scenario h4 {
+  color: #4facfe;
+  margin-bottom: 8px;
+}
+.note {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  padding: 12px 15px;
+  margin: 12px 0;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>XIAP Framework — Expert Training</h1>
+    <p>Advanced patterns, decision tables, and real-world complexity</p>
+    <span class="badge">Level 3 — Expert</span>
+    <span class="badge">High SPOF — XE Team</span>
+  </div>
+
+  <div class="main">
+    <div class="slides">
+      <!-- Slide 0: Welcome -->
+      <div class="slide active">
+        <h2>Welcome to Level 3 — Expert</h2>
+        <p style="font-size: 1.15em; margin-top: 30px;">This is the final level. You've completed Levels 1 and 2. Now we tackle the complex, production-level patterns.</p>
+        <h3>What You'll Learn</h3>
+        <ul>
+          <li>Advanced plugin predicates and decision table logic</li>
+          <li>Accessing business component families and relationships</li>
+          <li>Working with static values, system values, and metadata</li>
+          <li>Common tasks: resolving objects, user info, security, currency services</li>
+          <li>Complex transaction scenarios and edge cases</li>
+          <li>Performance considerations for plugins</li>
+          <li>4 comprehensive expert scenario challenges</li>
+        </ul>
+        <div class="note">
+          <strong>Expert Challenges:</strong> These scenarios test your ability to combine multiple concepts to solve real production problems. Solutions are not straightforward.
+        </div>
+        <p style="margin-top: 40px; text-align: center; color: #999;">Click <strong>Next</strong> to begin →</p>
+      </div>
+
+      <!-- Slide 1: Advanced Predicates -->
+      <div class="slide">
+        <h2>Advanced Plugin Predicates</h2>
+        <p>Control plugin execution with sophisticated predicate logic:</p>
+        <h3>Predicate Types (Deep Dive)</h3>
+        <table class="table-compact">
+          <tr>
+            <th>Type</th>
+            <th>Usage</th>
+          </tr>
+          <tr>
+            <td><code>ClaimProductCode</code></td>
+            <td>Run for specific claims product codes. Multiple codes separated by comma.</td>
+          </tr>
+          <tr>
+            <td><code>UWProductCode</code></td>
+            <td>Run for specific underwriting product codes.</td>
+          </tr>
+          <tr>
+            <td><code>GenericDataItemTypeCode</code></td>
+            <td>Run for specific generic data type codes.</td>
+          </tr>
+          <tr>
+            <td><code>ClaimsDecisionTable</code></td>
+            <td>Decision table lookup determines if plugin runs. Matched against claims product code.</td>
+          </tr>
+          <tr>
+            <td><code>UwDecisionTable</code></td>
+            <td>Decision table lookup for underwriting product code.</td>
+          </tr>
+        </table>
+        <h3>Real Configuration Example</h3>
+        <pre>&lt;Component component="Xiap.Claims.BusinessComponent.ClaimDetail"
+ point="Validation"
+ sequence="150"
+ type="MyPlugins.ClaimDetailValidationPlugin,MyPlugins"
+ predicateType="ClaimsDecisionTable" 
+ predicate="X-CLAIM-VALIDATION" /&gt;</pre>
+        <p>This plugin only runs for claims whose product code matches entries in the decision table "X-CLAIM-VALIDATION".</p>
+      </div>
+
+      <!-- Slide 2: Decision Tables & Can Execute -->
+      <div class="slide">
+        <h2>Decision Table Execution Control</h2>
+        <p>Plugins can check predicates at runtime using the <code>CanExecute</code> method:</p>
+        <pre>public class MyDecisionTablePlugin : AbstractComponentPlugin
+{
+    public override ProcessResultsCollection ProcessComponent(
+        IBusinessComponent component,
+        ProcessInvocationPoint point,
+        int pluginId)
+    {
+        if (point != ProcessInvocationPoint.Validation)
+            return null;
+
+        var claimHeader = component as ClaimHeader;
+        
+        // Manually check if we should run
+        bool canRun = CanExecute(
+            claimHeader,
+            point,
+            "MyPluginName",
+            new string[] { "DECISION_TABLE_VALUE1", "DECISION_TABLE_VALUE2" });
+        
+        if (!canRun) return null;
+        
+        // Plugin logic here
+        return null;
+    }
+}</pre>
+        <h3>Decision Table Reference</h3>
+        <p>Decision tables are defined in Design Studio with rows like:</p>
+        <ul>
+          <li><strong>Product Code</strong> — The product code to match</li>
+          <li><strong>Plugin Group</strong> — Group name (e.g., "MyPluginGroup")</li>
+          <li><strong>Plugin</strong> — Specific plugin name</li>
+          <li><strong>Result</strong> — TRUE/FALSE whether to run</li>
+        </ul>
+      </div>
+
+      <!-- Slide 3: Accessing Business Objects -->
+      <div class="slide">
+        <h2>Accessing Business Objects & Services</h2>
+        <p>Plugins often need to interact with business services and objects:</p>
+        <h3>Resolving Objects via ObjectFactory</h3>
+        <pre>// Get security service
+var securityService = ObjectFactory.Resolve&lt;ISecurityService&gt;();
+var user = securityService.FindUsersByNameID(nameId).FirstOrDefault();
+
+// Get currency service
+var currencyService = ObjectFactory.Resolve&lt;ICurrencyService&gt;();
+decimal convertedAmount = currencyService.ConvertCurrency(
+    amount, "GBP", "USD", DateTime.Now);
+
+// Get decision table helper
+var dtHelper = ObjectFactory.Resolve&lt;IDecisionTableHelper&gt;();
+var decisionTableComponent = dtHelper.Call(
+    "TABLE_CODE", DateTime.Now, conditions);</pre>
+        <h3>Accessing Component Relationships</h3>
+        <pre>var claimHeader = (ClaimHeader)component;
+
+// Get all related claim details
+var claimDetails = claimHeader.ClaimDetail; // ICollection
+
+// Access parent component
+var parentComponent = claimHeader.ParentComponent;
+
+// Check if component is new (vs. existing)
+bool isNew = claimHeader.IsNew;</pre>
+        <h3>Key Services Available</h3>
+        <ul>
+          <li><strong>ISecurityService</strong> — User lookup and permissions</li>
+          <li><strong>ICurrencyService</strong> — Currency conversion and exchange rates</li>
+          <li><strong>IDecisionTableHelper</strong> — Decision table lookups</li>
+          <li><strong>ISystemValueSetQuery</strong> — System value lookups</li>
+        </ul>
+      </div>
+
+      <!-- Slide 4: Static Values & Metadata -->
+      <div class="slide">
+        <h2>Working with Static Values & Metadata</h2>
+        <p>Access static values, system values, and field metadata:</p>
+        <h3>Static Values (Enums)</h3>
+        <pre>// Static values are accessed via enums
+var coverageCategory = (StaticValues.CoverageCategory)
+    coverageCode.CoverageCategory.GetValueOrDefault((short)0);
+
+// Use GetValueOrDefault to avoid null exceptions
+var riskType = (StaticValues.RiskType)
+    claimDetail.RiskTypeCode.GetValueOrDefault(
+        (short)StaticValues.RiskType.Standard);</pre>
+        <h3>System Values (Database Lookups)</h3>
+        <pre>var systemValueQuery = ObjectFactory.Resolve&lt;ISystemValueSetQuery&gt;();
+var values = systemValueQuery.Query&lt;HeaderStatusData&gt;()
+    .Where(x => x.IsActive == true)
+    .ToList();</pre>
+        <h3>Field Metadata Access</h3>
+        <pre>// Get Field object for a property
+Field claimTitleField = claimHeader.ClaimTitleField;
+
+// Check if field is mandatory
+bool isMandatory = claimTitleField.IsMandatory;
+
+// Check if field is read-only
+bool isReadOnly = claimTitleField.IsReadOnly;</pre>
+        <h3>Important Pattern</h3>
+        <p>Always use <code>GetValueOrDefault()</code> when casting nullable static values to avoid null reference exceptions.</p>
+      </div>
+
+      <!-- Slide 5: Error Handling & Complex Messages -->
+      <div class="slide">
+        <h2>Advanced Error Handling</h2>
+        <p>Complex error scenarios and message handling patterns:</p>
+        <h3>Conditional Error Handling</h3>
+        <pre>public override ProcessResultsCollection ProcessComponent(
+    IBusinessComponent component,
+    ProcessInvocationPoint point,
+    int pluginId)
+{
+    var results = new ProcessResultsCollection();
+    var claimDetail = component as ClaimDetail;
+    
+    // Only check errors on edit transactions
+    var transContext = claimDetail.Context;
+    if (transContext.IsDisplayTransaction)
+        return null; // No validation on read-only
+    
+    // Multi-level validation
+    if (claimDetail.ClaimAmount < 0)
+    {
+        results.AddError("NEGATIVE_AMOUNT", 
+            "Claim amount cannot be negative");
+    }
+    else if (claimDetail.ClaimAmount > 1000000)
+    {
+        results.AddWarning("VERY_LARGE_CLAIM",
+            "Claim amount exceeds £1,000,000");
+    }
+    
+    return results.Count > 0 ? results : null;
+}</pre>
+        <h3>Message Configuration</h3>
+        <p>Messages must be registered in <code>Config.Message</code> table with:</p>
+        <ul>
+          <li><strong>MessageAlias</strong> — Unique identifier (e.g., "CLAIM_EXCEEDS_LIMIT")</li>
+          <li><strong>MessageType</strong> — 4 = Customer (for custom plugins)</li>
+          <li><strong>MessageCategory</strong> — Category code (1=Underwriting, etc.)</li>
+        </ul>
+        <p>Message text is configured in <code>Config.MessageTemplate</code> with language support and replaceable parameters.</p>
+      </div>
+
+      <!-- Slide 6: Performance & Best Practices -->
+      <div class="slide">
+        <h2>Performance & Best Practices</h2>
+        <p>Production-grade plugin patterns and performance considerations:</p>
+        <h3>Performance Tips</h3>
+        <ul>
+          <li><strong>Lazy Load Services</strong> — Only resolve services you actually use</li>
+          <li><strong>Batch Operations</strong> — Don't make separate service calls in loops</li>
+          <li><strong>Cache Static Data</strong> — Resolve ISystemValueSetQuery once, not per component</li>
+          <li><strong>Avoid Unnecessary Checks</strong> — Early returns on conditions that skip processing</li>
+          <li><strong>Minimize Database Calls</strong> — Use existing component data before querying</li>
+        </ul>
+        <h3>Anti-Patterns to Avoid</h3>
+        <pre>// DON'T DO THIS - Resolves service in loop
+foreach (var detail in claimHeader.ClaimDetail)
+{
+    var currencyService = ObjectFactory.Resolve&lt;ICurrencyService&gt;();
+    // ...expensive operation
+}
+
+// DO THIS - Resolve once, reuse
+var currencyService = ObjectFactory.Resolve&lt;ICurrencyService&gt;();
+foreach (var detail in claimHeader.ClaimDetail)
+{
+    // ...use service here
+}</pre>
+        <h3>Error Handling Best Practice</h3>
+        <p>Plugins should <strong>never throw exceptions</strong>. Always catch exceptions and return errors via ProcessResultsCollection.</p>
+      </div>
+
+      <!-- Slide 7: Expert Scenarios -->
+      <div class="slide">
+        <h2>Expert Scenario Challenge 1</h2>
+        <div class="scenario">
+          <h4>Challenge: Multi-Condition Validation Plugin</h4>
+          <p><strong>Requirement:</strong> Create a component plugin that validates a claim detail based on multiple conditions:</p>
+          <ol>
+            <li>If claim amount > coverage limit, raise ERROR</li>
+            <li>If claim amount > £50,000 AND product code = "SPECIAL", convert currency from EUR to GBP</li>
+            <li>If risk type = "Marine", validate that deductible is set</li>
+            <li>Only run this validation for specific product codes (use predicates)</li>
+          </ol>
+          <p><strong>Problem:</strong> How would you structure this plugin to handle all 4 conditions efficiently?</p>
+          <p style="margin-top: 10px; font-size: 0.9em; color: #666;"><strong>Approach:</strong> Use predicate to filter at config level (condition 4). In code, check point first (early return if not Validation). Resolve services once at top. Check conditions in order (cheapest first). Use GetValueOrDefault() for enums. Return null if no errors for performance.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar">
+      <div class="nav-buttons">
+        <button id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+        <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+      </div>
+      <div class="slide-counter">
+        <span id="slideNum">1</span> / <span id="totalSlides">8</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <h3 style="color: #4facfe; font-size: 1.1em; margin: 20px 0 15px;">Quiz — 10 Questions</h3>
+      <div class="quiz-section">
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q1. What does CanExecute method do?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="a"> Executes the plugin code
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="b"> Checks if predicate conditions are met at runtime
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="c"> Validates component data
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q1" value="d"> Logs plugin execution
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q2. When should you check IsDisplayTransaction?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="a"> Always, at start of plugin
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="b"> Only when doing validation that shouldn't run on read-only
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="c"> Never, it's set automatically
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q2" value="d"> Only in transaction plugins, not component plugins
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q3. How do you safely access a nullable static value?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="a"> Cast directly: (StaticValues.RiskType)value
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="b"> Use GetValueOrDefault() with a default value
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="c"> Check if null first, then cast
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q3" value="d"> Static values are never nullable
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q4. What should plugins NEVER do?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="a"> Access the database
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="b"> Throw exceptions (should return errors)
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="c"> Call business services
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q4" value="d"> Access component relationships
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q5. When should you resolve an ObjectFactory service?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="a"> Inside each loop for freshness
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="b"> Multiple times to ensure consistency
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="c"> Once at the start, then reuse
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q5" value="d"> Only if you know it's not null
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q6. What service would you use for currency conversion?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="a"> ISystemValueSetQuery
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="b"> ICurrencyService
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="c"> IDecisionTableHelper
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q6" value="d"> ISecurityService
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q7. How do you access a parent component from a child?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="a"> component.Parent
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="b"> component.ParentComponent
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="c"> businessTransaction.RootBusinessComponent
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q7" value="d"> ObjectFactory.Resolve&lt;IParentComponent&gt;()
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q8. What MessageType should custom plugins use?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="a"> 1 (System)
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="b"> 2 (Warning)
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="c"> 3 (Error)
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q8" value="d"> 4 (Customer)
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q9. Which predicate type uses Decision Tables?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="a"> ClaimProductCode
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="b"> UWProductCode
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="c"> ClaimsDecisionTable
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q9" value="d"> GenericDataItemTypeCode
+          </div>
+        </div>
+
+        <div class="quiz-q">
+          <div class="quiz-q-num">Q10. What's the best practice for checking multiple conditions?</div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="a"> Check most expensive first for early exit
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="b"> Check cheapest first for early exit
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="c"> Check all conditions regardless
+          </div>
+          <div class="quiz-opt">
+            <input type="radio" name="q10" value="d"> Use decision tables instead
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+document.getElementById('totalSlides').textContent = totalSlides;
+
+function showSlide(n) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[n].classList.add('active');
+  document.getElementById('slideNum').textContent = n + 1;
+  document.getElementById('prevBtn').disabled = (n === 0);
+  document.getElementById('nextBtn').disabled = (n === totalSlides - 1);
+  
+  const progress = ((n + 1) / totalSlides) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+}
+
+function changeSlide(direction) {
+  const newSlide = currentSlide + direction;
+  if (newSlide >= 0 && newSlide < totalSlides) {
+    currentSlide = newSlide;
+    showSlide(currentSlide);
+  }
+}
+
+showSlide(0);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') changeSlide(-1);
+  if (e.key === 'ArrowRight') changeSlide(1);
+});
+</script>
+
+</body>
+</html>
