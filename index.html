@@ -137,6 +137,17 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
   .main{padding:1.25rem}
   .hdr-stats{gap:.75rem}
 }
+
+/* ── SUBSECTION ──────────────────────────────────────────── */
+.subsection{margin-bottom:2rem}
+.subsection-title{
+  font-size:.92rem;font-weight:700;color:#5F249F;
+  text-transform:uppercase;letter-spacing:.08em;
+  padding:0 0.2rem .6rem;margin-bottom:.8rem;
+  border-bottom:2px solid #e0d9ee;
+}
+.subsection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+
 </style>
 </head>
 <body>
@@ -153,7 +164,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
       <div class="stat-lbl">Completed</div>
     </div>
     <div class="stat">
-      <div class="stat-val" id="totalCount">22</div>
+      <div class="stat-val" id="totalCount">21</div>
       <div class="stat-lbl">Modules</div>
     </div>
     <div class="overall-ring" title="Overall progress">
@@ -177,7 +188,7 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
 <div class="prog-section">
   <div class="prog-label">
     <span>Overall progress</span>
-    <strong id="progLabel">0 of 22 modules passed</strong>
+    <strong id="progLabel">0 of 21 modules passed</strong>
   </div>
   <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
 </div>
@@ -185,528 +196,103 @@ body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-hei
 <div class="main">
 
   <!-- XE TEAM -->
-  <div class="team-section">
-    <div class="team-header">
-      <div class="team-icon" style="background:linear-gradient(135deg,#5F249F,#330072)">XE</div>
-      <div>
-        <div class="team-title">XE Team Modules</div>
-        <div class="team-sub">HTMLUI (3 levels), Claim Transactions (3 levels), Angular (4 modules) &#8212; 10 modules</div>
+  
+    <div class="team-section">
+      <div class="team-header">
+        <div class="team-icon" style="background:#5F249F">XE</div>
+        <div>
+          <div class="team-title">XE Team Modules</div>
+          <div class="team-sub">HTMLUI (3 levels), Claim Transactions (3 levels), Angular (4 modules) — 10 modules</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Xuber HTMLUI</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_XE_HTMLUI_Beginner_Training.html" data-key="xe_htmlui_beg"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span></div><div class="card-title">Xuber HTMLUI — Beginner</div><div class="card-desc">What the HTMLUI is, the real folder structure, how a request works, reading a service file and basic debugging.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_htmlui_beg">Not started</div><div class="card-status st-notstarted" id="status-xe_htmlui_beg"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_XE_HTMLUI_Intermediate_Training.html" data-key="xe_htmlui_int"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span></div><div class="card-title">Xuber HTMLUI — Intermediate</div><div class="card-desc">XuWebApiManager internals, all 6 service patterns, complete XuClaimsService and XuUnderwritingService reference tables.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_htmlui_int">Not started</div><div class="card-status st-notstarted" id="status-xe_htmlui_int"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_XE_HTMLUI_Expert_Training.html" data-key="xe_htmlui_exp"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span></div><div class="card-title">Xuber HTMLUI — Expert</div><div class="card-desc">Adding new service methods, feature module structure, 28 real claims components, lazy loading and advanced debugging.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_htmlui_exp">Not started</div><div class="card-status st-notstarted" id="status-xe_htmlui_exp"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_Angular_Module3_Training.html" data-key="ang3"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">HTMLUI in Practice</div><div class="card-desc">Codebase tour, local dev setup, debugging, Git workflow, build pipeline and deployment procedures.</div></div><div class="card-bottom"><div class="card-score" id="score-ang3">Not started</div><div class="card-status st-notstarted" id="status-ang3"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Claim Transactions</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_XE_Claim_Transactions_Beginner_Training.html" data-key="xe_claims_beg"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span></div><div class="card-title">Claim Transactions — Beginner</div><div class="card-desc">What transactions are, the 8 modes, the 5-step startup sequence, the shared template concept and basic Network tab debugging.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_claims_beg">Not started</div><div class="card-status st-notstarted" id="status-xe_claims_beg"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_XE_Claim_Transactions_Intermediate_Training.html" data-key="xe_claims_int"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span></div><div class="card-title">Claim Transactions — Intermediate</div><div class="card-desc">The base class, XuDeferred pattern, 16 injected services, navigateToNode routing and the display-to-amend transition.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_claims_int">Not started</div><div class="card-status st-notstarted" id="status-xe_claims_int"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_XE_Claim_Transactions_Expert_Training.html" data-key="xe_claims_exp"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span></div><div class="card-title">Claim Transactions — Expert</div><div class="card-desc">R&P financial framework, XuCurrentFinancialGroupPanel, AfterViewChecked, xuCache, layer claims and new transaction types.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_claims_exp">Not started</div><div class="card-status st-notstarted" id="status-xe_claims_exp"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <div class="subsection-title">Angular Engineering</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_Angular_Module1_Training.html" data-key="ang1"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">Angular Foundation</div><div class="card-desc">Architecture, components, data binding, services, dependency injection, Router and HttpClientModule with RxJS.</div></div><div class="card-bottom"><div class="card-score" id="score-ang1">Not started</div><div class="card-status st-notstarted" id="status-ang1"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_Angular_Module2_Training.html" data-key="ang2"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">Angular Advanced</div><div class="card-desc">Change detection, lifecycle hooks, reactive forms, custom directives, pipes, feature modules and performance optimization.</div></div><div class="card-bottom"><div class="card-score" id="score-ang2">Not started</div><div class="card-status st-notstarted" id="status-ang2"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_Angular_Module4_Training.html" data-key="ang4"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">Angular Testing & CI</div><div class="card-desc">Jasmine, TestBed, HTTP testing with HttpTestingController, code coverage thresholds and Azure Pipelines CI.</div></div><div class="card-bottom"><div class="card-score" id="score-ang4">Not started</div><div class="card-status st-notstarted" id="status-ang4"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+        </div>
       </div>
     </div>
-    <div class="module-grid">
 
-      <a class="module-card" href="v2_XE_HTMLUI_Beginner_Training.html" data-key="xe_htmlui_beg">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-            <span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span>
-          </div>
-          <div class="card-title">Xuber HTMLUI &#8212; Beginner</div>
-          <div class="card-desc">What the HTMLUI is, the real folder structure, how a request works, reading a service file and basic debugging. Start here.</div>
+    <div class="team-section">
+      <div class="team-header">
+        <div class="team-icon" style="background:#006975">RM</div>
+        <div>
+          <div class="team-title">Release Management Modules</div>
+          <div class="team-sub">Infrastructure, data management and operational support — 7 modules</div>
         </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-xe_htmlui_beg">Not started</div>
-          <div class="card-status st-notstarted" id="status-xe_htmlui_beg">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
+      </div>
 
-      <a class="module-card" href="v2_XE_HTMLUI_Intermediate_Training.html" data-key="xe_htmlui_int">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-            <span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span>
-          </div>
-          <div class="card-title">Xuber HTMLUI &#8212; Intermediate</div>
-          <div class="card-desc">XuWebApiManager internals, all service patterns, complete XuClaimsService and XuUnderwritingService endpoint references.</div>
+      <div class="subsection">
+        <div class="subsection-title">Infrastructure</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_RM_AWS_Services_Training.html" data-key="rm_aws"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">AWS Services</div><div class="card-desc">EC2, RDS, S3, CloudWatch, IAM, VPC and deployment strategies on AWS infrastructure.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_aws">Not started</div><div class="card-status st-notstarted" id="status-rm_aws"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_RM_iSeries_DB2_Training.html" data-key="rm_iseries"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">iSeries, DB2 & AS/400</div><div class="card-desc">IBM iSeries platform, DB2 database management, AS/400 architecture and legacy system integration.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_iseries">Not started</div><div class="card-status st-notstarted" id="status-rm_iseries"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_RM_Azure_SmartTest_Training.html" data-key="rm_azure"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">Azure Pipelines & CI/CD</div><div class="card-desc">CI/CD pipeline approval and monitoring, pipeline YAML, build stages, deployment gates and release management.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_azure">Not started</div><div class="card-status st-notstarted" id="status-rm_azure"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
         </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-xe_htmlui_int">Not started</div>
-          <div class="card-status st-notstarted" id="status-xe_htmlui_int">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
+      </div>
 
-      <a class="module-card" href="v2_XE_HTMLUI_Expert_Training.html" data-key="xe_htmlui_exp">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-            <span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span>
-          </div>
-          <div class="card-title">Xuber HTMLUI &#8212; Expert</div>
-          <div class="card-desc">Adding service methods, the 28 real claims components, lazy loading, routing and advanced multi-layer debugging.</div>
+      <div class="subsection">
+        <div class="subsection-title">Data Management</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_RM_SQL_DB_Refresh_Training.html" data-key="rm_sql"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">SQL & Database Refresh</div><div class="card-desc">SQL scripting, database refresh cycles, backup & restore procedures and data integrity validation.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_sql">Not started</div><div class="card-status st-notstarted" id="status-rm_sql"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_RM_SOLR_K2_Scheduler_Training.html" data-key="rm_solr"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">SOLR & K2 Scheduler</div><div class="card-desc">Lucene search engine, SOLR configuration, K2 job scheduling and workflow automation.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_solr">Not started</div><div class="card-status st-notstarted" id="status-rm_solr"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
         </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-xe_htmlui_exp">Not started</div>
-          <div class="card-status st-notstarted" id="status-xe_htmlui_exp">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
+      </div>
 
-      <a class="module-card" href="v2_Angular_Module3_Training.html" data-key="ang3">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-          </div>
-          <div class="card-title">Xuber HTMLUI in Practice</div>
-          <div class="card-desc">Codebase tour, local dev setup, debugging, Git workflow, build pipeline and deployment procedures.</div>
+      <div class="subsection">
+        <div class="subsection-title">Operations</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_RM_DR_Certs_Training.html" data-key="rm_dr"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">DR & Certificates</div><div class="card-desc">Disaster recovery planning, failover procedures, SSL/TLS certificate management and renewal cycles.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_dr">Not started</div><div class="card-status st-notstarted" id="status-rm_dr"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_RM_Xuber_Patches_Training.html" data-key="rm_patches"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">Xuber Patches</div><div class="card-desc">Patch development, testing, deployment, rollback procedures and version management across environments.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_patches">Not started</div><div class="card-status st-notstarted" id="status-rm_patches"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
         </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-ang3">Not started</div>
-          <div class="card-status st-notstarted" id="status-ang3">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_XE_Claim_Transactions_Beginner_Training.html" data-key="xe_claims_beg">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-            <span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span>
-          </div>
-          <div class="card-title">Claim Transactions &#8212; Beginner</div>
-          <div class="card-desc">What transactions are, the 8 modes, the 5-step startup sequence, the shared template concept and basic Network tab debugging.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-xe_claims_beg">Not started</div>
-          <div class="card-status st-notstarted" id="status-xe_claims_beg">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_XE_Claim_Transactions_Intermediate_Training.html" data-key="xe_claims_int">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-            <span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span>
-          </div>
-          <div class="card-title">Claim Transactions &#8212; Intermediate</div>
-          <div class="card-desc">The base class, XuDeferred pattern, 16 injected services, navigateToNode routing and the real display&#8209;to&#8209;amend transition.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-xe_claims_int">Not started</div>
-          <div class="card-status st-notstarted" id="status-xe_claims_int">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_XE_Claim_Transactions_Expert_Training.html" data-key="xe_claims_exp">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-            <span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span>
-          </div>
-          <div class="card-title">Claim Transactions &#8212; Expert</div>
-          <div class="card-desc">R&amp;P financial framework, XuCurrentFinancialGroupPanel, AfterViewChecked, xuCache, layer claims and adding a new transaction type.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-xe_claims_exp">Not started</div>
-          <div class="card-status st-notstarted" id="status-xe_claims_exp">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_Angular_Module1_Training.html" data-key="ang1">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-          </div>
-          <div class="card-title">Angular Foundation</div>
-          <div class="card-desc">Architecture, components, data binding, services, dependency injection, Router and HttpClient with RxJS.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-ang1">Not started</div>
-          <div class="card-status st-notstarted" id="status-ang1">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_Angular_Module4_Training.html" data-key="ang4">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-          </div>
-          <div class="card-title">Angular Testing and CI</div>
-          <div class="card-desc">Jasmine, TestBed, HTTP testing with HttpTestingController, code coverage thresholds and Azure Pipelines CI.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-ang4">Not started</div>
-          <div class="card-status st-notstarted" id="status-ang4">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_Angular_Module2_Training.html" data-key="ang2">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-xe">XE Team</span>
-          </div>
-          <div class="card-title">Angular Advanced</div>
-          <div class="card-desc">Signals, Reactive Forms, advanced RxJS operators (forkJoin, combineLatest, exhaustMap) and state management.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-ang2">Not started</div>
-          <div class="card-status st-notstarted" id="status-ang2">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-    </div>
-  </div>
-
-  <!-- RM TEAM -->
-  <div class="team-section">
-    <div class="team-header">
-      <div class="team-icon" style="background:linear-gradient(135deg,#006975,#00968F)">RM</div>
-      <div>
-        <div class="team-title">RM Team Modules</div>
-        <div class="team-sub">AWS, iSeries, SQL Server, Azure, SOLR, DR and patch management — 7 modules</div>
       </div>
     </div>
-    <div class="module-grid">
 
-      <a class="module-card" href="v2_RM_AWS_Services_Training.html" data-key="rm_aws">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-rm">RM Team</span>
-          </div>
-          <div class="card-title">AWS Services</div>
-          <div class="card-desc">S3, EC2, Security Groups, IAM and CloudWatch for Xuber infrastructure — 0 SMEs.</div>
+    <div class="team-section">
+      <div class="team-header">
+        <div class="team-icon" style="background:#00968F">GN</div>
+        <div>
+          <div class="team-title">Genius Team Modules</div>
+          <div class="team-sub">Rating, SmartTest regression, Bureau processing and Intercept messaging — 4 modules</div>
         </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-rm_aws">Not started</div>
-          <div class="card-status st-notstarted" id="status-rm_aws">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
+      </div>
 
-      <a class="module-card" href="v2_RM_iSeries_DB2_Training.html" data-key="rm_iseries">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-rm">RM Team</span>
-          </div>
-          <div class="card-title">iSeries, DB2 and AS400</div>
-          <div class="card-desc">Platform overview, essential commands, DB2 admin, Genius environment creation and PTF build issue resolution — 1 SME.</div>
+      <div class="subsection">
+        <div class="subsection-title">Core Systems</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_Genius_Rating_Training.html" data-key="gn_rating"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Genius Rating</div><div class="card-desc">Rating tables, factors, routines and how Genius calculates premiums automatically. Setup, maintenance and overrides.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_rating">Not started</div><div class="card-status st-notstarted" id="status-gn_rating"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_Genius_Intercept_Training_5.html" data-key="gn_bureau"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Genius Bureau Processing</div><div class="card-desc">Bureau message format, Genius as recipient, message validation, underwriting rules and outcome routing.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_bureau">Not started</div><div class="card-status st-notstarted" id="status-gn_bureau"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
         </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-rm_iseries">Not started</div>
-          <div class="card-status st-notstarted" id="status-rm_iseries">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
+      </div>
 
-      <a class="module-card" href="v2_RM_SQL_DB_Refresh_Training.html" data-key="rm_sql">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-rm">RM Team</span>
-          </div>
-          <div class="card-title">SQL Server and DB Refresh</div>
-          <div class="card-desc">Backup types, restore procedures, environment refresh, GDPR data masking and daily monitoring — 0 SMEs.</div>
+      <div class="subsection">
+        <div class="subsection-title">Testing & Messaging</div>
+        <div class="subsection-grid">
+          <a class="module-card" href="v2_Genius_SmartTest_Training.html" data-key="gn_smarttest"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Testing Genius using SmartTest</div><div class="card-desc">Architecture, running scripts, failure triage (6 categories), PTF preparation and capturing. Animated flows and scenarios.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_smarttest">Not started</div><div class="card-status st-notstarted" id="status-gn_smarttest"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
+          <a class="module-card" href="v2_Genius_Intercept_Training.html" data-key="gn_intercept"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Genius Intercept Messaging</div><div class="card-desc">Message exchange with external systems, Genius as sender/receiver, message structure and routing logic.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_intercept">Not started</div><div class="card-status st-notstarted" id="status-gn_intercept"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
         </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-rm_sql">Not started</div>
-          <div class="card-status st-notstarted" id="status-rm_sql">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_RM_Azure_SmartTest_Training.html" data-key="rm_azure">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-rm">RM Team</span>
-          </div>
-          <div class="card-title">Azure Pipelines &amp; CI/CD</div>
-          <div class="card-desc">CI/CD pipeline approval and monitoring, pipeline YAML, build stages, deployment gates and release management &#8212; 0 SMEs.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-rm_azure">Not started</div>
-          <div class="card-status st-notstarted" id="status-rm_azure">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_RM_SOLR_K2_Scheduler_Training.html" data-key="rm_solr">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-rm">RM Team</span>
-          </div>
-          <div class="card-title">SOLR, K2 and Xuber Scheduler</div>
-          <div class="card-desc">Installation, health checks and troubleshooting for three critical Xuber middleware services — 0 SMEs.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-rm_solr">Not started</div>
-          <div class="card-status st-notstarted" id="status-rm_solr">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_RM_DR_Certs_Training.html" data-key="rm_dr">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-high">High SPOF</span>
-            <span class="badge badge-team-rm">RM Team</span>
-          </div>
-          <div class="card-title">DR Testing and Certificate Changes</div>
-          <div class="card-desc">RTO/RPO, Xuber DR tiers, annual DR test, SSL certificate management, renewal process and expiry monitoring — 0 SMEs.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-rm_dr">Not started</div>
-          <div class="card-status st-notstarted" id="status-rm_dr">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_RM_Xuber_Patches_Training.html" data-key="rm_patches">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-high">High SPOF</span>
-            <span class="badge badge-team-rm">RM Team</span>
-          </div>
-          <div class="card-title">Xuber Enterprise Patches and Release</div>
-          <div class="card-desc">Patch types, release planning, pre-deployment checklist, deployment procedure and rollback — 1 SME.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-rm_patches">Not started</div>
-          <div class="card-status st-notstarted" id="status-rm_patches">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-    </div>
-  </div>
-
-  <!-- GENIUS TEAM -->
-  <div class="team-section">
-    <div class="team-header">
-      <div class="team-icon" style="background:linear-gradient(135deg,#8a5500,#ED9B33)">GN</div>
-      <div>
-        <div class="team-title">Genius Team Modules</div>
-        <div class="team-sub">Rating, SmartTest regression, Bureau processing and Intercept messaging &#8212; 4 modules</div>
       </div>
     </div>
-    <div class="module-grid">
 
-      <a class="module-card" href="v2_Genius_Rating_Training.html" data-key="gn_rating">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-genius">Genius Team</span>
-          </div>
-          <div class="card-title">Genius Rating</div>
-          <div class="card-desc">Rating tables, factors, routines and how Genius calculates premiums automatically. Covers setup, maintenance, overrides and the underwriting experience &#8212; 0 SMEs.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-gn_rating">Not started</div>
-          <div class="card-status st-notstarted" id="status-gn_rating">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_Genius_SmartTest_Training.html" data-key="gn_smarttest">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-critical">Critical SPOF</span>
-            <span class="badge badge-team-genius">Genius Team</span>
-          </div>
-          <div class="card-title">Testing Genius using SmartTest</div>
-          <div class="card-desc">Architecture, running scripts, failure triage (6 categories), PTF preparation and capturing. Animated flows and scenario challenges &#8212; 1 SME.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-gn_smarttest">Not started</div>
-          <div class="card-status st-notstarted" id="status-gn_smarttest">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_Genius_Intercept_Training_5.html" data-key="gn_bureau">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-high">High SPOF</span>
-            <span class="badge badge-team-genius">Genius Team</span>
-          </div>
-          <div class="card-title">Genius Bureau Processing</div>
-          <div class="card-desc">The full Bureau pipeline, closings on-line edit, GBCM11 error messages, Bureau claims, ELASS &amp; downloads, configuration and parameters — 2 SMEs.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-gn_bureau">Not started</div>
-          <div class="card-status st-notstarted" id="status-gn_bureau">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-      <a class="module-card" href="v2_Genius_Intercept_Training.html" data-key="gn_intercept">
-        <div class="card-top">
-          <div class="card-badges">
-            <span class="badge badge-high">High SPOF</span>
-            <span class="badge badge-team-genius">Genius Team</span>
-          </div>
-          <div class="card-title">Genius Intercept Product and Messaging</div>
-          <div class="card-desc">Intercept architecture, publish-subscribe messaging, queue monitoring, DLQ management and daily operations — 2 SMEs.</div>
-        </div>
-        <div class="card-bottom">
-          <div class="card-score" id="score-gn_intercept">Not started</div>
-          <div class="card-status st-notstarted" id="status-gn_intercept">
-            <div class="status-dot"></div><span>Not started</span>
-          </div>
-          <span class="card-arrow">&#8594;</span>
-        </div>
-      </a>
-
-    </div>
-  </div>
-
-  <div class="reset-wrap">
-    <button class="reset-btn" onclick="resetAll()">&#8635; Reset all progress</button>
-  </div>
-
-</div><!-- /main -->
-
-<script>
-// ── STORAGE KEYS ────────────────────────────────────────────
-var KEYS = [
-  'xe_htmlui_beg','xe_htmlui_int','xe_htmlui_exp',
-  'ang3','xe_claims_beg','xe_claims_int','xe_claims_exp','ang1','ang4','ang2',
-  'rm_aws','rm_iseries','rm_sql','rm_azure','rm_solr','rm_dr','rm_patches',
-  'gn_rating','gn_smarttest','gn_bureau','gn_intercept'
-];
-var STORE_PREFIX = 'xuber_training_';
-
-function save(key, score) {
-  try { localStorage.setItem(STORE_PREFIX + key, String(score)); } catch(e) {}
-}
-function load(key) {
-  try {
-    var v = localStorage.getItem(STORE_PREFIX + key);
-    return v !== null ? parseInt(v, 10) : null;
-  } catch(e) { return null; }
-}
-
-// ── RENDER CARD STATUS ───────────────────────────────────────
-function renderCard(key) {
-  var score = load(key);
-  var scoreEl  = document.getElementById('score-'  + key);
-  var statusEl = document.getElementById('status-' + key);
-  var card     = document.querySelector('[data-key="' + key + '"]');
-  if (!scoreEl || !statusEl) return;
-
-  if (score === null) {
-    scoreEl.textContent = 'Not started';
-    statusEl.className  = 'card-status st-notstarted';
-    statusEl.innerHTML  = '<div class="status-dot"></div><span>Not started</span>';
-    if (card) card.classList.remove('completed');
-  } else if (score >= 70) {
-    scoreEl.innerHTML   = 'Score: <strong>' + score + '%</strong>';
-    statusEl.className  = 'card-status st-passed';
-    statusEl.innerHTML  = '<div class="status-dot"></div><span>Passed</span>';
-    if (card) card.classList.add('completed');
-  } else {
-    scoreEl.innerHTML   = 'Score: <strong>' + score + '%</strong>';
-    statusEl.className  = 'card-status st-inprogress';
-    statusEl.innerHTML  = '<div class="status-dot"></div><span>Retry needed</span>';
-    if (card) card.classList.remove('completed');
-  }
-}
-
-// ── UPDATE HEADER STATS ──────────────────────────────────────
-function updateStats() {
-  var passed = 0;
-  KEYS.forEach(function(k) {
-    var s = load(k);
-    if (s !== null && s >= 70) passed++;
-  });
-  var pct = Math.round((passed / KEYS.length) * 100);
-  document.getElementById('completedCount').textContent = passed;
-  document.getElementById('overallPct').textContent     = pct + '%';
-  document.getElementById('progFill').style.width       = pct + '%';
-  document.getElementById('progLabel').textContent      =
-    passed + ' of ' + KEYS.length + ' modules passed';
-}
-
-// ── HANDLE RETURN FROM A MODULE ──────────────────────────────
-// Modules store their quiz score in localStorage with the key
-// 'xuber_quiz_{moduleKey}' — we pick it up on returning to the index
-function checkReturningScores() {
-  KEYS.forEach(function(k) {
-    var quizKey = 'xuber_quiz_' + k;
-    try {
-      var v = localStorage.getItem(quizKey);
-      if (v !== null) {
-        save(k, parseInt(v, 10));
-        localStorage.removeItem(quizKey);
-      }
-    } catch(e) {}
-  });
-}
-
-// ── RESET ALL ────────────────────────────────────────────────
-function resetAll() {
-  if (!confirm('Reset all progress? This cannot be undone.')) return;
-  KEYS.forEach(function(k) {
-    try { localStorage.removeItem(STORE_PREFIX + k); } catch(e) {}
-  });
-  KEYS.forEach(renderCard);
-  updateStats();
-}
-
-// ── INIT ─────────────────────────────────────────────────────
-checkReturningScores();
-KEYS.forEach(renderCard);
-updateStats();
-</script>
-</body>
-</html>
