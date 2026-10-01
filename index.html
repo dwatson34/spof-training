@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xuber SPOF Training Suite — Learn the Critical Systems</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 60px;
+  animation: slideDown 0.6s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header h1 {
+  font-size: 3.5em;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.header p {
+  font-size: 1.3em;
+  opacity: 0.95;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+.header-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: rgba(255,255,255,0.15);
+  padding: 15px 25px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.stat-number {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.9em;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+/* Main Content */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease 0.2s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Left Side - CTA */
+.launch-section {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.launch-section h2 {
+  color: #667eea;
+  font-size: 2.2em;
+  margin-bottom: 20px;
+}
+
+.launch-section p {
+  font-size: 1.1em;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.launch-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  padding: 20px 40px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.launch-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+.launch-button:active {
+  transform: translateY(-1px);
+}
+
+/* Right Side - Features */
+.features-section {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.features-section h2 {
+  color: #667eea;
+  font-size: 2.2em;
+  margin-bottom: 30px;
+}
+
+.feature-list {
+  list-style: none;
+}
+
+.feature-list li {
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+  font-size: 1.05em;
+  line-height: 1.6;
+  color: #555;
+}
+
+.feature-list li:last-child {
+  border-bottom: none;
+}
+
+.feature-icon {
+  color: #667eea;
+  font-size: 1.5em;
+  margin-right: 15px;
+  margin-top: 3px;
+  min-width: 20px;
+}
+
+/* Documentation Section */
+.docs-section {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease 0.4s both;
+}
+
+.docs-section h2 {
+  color: #667eea;
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.doc-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+  padding: 35px;
+  border-radius: 12px;
+  border-left: 5px solid #667eea;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.doc-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+  border-left-color: #764ba2;
+}
+
+.doc-card h3 {
+  color: #667eea;
+  font-size: 1.4em;
+  margin-bottom: 12px;
+}
+
+.doc-card p {
+  color: #666;
+  line-height: 1.7;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.doc-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.doc-link:hover {
+  color: #764ba2;
+  gap: 8px;
+}
+
+.doc-link::after {
+  content: '→';
+  margin-left: 8px;
+  transition: margin 0.3s;
+}
+
+.doc-card:hover .doc-link::after {
+  margin-left: 12px;
+}
+
+/* Module Grid Preview */
+.modules-preview {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease 0.6s both;
+}
+
+.modules-preview h2 {
+  color: #667eea;
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.team-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 45px rgba(102, 126, 234, 0.5);
+}
+
+.team-icon {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+}
+
+.team-card h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.team-card p {
+  font-size: 0.95em;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+.team-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  margin-top: 15px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  color: #fff;
+  padding: 40px 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 60px;
+}
+
+.footer h3 {
+  font-size: 1.3em;
+  margin-bottom: 15px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.3s;
+  font-weight: 500;
+}
+
+.footer-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.footer p {
+  font-size: 0.95em;
+  opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 2.5em;
+  }
+
+  .header-stats {
+    gap: 20px;
+  }
+
+  .stat {
+    padding: 12px 20px;
+  }
+
+  .stat-number {
+    font-size: 2em;
+  }
+
+  .launch-section,
+  .features-section,
+  .docs-section,
+  .modules-preview {
+    padding: 30px;
+  }
+
+  .launch-section h2,
+  .features-section h2,
+  .docs-section h2,
+  .modules-preview h2 {
+    font-size: 1.8em;
+  }
+
+  .docs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .launch-button {
+    font-size: 1em;
+    padding: 16px 30px;
+  }
+}
+
+/* Accessibility */
+.launch-button:focus {
+  outline: 3px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
+}
+
+.doc-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Xuber SPOF Training Suite</h1>
+    <p>Master the Critical Single Points of Failure in Xuber Enterprise</p>
+    
+    <div class="header-stats">
+      <div class="stat">
+        <div class="stat-number">24</div>
+        <div class="stat-label">Interactive Modules</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Teams Covered</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Learning Levels</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Backend Required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Launch Section -->
+    <div class="launch-section">
+      <h2>Ready to Learn?</h2>
+      <p>
+        Access 24 interactive training modules covering critical Xuber systems. 
+        Self-paced learning with quizzes, scenarios, and real code examples.
+      </p>
+      <p style="font-size: 0.95em; color: #999; margin-bottom: 30px;">
+        Each module takes 45–75 minutes. Start with Beginner level, progress to Expert.
+      </p>
+      <a href="portal.html" class="launch-button">Launch Training Portal →</a>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+      <h2>What You'll Get</h2>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-icon">📚</span>
+          <span><strong>Interactive Slides</strong> — 7–8 slides per module with animations and real code</span>
+        </li>
+        <li>
+          <span class="feature-icon">🎯</span>
+          <span><strong>Quiz System</strong> — 10 questions per module (70% pass threshold)</span>
+        </li>
+        <li>
+          <span class="feature-icon">🔊</span>
+          <span><strong>Text-to-Speech</strong> — Narrated slides for auditory learners</span>
+        </li>
+        <li>
+          <span class="feature-icon">💡</span>
+          <span><strong>Scenario Challenges</strong> — Real-world problems (Intermediate & Expert)</span>
+        </li>
+        <li>
+          <span class="feature-icon">📱</span>
+          <span><strong>Mobile Responsive</strong> — Learn on any device</span>
+        </li>
+        <li>
+          <span class="feature-icon">✓</span>
+          <span><strong>Progress Tracking</strong> — Quiz scores saved in your browser</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Documentation Section -->
+  <div class="docs-section">
+    <h2>📖 Documentation & Resources</h2>
+    
+    <div class="docs-grid">
+      <!-- User Guide -->
+      <div class="doc-card">
+        <h3>📘 User Guide</h3>
+        <p>
+          Everything you need to know about taking modules, understanding learning paths, scoring requirements, and common questions.
+        </p>
+        <a href="XUBER_SPOF_TRAINING_USER_GUIDE.md" class="doc-link">Read User Guide</a>
+      </div>
+
+      <!-- Technical Docs -->
+      <div class="doc-card">
+        <h3>⚙️ Technical Documentation</h3>
+        <p>
+          Deep dive into the architecture, technology stack, module structure, and how to extend the platform for your team.
+        </p>
+        <a href="XUBER_SPOF_TRAINING_TECHNICAL_DOCS.md" class="doc-link">Read Technical Docs</a>
+      </div>
+
+      <!-- Deployment Guide -->
+      <div class="doc-card">
+        <h3>🚀 Deployment Guide</h3>
+        <p>
+          Step-by-step procedures for deployment, rollback instructions, post-deployment monitoring, and communication plans.
+        </p>
+        <a href="DEPLOYMENT_RELEASE_NOTES.md" class="doc-link">Read Deployment Guide</a>
+      </div>
+
+      <!-- Module Creation Prompt -->
+      <div class="doc-card">
+        <h3>🔨 Module Creation Template</h3>
+        <p>
+          Reusable prompt template for your team to brief Claude on building similar training modules for your systems.
+        </p>
+        <a href="SPOF_Training_Module_Creation_Prompt.md" class="doc-link">View Template</a>
+      </div>
+
+      <!-- README -->
+      <div class="doc-card">
+        <h3>ℹ️ Quick Start (README)</h3>
+        <p>
+          Quick-start guide with portal links, feature highlights, recommended learning paths, and key statistics.
+        </p>
+        <a href="README.md" class="doc-link">Read README</a>
+      </div>
+
+      <!-- QA Summary -->
+      <div class="doc-card">
+        <h3>✓ QA & Sign-Off</h3>
+        <p>
+          Complete quality assurance verification results, known limitations, pre-deployment checklist, and deployment approval.
+        </p>
+        <a href="QA_SUMMARY_AND_DEPLOYMENT_READY.txt" class="doc-link">View QA Summary</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modules Preview -->
+  <div class="modules-preview">
+    <h2>🎓 What's Covered</h2>
+    
+    <div class="teams-grid">
+      <div class="team-card">
+        <div class="team-icon">⚡</div>
+        <h3>XE Team</h3>
+        <p>HTMLUI, Claim Transactions & Angular Engineering</p>
+        <div class="team-badge">10 modules</div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-icon">🔌</div>
+        <h3>XIAP Framework</h3>
+        <p>Plugin development: architecture, patterns & advanced techniques</p>
+        <div class="team-badge">3 modules</div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-icon">📊</div>
+        <h3>Release Management</h3>
+        <p>Infrastructure, data management & operations</p>
+        <div class="team-badge">7 modules</div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-icon">💼</div>
+        <h3>Genius Team</h3>
+        <p>Rating engine, SmartTest, Bureau & Intercept</p>
+        <div class="team-badge">4 modules</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <h3>Ready to Get Started?</h3>
+    <div class="footer-links">
+      <a href="portal.html" class="footer-link">Launch Portal</a>
+      <a href="XUBER_SPOF_TRAINING_USER_GUIDE.md" class="footer-link">User Guide</a>
+      <a href="README.md" class="footer-link">GitHub Info</a>
+    </div>
+    <p>
+      Xuber SPOF Training Suite v1.0 — 24 Interactive Modules | Free Hosting via GitHub Pages<br>
+      <a href="https://github.com/dwatson34/spof-training" style="color: rgba(255,255,255,0.8); text-decoration: none;">github.com/dwatson34/spof-training</a>
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
