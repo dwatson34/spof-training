@@ -721,6 +721,18 @@ function changeSlide(direction) {
 
 showSlide(0);
 
+
+const SLIDE_TTS = [
+  "Welcome to Level 3 Expert. This is the final level testing your ability to combine multiple concepts.",
+  "Control plugin execution with sophisticated predicate logic and decision tables.",
+  "Plugins can check predicates at runtime using the Can Execute method.",
+  "Plugins often need to interact with business services and objects via ObjectFactory.",
+  "Access static values, system values, and field metadata from business components.",
+  "Complex error scenarios and message handling patterns for production code.",
+  "Production-grade plugin patterns and performance considerations to optimize plugins.",
+  "Expert scenario challenge testing your ability to combine concepts for real production problems."
+];
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') changeSlide(-1);
   if (e.key === 'ArrowRight') changeSlide(1);

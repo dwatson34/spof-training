@@ -739,6 +739,18 @@ function changeSlide(direction) {
 showSlide(0);
 
 // Keyboard navigation
+
+const SLIDE_TTS = [
+  "Welcome to XIAP Framework Beginner Training. This is a Beginner-level module covering the fundamentals of XIAP.",
+  "XIAP is the core application framework that underpins Xuber Enterprise. It is not simply an API layer or scheduler.",
+  "XIAP provides two main types of plugins that developers write: Transaction Plugins and Component Plugins.",
+  "Every business transaction flows through lifecycle points. Plugins are configured to run at specific points.",
+  "Business components follow their own lifecycle independent of transactions.",
+  "Plugins require two things: Code and Configuration. Plugins are registered in Processes.config.",
+  "A minimal transaction plugin that logs when a transaction completes.",
+  "Key takeaways: XIAP is the core framework that controls Xuber's execution model. Plugins are C-sharp classes that extend XIAP behavior."
+];
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') changeSlide(-1);
   if (e.key === 'ArrowRight') changeSlide(1);

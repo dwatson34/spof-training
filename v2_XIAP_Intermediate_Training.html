@@ -778,6 +778,18 @@ function changeSlide(direction) {
 
 showSlide(0);
 
+
+const SLIDE_TTS = [
+  "Welcome to Level 2 Intermediate. This module assumes you've completed Level 1 Beginner.",
+  "Every transaction plugin implements this interface with a single method called Process Transaction.",
+  "From within a plugin, access the transaction state via the Context property.",
+  "Component plugins implement this interface with multiple methods.",
+  "Plugins communicate errors and warnings back via ProcessResultsCollection.",
+  "Process Handlers are a special type of Component Plugin that orchestrate K2 workflows.",
+  "Control when a plugin executes using Predicates and Decision Tables.",
+  "A realistic plugin that validates claim amounts against policy limits."
+];
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') changeSlide(-1);
   if (e.key === 'ArrowRight') changeSlide(1);

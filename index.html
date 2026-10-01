@@ -3,362 +3,616 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DXC | Xuber Training Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Xuber SPOF Training Suite — Learn the Critical Systems</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Open Sans',sans-serif;background:#f0eef8;color:#1a1a2e;min-height:100vh}
-
-/* ── HEADER ─────────────────────────────────────────────── */
-.hdr{
-  background:linear-gradient(135deg,#330072 0%,#5F249F 100%);
-  padding:0 2rem;height:58px;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 20px rgba(51,0,114,.4);
-}
-.logo{display:flex;align-items:center;gap:.5rem}
-.logo-dxc{font-size:1.1rem;font-weight:800;color:#fff;letter-spacing:.06em}
-.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.25)}
-.logo-title{font-size:.78rem;color:#d4c8f0;font-weight:600}
-.hdr-stats{display:flex;align-items:center;gap:1.25rem}
-.stat{text-align:right}
-.stat-val{font-size:1rem;font-weight:800;color:#fff;line-height:1}
-.stat-lbl{font-size:.6rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em}
-.overall-ring{
-  width:46px;height:46px;border-radius:50%;border:3px solid rgba(255,255,255,.3);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-}
-.ring-pct{font-size:.72rem;font-weight:800;color:#fff;line-height:1}
-.ring-lbl{font-size:.45rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em}
-
-/* ── HERO ────────────────────────────────────────────────── */
-.hero{
-  background:linear-gradient(135deg,#150535 0%,#330072 60%,#5F249F 100%);
-  padding:2.5rem 2rem 2rem;
-}
-.hero h1{font-size:1.9rem;font-weight:800;color:#fff;margin-bottom:.4rem}
-.hero p{font-size:.9rem;color:#c4b8e8;max-width:600px;line-height:1.6}
-.hero-meta{display:flex;gap:1.5rem;margin-top:1.25rem;flex-wrap:wrap}
-.meta-pill{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
-  border-radius:20px;padding:.3rem .85rem;
-  font-size:.72rem;font-weight:700;color:rgba(255,255,255,.8);
-}
-.meta-pill span{color:#FFCD00}
-
-/* ── PROGRESS BAR ────────────────────────────────────────── */
-.prog-section{background:#fff;border-bottom:1px solid #e0d9ee;padding:1rem 2rem}
-.prog-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
-.prog-label span{font-size:.75rem;font-weight:700;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em}
-.prog-label strong{font-size:.75rem;font-weight:800;color:#5F249F}
-.prog-bar{height:8px;background:#f0eef8;border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,#00968F,#5F249F);border-radius:4px;transition:width .6s ease}
-
-/* ── MAIN CONTENT ────────────────────────────────────────── */
-.main{max-width:1100px;margin:0 auto;padding:2rem}
-
-/* ── TEAM SECTION ────────────────────────────────────────── */
-.team-section{margin-bottom:2.5rem}
-.team-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem}
-.team-icon{
-  width:38px;height:38px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.75rem;font-weight:800;color:#fff;
-}
-.team-title{font-size:1.1rem;font-weight:800;color:#330072}
-.team-sub{font-size:.78rem;color:#5a5a7a;margin-top:.1rem}
-
-/* ── MODULE GRID ─────────────────────────────────────────── */
-.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-
-/* ── MODULE CARD ─────────────────────────────────────────── */
-.module-card{
-  background:#fff;border:1.5px solid #e0d9ee;border-radius:14px;
-  overflow:hidden;transition:all .2s;cursor:pointer;
-  display:flex;flex-direction:column;
-  text-decoration:none;color:inherit;
-}
-.module-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 8px 28px rgba(95,36,159,.15);
-  border-color:#c4b8e8;
-}
-.module-card.completed{border-color:#1a7a4a}
-.card-top{padding:1rem 1.1rem .75rem;flex:1}
-.card-badges{display:flex;gap:.4rem;margin-bottom:.6rem;flex-wrap:wrap}
-.badge{
-  font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
-  padding:.2rem .55rem;border-radius:6px;
-}
-.badge-critical{background:#fdf0ee;color:#c0392b}
-.badge-high{background:#fff8e6;color:#b97a00}
-.badge-team-xe{background:#f0ebfa;color:#5F249F}
-.badge-team-rm{background:#e0f5f4;color:#006975}
-.badge-team-genius{background:#fff3e0;color:#8a5500}
-.card-title{font-size:.95rem;font-weight:800;color:#330072;margin-bottom:.3rem;line-height:1.3}
-.card-desc{font-size:.78rem;color:#5a5a7a;line-height:1.5}
-
-/* ── CARD PROGRESS ───────────────────────────────────────── */
-.card-bottom{
-  padding:.65rem 1.1rem;
-  border-top:1px solid #f0eef8;
-  display:flex;align-items:center;justify-content:space-between;
-  background:#fafaf8;
-}
-.card-score{font-size:.7rem;color:#5a5a7a}
-.card-score strong{color:#330072;font-weight:800}
-.card-status{display:flex;align-items:center;gap:.4rem;font-size:.7rem;font-weight:700}
-.status-dot{width:7px;height:7px;border-radius:50%}
-.st-notstarted .status-dot{background:#c8c4d8}
-.st-notstarted{color:#8a8aaa}
-.st-inprogress .status-dot{background:#ED9B33}
-.st-inprogress{color:#8a5500}
-.st-passed .status-dot{background:#1a7a4a}
-.st-passed{color:#1a7a4a}
-.card-arrow{font-size:.85rem;color:#c4b8e8;margin-left:.25rem}
-.module-card:hover .card-arrow{color:#5F249F}
-
-/* ── RESET BUTTON ────────────────────────────────────────── */
-.reset-wrap{text-align:center;margin-top:2.5rem;padding-top:2rem;border-top:1px solid #e0d9ee}
-.reset-btn{
-  background:transparent;border:1.5px solid #e0d9ee;
-  color:#8a8aaa;font-family:inherit;font-size:.78rem;font-weight:600;
-  padding:.55rem 1.25rem;border-radius:7px;cursor:pointer;transition:all .2s;
-}
-.reset-btn:hover{border-color:#c0392b;color:#c0392b}
-
-/* ── RESPONSIVE ──────────────────────────────────────────── */
-@media(max-width:600px){
-  .hero h1{font-size:1.4rem}
-  .main{padding:1.25rem}
-  .hdr-stats{gap:.75rem}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ── SUBSECTION ──────────────────────────────────────────── */
-.subsection{margin-bottom:2rem}
-.subsection-title{
-  font-size:.92rem;font-weight:700;color:#5F249F;
-  text-transform:uppercase;letter-spacing:.08em;
-  padding:0 0.2rem .6rem;margin-bottom:.8rem;
-  border-bottom:2px solid #e0d9ee;
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
 }
-.subsection-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 60px;
+  animation: slideDown 0.6s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header h1 {
+  font-size: 3.5em;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.header p {
+  font-size: 1.3em;
+  opacity: 0.95;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+.header-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  background: rgba(255,255,255,0.15);
+  padding: 15px 25px;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.stat-number {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.9em;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+/* Main Content */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease 0.2s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Left Side - CTA */
+.launch-section {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.launch-section h2 {
+  color: #667eea;
+  font-size: 2.2em;
+  margin-bottom: 20px;
+}
+
+.launch-section p {
+  font-size: 1.1em;
+  line-height: 1.8;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.launch-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  padding: 20px 40px;
+  font-size: 1.2em;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.launch-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+.launch-button:active {
+  transform: translateY(-1px);
+}
+
+/* Right Side - Features */
+.features-section {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.features-section h2 {
+  color: #667eea;
+  font-size: 2.2em;
+  margin-bottom: 30px;
+}
+
+.feature-list {
+  list-style: none;
+}
+
+.feature-list li {
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: flex-start;
+  font-size: 1.05em;
+  line-height: 1.6;
+  color: #555;
+}
+
+.feature-list li:last-child {
+  border-bottom: none;
+}
+
+.feature-icon {
+  color: #667eea;
+  font-size: 1.5em;
+  margin-right: 15px;
+  margin-top: 3px;
+  min-width: 20px;
+}
+
+/* Documentation Section */
+.docs-section {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease 0.4s both;
+}
+
+.docs-section h2 {
+  color: #667eea;
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.doc-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #f0f4f8 100%);
+  padding: 35px;
+  border-radius: 12px;
+  border-left: 5px solid #667eea;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.doc-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+  border-left-color: #764ba2;
+}
+
+.doc-card h3 {
+  color: #667eea;
+  font-size: 1.4em;
+  margin-bottom: 12px;
+}
+
+.doc-card p {
+  color: #666;
+  line-height: 1.7;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.doc-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s;
+}
+
+.doc-link:hover {
+  color: #764ba2;
+  gap: 8px;
+}
+
+.doc-link::after {
+  content: '→';
+  margin-left: 8px;
+  transition: margin 0.3s;
+}
+
+.doc-card:hover .doc-link::after {
+  margin-left: 12px;
+}
+
+/* Module Grid Preview */
+.modules-preview {
+  background: #fff;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease 0.6s both;
+}
+
+.modules-preview h2 {
+  color: #667eea;
+  font-size: 2.5em;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.team-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 45px rgba(102, 126, 234, 0.5);
+}
+
+.team-icon {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+}
+
+.team-card h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.team-card p {
+  font-size: 0.95em;
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
+.team-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  margin-top: 15px;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  color: #fff;
+  padding: 40px 20px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 60px;
+}
+
+.footer h3 {
+  font-size: 1.3em;
+  margin-bottom: 15px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.footer-link {
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.3s;
+  font-weight: 500;
+}
+
+.footer-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.footer p {
+  font-size: 0.95em;
+  opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 2.5em;
+  }
+
+  .header-stats {
+    gap: 20px;
+  }
+
+  .stat {
+    padding: 12px 20px;
+  }
+
+  .stat-number {
+    font-size: 2em;
+  }
+
+  .launch-section,
+  .features-section,
+  .docs-section,
+  .modules-preview {
+    padding: 30px;
+  }
+
+  .launch-section h2,
+  .features-section h2,
+  .docs-section h2,
+  .modules-preview h2 {
+    font-size: 1.8em;
+  }
+
+  .docs-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .launch-button {
+    font-size: 1em;
+    padding: 16px 30px;
+  }
+}
+
+/* Accessibility */
+.launch-button:focus {
+  outline: 3px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
+}
+
+.doc-link:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
 </style>
 </head>
 <body>
 
-<header class="hdr">
-  <div class="logo">
-    <span class="logo-dxc">DXC</span>
-    <div class="logo-sep"></div>
-    <span class="logo-title">Xuber Training Portal</span>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Xuber SPOF Training Suite</h1>
+    <p>Master the Critical Single Points of Failure in Xuber Enterprise</p>
+    
+    <div class="header-stats">
+      <div class="stat">
+        <div class="stat-number">24</div>
+        <div class="stat-label">Interactive Modules</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Teams Covered</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Learning Levels</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Backend Required</div>
+      </div>
+    </div>
   </div>
-  <div class="hdr-stats">
-    <div class="stat">
-      <div class="stat-val" id="completedCount">0</div>
-      <div class="stat-lbl">Completed</div>
-    </div>
-    <div class="stat">
-      <div class="stat-val" id="totalCount">24</div>
-      <div class="stat-lbl">Modules</div>
-    </div>
-    <div class="overall-ring" title="Overall progress">
-      <div class="ring-pct" id="overallPct">0%</div>
-      <div class="ring-lbl">Done</div>
-    </div>
-  </div>
-</header>
 
-<div class="hero">
-  <h1>Xuber SPOF Training Suite</h1>
-  <p>Targeted training to resolve Critical and High single-points-of-failure identified in the XE, RM and Genius team skills matrices. Complete all modules relevant to your team and log your quiz scores in the Skills Matrix.</p>
-  <div class="hero-meta">
-    <div class="meta-pill">&#9679; <span>5</span> Critical SPOFs — XE team</div>
-    <div class="meta-pill">&#9679; <span>7</span> Critical/High SPOFs — RM team</div>
-    <div class="meta-pill">&#9679; <span>4</span> Critical/High SPOFs — Genius team</div>
-    <div class="meta-pill">&#9679; 70% to pass each quiz</div>
+  <!-- Main Content -->
+  <div class="main">
+    <!-- Launch Section -->
+    <div class="launch-section">
+      <h2>Ready to Learn?</h2>
+      <p>
+        Access 24 interactive training modules covering critical Xuber systems. 
+        Self-paced learning with quizzes, scenarios, and real code examples.
+      </p>
+      <p style="font-size: 0.95em; color: #999; margin-bottom: 30px;">
+        Each module takes 45–75 minutes. Start with Beginner level, progress to Expert.
+      </p>
+      <a href="portal.html" class="launch-button">Launch Training Portal →</a>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+      <h2>What You'll Get</h2>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-icon">📚</span>
+          <span><strong>Interactive Slides</strong> — 7–8 slides per module with animations and real code</span>
+        </li>
+        <li>
+          <span class="feature-icon">🎯</span>
+          <span><strong>Quiz System</strong> — 10 questions per module (70% pass threshold)</span>
+        </li>
+        <li>
+          <span class="feature-icon">🔊</span>
+          <span><strong>Text-to-Speech</strong> — Narrated slides for auditory learners</span>
+        </li>
+        <li>
+          <span class="feature-icon">💡</span>
+          <span><strong>Scenario Challenges</strong> — Real-world problems (Intermediate & Expert)</span>
+        </li>
+        <li>
+          <span class="feature-icon">📱</span>
+          <span><strong>Mobile Responsive</strong> — Learn on any device</span>
+        </li>
+        <li>
+          <span class="feature-icon">✓</span>
+          <span><strong>Progress Tracking</strong> — Quiz scores saved in your browser</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Documentation Section -->
+  <div class="docs-section">
+    <h2>📖 Documentation & Resources</h2>
+    
+    <div class="docs-grid">
+      <!-- User Guide -->
+      <div class="doc-card">
+        <h3>📘 User Guide</h3>
+        <p>
+          Everything you need to know about taking modules, understanding learning paths, scoring requirements, and common questions.
+        </p>
+        <a href="XUBER_SPOF_TRAINING_USER_GUIDE.md" class="doc-link">Read User Guide</a>
+      </div>
+
+      <!-- Technical Docs -->
+      <div class="doc-card">
+        <h3>⚙️ Technical Documentation</h3>
+        <p>
+          Deep dive into the architecture, technology stack, module structure, and how to extend the platform for your team.
+        </p>
+        <a href="XUBER_SPOF_TRAINING_TECHNICAL_DOCS.md" class="doc-link">Read Technical Docs</a>
+      </div>
+
+      <!-- Deployment Guide -->
+      <div class="doc-card">
+        <h3>🚀 Deployment Guide</h3>
+        <p>
+          Step-by-step procedures for deployment, rollback instructions, post-deployment monitoring, and communication plans.
+        </p>
+        <a href="DEPLOYMENT_RELEASE_NOTES.md" class="doc-link">Read Deployment Guide</a>
+      </div>
+
+      <!-- Module Creation Prompt -->
+      <div class="doc-card">
+        <h3>🔨 Module Creation Template</h3>
+        <p>
+          Reusable prompt template for your team to brief Claude on building similar training modules for your systems.
+        </p>
+        <a href="SPOF_Training_Module_Creation_Prompt.md" class="doc-link">View Template</a>
+      </div>
+
+      <!-- README -->
+      <div class="doc-card">
+        <h3>ℹ️ Quick Start (README)</h3>
+        <p>
+          Quick-start guide with portal links, feature highlights, recommended learning paths, and key statistics.
+        </p>
+        <a href="README.md" class="doc-link">Read README</a>
+      </div>
+
+      <!-- QA Summary -->
+      <div class="doc-card">
+        <h3>✓ QA & Sign-Off</h3>
+        <p>
+          Complete quality assurance verification results, known limitations, pre-deployment checklist, and deployment approval.
+        </p>
+        <a href="QA_SUMMARY_AND_DEPLOYMENT_READY.txt" class="doc-link">View QA Summary</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modules Preview -->
+  <div class="modules-preview">
+    <h2>🎓 What's Covered</h2>
+    
+    <div class="teams-grid">
+      <div class="team-card">
+        <div class="team-icon">⚡</div>
+        <h3>XE Team</h3>
+        <p>HTMLUI, Claim Transactions & Angular Engineering</p>
+        <div class="team-badge">10 modules</div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-icon">🔌</div>
+        <h3>XIAP Framework</h3>
+        <p>Plugin development: architecture, patterns & advanced techniques</p>
+        <div class="team-badge">3 modules</div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-icon">📊</div>
+        <h3>Release Management</h3>
+        <p>Infrastructure, data management & operations</p>
+        <div class="team-badge">7 modules</div>
+      </div>
+
+      <div class="team-card">
+        <div class="team-icon">💼</div>
+        <h3>Genius Team</h3>
+        <p>Rating engine, SmartTest, Bureau & Intercept</p>
+        <div class="team-badge">4 modules</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <h3>Ready to Get Started?</h3>
+    <div class="footer-links">
+      <a href="portal.html" class="footer-link">Launch Portal</a>
+      <a href="XUBER_SPOF_TRAINING_USER_GUIDE.md" class="footer-link">User Guide</a>
+      <a href="README.md" class="footer-link">GitHub Info</a>
+    </div>
+    <p>
+      Xuber SPOF Training Suite v1.0 — 24 Interactive Modules | Free Hosting via GitHub Pages<br>
+      <a href="https://github.com/dwatson34/spof-training" style="color: rgba(255,255,255,0.8); text-decoration: none;">github.com/dwatson34/spof-training</a>
+    </p>
   </div>
 </div>
 
-<div class="prog-section">
-  <div class="prog-label">
-    <span>Overall progress</span>
-    <strong id="progLabel">0 of 24 modules passed</strong>
-  </div>
-  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-</div>
-
-<div class="main">
-
-  <!-- XE TEAM -->
-  
-    <div class="team-section">
-      <div class="team-header">
-        <div class="team-icon" style="background:#5F249F">XE</div>
-        <div>
-          <div class="team-title">XE Team Modules</div>
-          <div class="team-sub">HTMLUI (3 levels), Claim Transactions (3 levels), Angular (4 modules) — 10 modules</div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Xuber HTMLUI</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_XE_HTMLUI_Beginner_Training.html" data-key="xe_htmlui_beg"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span></div><div class="card-title">Xuber HTMLUI — Beginner</div><div class="card-desc">What the HTMLUI is, the real folder structure, how a request works, reading a service file and basic debugging.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_htmlui_beg">Not started</div><div class="card-status st-notstarted" id="status-xe_htmlui_beg"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_XE_HTMLUI_Intermediate_Training.html" data-key="xe_htmlui_int"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span></div><div class="card-title">Xuber HTMLUI — Intermediate</div><div class="card-desc">XuWebApiManager internals, all 6 service patterns, complete XuClaimsService and XuUnderwritingService reference tables.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_htmlui_int">Not started</div><div class="card-status st-notstarted" id="status-xe_htmlui_int"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_XE_HTMLUI_Expert_Training.html" data-key="xe_htmlui_exp"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span></div><div class="card-title">Xuber HTMLUI — Expert</div><div class="card-desc">Adding new service methods, feature module structure, 28 real claims components, lazy loading and advanced debugging.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_htmlui_exp">Not started</div><div class="card-status st-notstarted" id="status-xe_htmlui_exp"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_Angular_Module3_Training.html" data-key="ang3"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">HTMLUI in Practice</div><div class="card-desc">Codebase tour, local dev setup, debugging, Git workflow, build pipeline and deployment procedures.</div></div><div class="card-bottom"><div class="card-score" id="score-ang3">Not started</div><div class="card-status st-notstarted" id="status-ang3"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Claim Transactions</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_XE_Claim_Transactions_Beginner_Training.html" data-key="xe_claims_beg"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span></div><div class="card-title">Claim Transactions — Beginner</div><div class="card-desc">What transactions are, the 8 modes, the 5-step startup sequence, the shared template concept and basic Network tab debugging.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_claims_beg">Not started</div><div class="card-status st-notstarted" id="status-xe_claims_beg"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_XE_Claim_Transactions_Intermediate_Training.html" data-key="xe_claims_int"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span></div><div class="card-title">Claim Transactions — Intermediate</div><div class="card-desc">The base class, XuDeferred pattern, 16 injected services, navigateToNode routing and the display-to-amend transition.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_claims_int">Not started</div><div class="card-status st-notstarted" id="status-xe_claims_int"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_XE_Claim_Transactions_Expert_Training.html" data-key="xe_claims_exp"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span><span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span></div><div class="card-title">Claim Transactions — Expert</div><div class="card-desc">R&P financial framework, XuCurrentFinancialGroupPanel, AfterViewChecked, xuCache, layer claims and new transaction types.</div></div><div class="card-bottom"><div class="card-score" id="score-xe_claims_exp">Not started</div><div class="card-status st-notstarted" id="status-xe_claims_exp"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Angular Engineering</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_Angular_Module1_Training.html" data-key="ang1"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">Angular Foundation</div><div class="card-desc">Architecture, components, data binding, services, dependency injection, Router and HttpClientModule with RxJS.</div></div><div class="card-bottom"><div class="card-score" id="score-ang1">Not started</div><div class="card-status st-notstarted" id="status-ang1"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_Angular_Module2_Training.html" data-key="ang2"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">Angular Advanced</div><div class="card-desc">Change detection, lifecycle hooks, reactive forms, custom directives, pipes, feature modules and performance optimization.</div></div><div class="card-bottom"><div class="card-score" id="score-ang2">Not started</div><div class="card-status st-notstarted" id="status-ang2"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_Angular_Module4_Training.html" data-key="ang4"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-xe">XE Team</span></div><div class="card-title">Angular Testing & CI</div><div class="card-desc">Jasmine, TestBed, HTTP testing with HttpTestingController, code coverage thresholds and Azure Pipelines CI.</div></div><div class="card-bottom"><div class="card-score" id="score-ang4">Not started</div><div class="card-status st-notstarted" id="status-ang4"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="team-section">
-      <div class="team-header">
-        <div class="team-icon" style="background:#4facfe">XI</div>
-        <div>
-          <div class="team-title">XIAP Framework Modules</div>
-          <div class="team-sub">Plugin development — architecture, patterns, and implementation — 3 levels</div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">XIAP Framework Training</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_XIAP_Beginner_Training.html" data-key="xiap_beg">
-            <div class="card-top">
-              <div class="card-badges">
-                <span class="badge badge-high">High SPOF</span>
-                <span class="badge badge-team-xe">XE Team</span>
-                <span class="badge" style="background:#e8f4f8;color:#0077a8;border:1px solid #b3d9ec">Level 1</span>
-              </div>
-              <div class="card-title">XIAP Framework — Beginner</div>
-              <div class="card-desc">What XIAP is, plugin architecture (Transaction vs Component), lifecycle points, configuration basics and your first plugin.</div>
-            </div>
-            <div class="card-bottom">
-              <div class="card-score" id="score-xiap_beg">Not started</div>
-              <div class="card-status st-notstarted" id="status-xiap_beg"><div class="status-dot"></div><span>Not started</span></div>
-              <span class="card-arrow">→</span>
-            </div>
-          </a>
-          <a class="module-card" href="v2_XIAP_Intermediate_Training.html" data-key="xiap_int">
-            <div class="card-top">
-              <div class="card-badges">
-                <span class="badge badge-high">High SPOF</span>
-                <span class="badge badge-team-xe">XE Team</span>
-                <span class="badge" style="background:#e8f0f8;color:#005a9c;border:1px solid #b3c9ec">Level 2</span>
-              </div>
-              <div class="card-title">XIAP Framework — Intermediate</div>
-              <div class="card-desc">ITransactionPlugin and IComponentPlugin interfaces, accessing context, error handling, Process Handlers, and real code examples.</div>
-            </div>
-            <div class="card-bottom">
-              <div class="card-score" id="score-xiap_int">Not started</div>
-              <div class="card-status st-notstarted" id="status-xiap_int"><div class="status-dot"></div><span>Not started</span></div>
-              <span class="card-arrow">→</span>
-            </div>
-          </a>
-          <a class="module-card" href="v2_XIAP_Expert_Training.html" data-key="xiap_exp">
-            <div class="card-top">
-              <div class="card-badges">
-                <span class="badge badge-high">High SPOF</span>
-                <span class="badge badge-team-xe">XE Team</span>
-                <span class="badge" style="background:#f8e8e8;color:#9c0000;border:1px solid #ecb3b3">Level 3</span>
-              </div>
-              <div class="card-title">XIAP Framework — Expert</div>
-              <div class="card-desc">Advanced predicates, decision tables, ObjectFactory services, static/system values, metadata, performance optimization and expert scenarios.</div>
-            </div>
-            <div class="card-bottom">
-              <div class="card-score" id="score-xiap_exp">Not started</div>
-              <div class="card-status st-notstarted" id="status-xiap_exp"><div class="status-dot"></div><span>Not started</span></div>
-              <span class="card-arrow">→</span>
-            </div>
-          </a>
-        </div>
-      </div>
-
-    </div>
-
-
-    <div class="team-section">
-      <div class="team-header">
-        <div class="team-icon" style="background:#006975">RM</div>
-        <div>
-          <div class="team-title">Release Management Modules</div>
-          <div class="team-sub">Infrastructure, data management and operational support — 7 modules</div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Infrastructure</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_RM_AWS_Services_Training.html" data-key="rm_aws"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">AWS Services</div><div class="card-desc">EC2, RDS, S3, CloudWatch, IAM, VPC and deployment strategies on AWS infrastructure.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_aws">Not started</div><div class="card-status st-notstarted" id="status-rm_aws"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_RM_iSeries_DB2_Training.html" data-key="rm_iseries"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">iSeries, DB2 & AS/400</div><div class="card-desc">IBM iSeries platform, DB2 database management, AS/400 architecture and legacy system integration.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_iseries">Not started</div><div class="card-status st-notstarted" id="status-rm_iseries"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_RM_Azure_SmartTest_Training.html" data-key="rm_azure"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">Azure Pipelines & CI/CD</div><div class="card-desc">CI/CD pipeline approval and monitoring, pipeline YAML, build stages, deployment gates and release management.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_azure">Not started</div><div class="card-status st-notstarted" id="status-rm_azure"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Data Management</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_RM_SQL_DB_Refresh_Training.html" data-key="rm_sql"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">SQL & Database Refresh</div><div class="card-desc">SQL scripting, database refresh cycles, backup & restore procedures and data integrity validation.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_sql">Not started</div><div class="card-status st-notstarted" id="status-rm_sql"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_RM_SOLR_K2_Scheduler_Training.html" data-key="rm_solr"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">SOLR & K2 Scheduler</div><div class="card-desc">Lucene search engine, SOLR configuration, K2 job scheduling and workflow automation.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_solr">Not started</div><div class="card-status st-notstarted" id="status-rm_solr"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Operations</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_RM_DR_Certs_Training.html" data-key="rm_dr"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">DR & Certificates</div><div class="card-desc">Disaster recovery planning, failover procedures, SSL/TLS certificate management and renewal cycles.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_dr">Not started</div><div class="card-status st-notstarted" id="status-rm_dr"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_RM_Xuber_Patches_Training.html" data-key="rm_patches"><div class="card-top"><div class="card-badges"><span class="badge badge-high">High SPOF</span><span class="badge badge-team-rm">RM Team</span></div><div class="card-title">Xuber Patches</div><div class="card-desc">Patch development, testing, deployment, rollback procedures and version management across environments.</div></div><div class="card-bottom"><div class="card-score" id="score-rm_patches">Not started</div><div class="card-status st-notstarted" id="status-rm_patches"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-    </div>
-
-    <div class="team-section">
-      <div class="team-header">
-        <div class="team-icon" style="background:#00968F">GN</div>
-        <div>
-          <div class="team-title">Genius Team Modules</div>
-          <div class="team-sub">Rating, SmartTest regression, Bureau processing and Intercept messaging — 4 modules</div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Core Systems</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_Genius_Rating_Training.html" data-key="gn_rating"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Genius Rating</div><div class="card-desc">Rating tables, factors, routines and how Genius calculates premiums automatically. Setup, maintenance and overrides.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_rating">Not started</div><div class="card-status st-notstarted" id="status-gn_rating"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_Genius_Intercept_Training_5.html" data-key="gn_bureau"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Genius Bureau Processing</div><div class="card-desc">Bureau message format, Genius as recipient, message validation, underwriting rules and outcome routing.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_bureau">Not started</div><div class="card-status st-notstarted" id="status-gn_bureau"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <div class="subsection-title">Testing & Messaging</div>
-        <div class="subsection-grid">
-          <a class="module-card" href="v2_Genius_SmartTest_Training.html" data-key="gn_smarttest"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Testing Genius using SmartTest</div><div class="card-desc">Architecture, running scripts, failure triage (6 categories), PTF preparation and capturing. Animated flows and scenarios.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_smarttest">Not started</div><div class="card-status st-notstarted" id="status-gn_smarttest"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-          <a class="module-card" href="v2_Genius_Intercept_Training.html" data-key="gn_intercept"><div class="card-top"><div class="card-badges"><span class="badge badge-critical">Critical SPOF</span><span class="badge badge-team-genius">Genius Team</span></div><div class="card-title">Genius Intercept Messaging</div><div class="card-desc">Message exchange with external systems, Genius as sender/receiver, message structure and routing logic.</div></div><div class="card-bottom"><div class="card-score" id="score-gn_intercept">Not started</div><div class="card-status st-notstarted" id="status-gn_intercept"><div class="status-dot"></div><span>Not started</span></div><span class="card-arrow">→</span></div></a>
-        </div>
-      </div>
-    </div>
-
+</body>
+</html>
