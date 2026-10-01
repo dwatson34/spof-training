@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XLPro Integration - Beginner Training</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        
+        .container { display: flex; min-height: 100vh; }
+        
+        /* SIDEBAR */
+        .sidebar { width: 280px; background: #fff; border-right: 2px solid #f0f0f0; padding: 20px 0; overflow-y: auto; position: sticky; top: 0; height: 100vh; box-shadow: 2px 0 8px rgba(0,0,0,0.1); }
+        .sidebar-header { padding: 0 20px 20px; border-bottom: 2px solid #f0f0f0; margin-bottom: 15px; }
+        .sidebar-header h3 { color: #667eea; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; }
+        .slide-nav { padding: 0 10px; }
+        .slide-item { padding: 12px 15px; margin: 5px 0; border-radius: 8px; cursor: pointer; transition: all 0.2s; font-size: 0.9em; color: #666; border-left: 3px solid transparent; display: flex; align-items: center; gap: 8px; }
+        .slide-item:hover { background: #f5f5f5; color: #667eea; }
+        .slide-item.active { background: #f0ebfa; color: #667eea; border-left-color: #667eea; font-weight: 600; }
+        .slide-num { font-size: 0.75em; background: #f0f0f0; padding: 3px 8px; border-radius: 4px; min-width: 25px; text-align: center; }
+        .slide-item.active .slide-num { background: #667eea; color: #fff; }
+        
+        /* MAIN CONTENT */
+        .main { flex: 1; display: flex; flex-direction: column; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 30px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .header h1 { font-size: 2.2em; margin-bottom: 5px; }
+        .header-meta { display: flex; gap: 20px; font-size: 0.9em; opacity: 0.95; margin-top: 15px; }
+        .meta-item { display: flex; align-items: center; gap: 8px; }
+        .progress-bar { height: 4px; background: rgba(255,255,255,0.3); margin-top: 15px; border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #00d4ff; transition: width 0.4s ease; }
+        
+        .content { flex: 1; overflow-y: auto; padding: 40px; }
+        .slide { display: none; animation: slideIn 0.4s ease; }
+        .slide.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        h2 { color: #667eea; font-size: 1.8em; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+        h2 em { font-style: normal; font-size: 1.3em; }
+        
+        p { color: #555; line-height: 1.8; margin-bottom: 18px; font-size: 0.95em; }
+        ul { margin-left: 25px; margin-bottom: 20px; }
+        li { color: #666; margin-bottom: 12px; line-height: 1.7; }
+        
+        /* VISUAL BOXES */
+        .diagram { background: #f9f9f9; border: 2px solid #e0e0e0; border-radius: 10px; padding: 25px; margin: 25px 0; font-family: monospace; font-size: 0.9em; color: #333; overflow-x: auto; }
+        .diagram-title { font-weight: 700; color: #667eea; margin-bottom: 15px; font-size: 0.95em; }
+        
+        .concept-box { background: linear-gradient(135deg, #e8ecf7 0%, #f0ebfa 100%); border-left: 5px solid #667eea; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .concept-label { font-weight: 700; color: #667eea; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+        .concept-text { color: #555; line-height: 1.7; }
+        
+        .icon-list { list-style: none; margin-left: 0; }
+        .icon-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; }
+        .icon-list li:before { content: '✓'; color: #667eea; font-weight: 700; font-size: 1.2em; min-width: 20px; }
+        
+        .expandable { background: #f5f5f5; border-left: 4px solid #667eea; padding: 15px; margin: 15px 0; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .expandable:hover { background: #efefef; }
+        .expandable-header { font-weight: 600; color: #667eea; display: flex; justify-content: space-between; align-items: center; }
+        .expandable-icon { transition: transform 0.3s; }
+        .expandable-icon.open { transform: rotate(180deg); }
+        .expandable-content { display: none; margin-top: 12px; color: #666; line-height: 1.7; font-size: 0.95em; }
+        .expandable-content.open { display: block; }
+        
+        .badge { display: inline-block; padding: 6px 12px; border-radius: 20px; font-size: 0.75em; font-weight: 700; margin-right: 8px; }
+        .badge-beg { background: #d4edda; color: #155724; }
+        .badge-int { background: #fff3cd; color: #856404; }
+        .badge-exp { background: #f8d7da; color: #721c24; }
+        
+        .controls { padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.05); border-top: 1px solid #ddd; }
+        button { padding: 12px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 0.95em; }
+        .btn-nav { background: #f0f0f0; color: #333; }
+        .btn-nav:hover { background: #e0e0e0; }
+        .btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-quiz { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 14px 35px; }
+        .btn-quiz:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        
+        .slide-counter { color: #999; font-weight: 600; }
+        
+        /* QUIZ */
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+        .question { background: #f9f9f9; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #667eea; }
+        .question h4 { color: #333; margin-bottom: 15px; font-size: 1em; }
+        .option { margin: 10px 0; display: flex; align-items: center; gap: 10px; }
+        .option input { cursor: pointer; }
+        .option label { cursor: pointer; }
+        .result { background: #d4edda; color: #155724; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 5px solid #155724; }
+        .result.fail { background: #f8d7da; color: #721c24; border-left-color: #721c24; }
+        .result h3 { margin-bottom: 10px; }
+        
+        /* TABLE */
+        .table-box { background: #f9f9f9; padding: 15px; margin: 15px 0; border-radius: 8px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #f0f0f0; font-weight: 600; color: #333; }
+        
+        @media (max-width: 900px) {
+            .sidebar { width: 200px; }
+            .header { padding: 20px 30px; }
+            .content { padding: 30px; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { position: absolute; z-index: 100; display: none; width: 250px; height: calc(100vh - 60px); }
+            .container { flex-direction: column; }
+            .main { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR NAVIGATION -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>🔌 XLPro Integration</h3>
+            </div>
+            <div class="slide-nav">
+                <div class="slide-item active" onclick="goToSlide(1)"><span class="slide-num">1</span>What is XLPro?</div>
+                <div class="slide-item" onclick="goToSlide(2)"><span class="slide-num">2</span>GLOBAL XLPro</div>
+                <div class="slide-item" onclick="goToSlide(3)"><span class="slide-num">3</span>Integration Flow</div>
+                <div class="slide-item" onclick="goToSlide(4)"><span class="slide-num">4</span>Architecture</div>
+                <div class="slide-item" onclick="goToSlide(5)"><span class="slide-num">5</span>Key Components</div>
+                <div class="slide-item" onclick="goToSlide(6)"><span class="slide-num">6</span>Prerequisites</div>
+                <div class="slide-item" onclick="goToSlide(7)"><span class="slide-num">7</span>Getting Started</div>
+                <div class="slide-item" onclick="goToSlide(8)"><span class="slide-num">Q</span>Quiz</div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <div class="header">
+                <h1>🔌 XLPro Integration Training</h1>
+                <div class="header-meta">
+                    <div class="meta-item">📚 <span>Beginner Level</span></div>
+                    <div class="meta-item">⏱️ <span>45-60 minutes</span></div>
+                    <div class="meta-item"><span class="badge badge-beg">BEGINNER</span></div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="content">
+                <!-- SLIDE 1 -->
+                <div class="slide active" id="slide-1">
+                    <h2><em>🔌</em> What is XLPro Integration?</h2>
+                    <p>XLPro Integration is a <strong>bridge</strong> that connects two powerful systems:</p>
+                    
+                    <div class="diagram">
+                        <div class="diagram-title">System Connection</div>
+                        ┌─────────────────────────────────────────────┐
+                        │  Xuber Enterprise                           │
+                        │  (Insurance Claims & Underwriting)          │
+                        └────────────────┬────────────────────────────┘
+                                         │
+                                         │ XLPro Integration
+                                         │ (Data Bridge)
+                                         │
+                        ┌────────────────▼────────────────────────────┐
+                        │  GLOBAL XLPro                               │
+                        │  (Reinsurance Management)                   │
+                        └─────────────────────────────────────────────┘
+                    </div>
+
+                    <p><strong>Why does this matter?</strong> These two systems need to share information automatically. Without integration, teams would have to manually copy data from one system to another — which is slow, error-prone, and inefficient.</p>
+
+                    <div class="concept-box">
+                        <div class="concept-label">💡 Think of it like...</div>
+                        <div class="concept-text">Two departments that used to pass paper files back and forth. Integration sets up an automated mail system so documents arrive instantly and accurately.</div>
+                    </div>
+
+                    <ul class="icon-list">
+                        <li>Eliminates manual data entry</li>
+                        <li>Reduces human error</li>
+                        <li>Speeds up claim processing</li>
+                        <li>Keeps systems synchronized 24/7</li>
+                    </ul>
+                </div>
+
+                <!-- SLIDE 2 -->
+                <div class="slide" id="slide-2">
+                    <h2><em>🌍</em> What is GLOBAL XLPro?</h2>
+                    
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span>What does "ceded reinsurance" mean?</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            Imagine you're an insurance company. You insure 1,000 houses, but that's risky — if a hurricane hits, you'd have to pay out millions. So you buy insurance FROM another company to cover half those houses. That's reinsurance. "Ceded" means the risk has been transferred to another insurer.
+                        </div>
+                    </div>
+
+                    <p><strong>GLOBAL XLPro is specialized software for managing reinsurance relationships.</strong></p>
+
+                    <div class="table-box">
+                        <table>
+                            <tr>
+                                <th>Feature</th>
+                                <th>What It Does</th>
+                            </tr>
+                            <tr>
+                                <td>Contract Management</td>
+                                <td>Tracks reinsurance contracts and coverage</td>
+                            </tr>
+                            <tr>
+                                <td>Claim Routing</td>
+                                <td>Identifies which claims are covered by reinsurance</td>
+                            </tr>
+                            <tr>
+                                <td>Recovery Calculation</td>
+                                <td>Calculates how much money the company recovers</td>
+                            </tr>
+                            <tr>
+                                <td>Financial Reporting</td>
+                                <td>Creates reports for management and regulators</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="concept-box">
+                        <div class="concept-label">🎯 Why integrate Xuber with XLPro?</div>
+                        <div class="concept-text">When a claim is created in Xuber, the reinsurance team instantly knows: "Is this claim covered by our reinsurance? How much can we recover?" This information is critical for financial planning.</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3 -->
+                <div class="slide" id="slide-3">
+                    <h2><em>🔄</em> How Data Flows</h2>
+                    
+                    <div class="diagram">
+                        <div class="diagram-title">Integration Data Flow (Step by Step)</div>
+                        Step 1: Claim Created in Xuber
+                                  │
+                                  ▼
+                        Step 2: Message Sent to Messaging Server
+                                  │
+                                  ▼
+                        Step 3: Data Arrives in Staging Database
+                                  │
+                                  ▼
+                        Step 4: Data Validated & Checked
+                                  │
+                                  ▼
+                        Step 5: Approved Data Moves to XLPro
+                                  │
+                                  ▼
+                        Step 6: XLPro Knows About the Claim!
+                    </div>
+
+                    <p>Each step is automated. The entire process typically takes <strong>15-30 minutes</strong> from claim creation to XLPro visibility.</p>
+
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span>What happens in the staging database?</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            The staging database is like a quality control checkpoint. Data arrives here first, where it's checked for errors: "Is this a valid claim? Are all required fields filled? Are the numbers reasonable?" Only data that passes all checks moves to XLPro. This protects the reinsurance system from bad data.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4 -->
+                <div class="slide" id="slide-4">
+                    <h2><em>🏗️</em> Integration Architecture</h2>
+                    
+                    <div class="concept-box">
+                        <div class="concept-label">3 Main Components</div>
+                        <div class="concept-text"></div>
+                    </div>
+
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span><strong>1️⃣ XLPro Integration Service</strong> — on Xuber Enterprise Server</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            This is installed on the Xuber server. It monitors Xuber for new claims and prepares them to be sent to XLPro. Think of it as the "sender" that packages data for shipment.
+                        </div>
+                    </div>
+
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span><strong>2️⃣ Messaging Module</strong> — on Xuber Messaging Server</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            This is the "postal service" between Xuber and XLPro. It takes the packaged data and delivers it to the staging database. It's responsible for reliable message delivery.
+                        </div>
+                    </div>
+
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span><strong>3️⃣ USM 6-9 Load</strong> — on XLPro Database Server</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            This processes incoming messages and loads them into GLOBAL XLPro. It's the "receiver" that unpacks the data and stores it where XLPro can use it.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 5 -->
+                <div class="slide" id="slide-5">
+                    <h2><em>⚙️</em> Key Components You'll Encounter</h2>
+                    
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span><strong>SSIS Packages</strong> — Automated Data Movement Jobs</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            SSIS stands for SQL Server Integration Services. These are automated jobs that run on a schedule (e.g., every 15 minutes). They handle the actual data movement between databases. Two key packages: USM2Staging (Xuber → Staging) and Staging2XLPro (Staging → XLPro).
+                        </div>
+                    </div>
+
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span><strong>Configuration Files</strong> — Instructions for SSIS Packages</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            Config files (.dtsConfig) tell SSIS packages where the databases are and how to connect to them. They contain connection strings, database names, folder paths, and passwords. Think of them as "address books" for the integration.
+                        </div>
+                    </div>
+
+                    <div class="expandable" onclick="toggleExpand(this)">
+                        <div class="expandable-header">
+                            <span><strong>Service Accounts</strong> — Security & Permissions</span>
+                            <span class="expandable-icon">▼</span>
+                        </div>
+                        <div class="expandable-content">
+                            Integration services run under dedicated user accounts with limited permissions (not admin accounts). This is a security best practice. These accounts have access only to what they need: specific databases and folders. Nothing more.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 6 -->
+                <div class="slide" id="slide-6">
+                    <h2><em>📋</em> What You Need Before Installing</h2>
+                    
+                    <p><strong>System Requirements</strong></p>
+                    <ul class="icon-list">
+                        <li>GLOBAL XLPro version 2.8.30 or later</li>
+                        <li>Xuber Enterprise with messaging components</li>
+                        <li>Microsoft SQL Server (supported version)</li>
+                        <li>SQL Server Integration Services (SSIS)</li>
+                        <li>MSDTC (Distributed Transaction Coordinator)</li>
+                    </ul>
+
+                    <p><strong>Access & Permissions</strong></p>
+                    <ul class="icon-list">
+                        <li>Administrator access to SQL Server</li>
+                        <li>Admin rights on Xuber servers</li>
+                        <li>db_owner permissions on databases</li>
+                        <li>Access to installation media</li>
+                    </ul>
+
+                    <div class="concept-box">
+                        <div class="concept-label">⚠️ Critical Step</div>
+                        <div class="concept-text"><strong>Back up all databases before starting installation.</strong> If something goes wrong, you can restore from backup. Never skip this step.</div>
+                    </div>
+                </div>
+
+                <!-- SLIDE 7 -->
+                <div class="slide" id="slide-7">
+                    <h2><em>🚀</em> Getting Started (5 High-Level Steps)</h2>
+                    
+                    <div class="diagram">
+                        <div class="diagram-title">Installation Sequence</div>
+Step 1: Back up databases
+        │
+Step 2: Update XLPro database with integration schema
+        │
+Step 3: Update Xuber database with integration config
+        │
+Step 4: Install XLPro Integration on Xuber server
+        │
+Step 5: Configure and schedule SSIS packages
+        │
+        ✓ Integration is Ready!
+                    </div>
+
+                    <p><strong>Estimated time: 2-4 hours</strong> depending on system complexity and experience level.</p>
+
+                    <div class="concept-box">
+                        <div class="concept-label">📚 You're Ready for the Next Level!</div>
+                        <div class="concept-text">You now understand what XLPro Integration is, why it exists, and how it works conceptually. The Intermediate level goes deeper into the actual installation procedures. Take the quiz below to confirm your understanding, then move forward!</div>
+                    </div>
+                </div>
+
+                <!-- QUIZ -->
+                <div class="quiz-section" id="quiz-section">
+                    <h2><em>📝</em> Knowledge Check Quiz</h2>
+                    <p>Answer 7 out of 10 questions correctly to pass.</p>
+                    
+                    <form id="quizForm">
+                        <div class="question">
+                            <h4>1. What does XLPro Integration connect?</h4>
+                            <div class="option"><input type="radio" name="q1" value="a"> A) Xuber Enterprise and GLOBAL XLPro</div>
+                            <div class="option"><input type="radio" name="q1" value="b"> B) SharePoint and Xuber</div>
+                            <div class="option"><input type="radio" name="q1" value="c"> C) SQL Server and Xuber</div>
+                            <div class="option"><input type="radio" name="q1" value="d"> D) XLPro and Excel</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>2. What is GLOBAL XLPro used for?</h4>
+                            <div class="option"><input type="radio" name="q2" value="a"> A) General insurance underwriting</div>
+                            <div class="option"><input type="radio" name="q2" value="b"> B) Ceded reinsurance management</div>
+                            <div class="option"><input type="radio" name="q2" value="c"> C) Document storage</div>
+                            <div class="option"><input type="radio" name="q2" value="d"> D) User access management</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>3. What is the staging database?</h4>
+                            <div class="option"><input type="radio" name="q3" value="a"> A) A backup of the production database</div>
+                            <div class="option"><input type="radio" name="q3" value="b"> B) A temporary checkpoint to validate data</div>
+                            <div class="option"><input type="radio" name="q3" value="c"> C) The XLPro main database</div>
+                            <div class="option"><input type="radio" name="q3" value="d"> D) A testing environment</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>4. How many main components are in the integration?</h4>
+                            <div class="option"><input type="radio" name="q4" value="a"> A) 2 (Xuber and XLPro)</div>
+                            <div class="option"><input type="radio" name="q4" value="b"> B) 3 (Service, Messaging, USM Load)</div>
+                            <div class="option"><input type="radio" name="q4" value="c"> C) 5 (multiple servers)</div>
+                            <div class="option"><input type="radio" name="q4" value="d"> D) 4 (databases and services)</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>5. What do SSIS packages do?</h4>
+                            <div class="option"><input type="radio" name="q5" value="a"> A) Store configuration settings</div>
+                            <div class="option"><input type="radio" name="q5" value="b"> B) Automatically move data on a schedule</div>
+                            <div class="option"><input type="radio" name="q5" value="c"> C) Create backup copies</div>
+                            <div class="option"><input type="radio" name="q5" value="d"> D) Encrypt sensitive data</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>6. What does MSDTC do?</h4>
+                            <div class="option"><input type="radio" name="q6" value="a"> A) Manages database transactions across servers</div>
+                            <div class="option"><input type="radio" name="q6" value="b"> B) Encrypts database connections</div>
+                            <div class="option"><input type="radio" name="q6" value="c"> C) Creates scheduled backups</div>
+                            <div class="option"><input type="radio" name="q6" value="d"> D) Monitors SQL Server performance</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>7. What should you do BEFORE installation?</h4>
+                            <div class="option"><input type="radio" name="q7" value="a"> A) Restart all servers</div>
+                            <div class="option"><input type="radio" name="q7" value="b"> B) Back up all databases</div>
+                            <div class="option"><input type="radio" name="q7" value="c"> C) Clear all log files</div>
+                            <div class="option"><input type="radio" name="q7" value="d"> D) Update Windows</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>8. Roughly how long does full installation take?</h4>
+                            <div class="option"><input type="radio" name="q8" value="a"> A) 30 minutes</div>
+                            <div class="option"><input type="radio" name="q8" value="b"> B) 1 hour</div>
+                            <div class="option"><input type="radio" name="q8" value="c"> C) 2-4 hours</div>
+                            <div class="option"><input type="radio" name="q8" value="d"> D) 1 full day</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>9. What's the main advantage of the integration?</h4>
+                            <div class="option"><input type="radio" name="q9" value="a"> A) Faster server performance</div>
+                            <div class="option"><input type="radio" name="q9" value="b"> B) Automated data sync, no manual entry</div>
+                            <div class="option"><input type="radio" name="q9" value="c"> C) Cheaper licensing</div>
+                            <div class="option"><input type="radio" name="q9" value="d"> D) Better user interface</div>
+                        </div>
+
+                        <div class="question">
+                            <h4>10. Which permission level is needed for database updates?</h4>
+                            <div class="option"><input type="radio" name="q10" value="a"> A) Read-only</div>
+                            <div class="option"><input type="radio" name="q10" value="b"> B) db_owner</div>
+                            <div class="option"><input type="radio" name="q10" value="c"> C) User role</div>
+                            <div class="option"><input type="radio" name="q10" value="d"> D) Public</div>
+                        </div>
+
+                        <button type="button" class="btn-quiz" onclick="submitQuiz()" style="width: 100%; margin-top: 20px;">Submit Quiz</button>
+                    </form>
+
+                    <div id="results"></div>
+                </div>
+            </div>
+
+            <!-- FOOTER CONTROLS -->
+            <div class="controls">
+                <button class="btn-nav" id="prevBtn" onclick="previousSlide()">← Previous</button>
+                <span class="slide-counter">Slide <span id="currentSlide">1</span> of 7</span>
+                <button class="btn-nav" id="nextBtn" onclick="nextSlide()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 7;
+
+        function updateDisplay() {
+            document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('currentSlide').textContent = currentSlide;
+            document.getElementById('progressFill').style.width = (currentSlide / totalSlides * 100) + '%';
+            
+            document.querySelectorAll('.slide-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.slide-item')[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+            
+            document.getElementById('quiz-section').style.display = 'none';
+            
+            if (currentSlide === totalSlides) {
+                document.querySelector('.controls').innerHTML = `
+                    <button class="btn-nav" onclick="previousSlide()">← Previous</button>
+                    <button class="btn-quiz" onclick="showQuiz()">Take Quiz →</button>
+                    <span class="slide-counter">Ready to test your knowledge!</span>
+                `;
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) currentSlide++;
+            updateDisplay();
+            window.scrollTo(0, 0);
+        }
+
+        function previousSlide() {
+            if (currentSlide > 1) currentSlide--;
+            updateDisplay();
+            window.scrollTo(0, 0);
+        }
+
+        function goToSlide(n) {
+            if (n >= 1 && n <= totalSlides) {
+                currentSlide = n;
+                updateDisplay();
+                document.querySelector('.content').scrollTo(0, 0);
+            } else if (n === 8) {
+                showQuiz();
+            }
+        }
+
+        function showQuiz() {
+            document.querySelectorAll('.slide').forEach(el => el.classList.remove('active'));
+            document.getElementById('quiz-section').classList.add('active');
+            document.querySelector('.controls').style.display = 'none';
+            document.querySelector('.content').scrollTo(0, 0);
+        }
+
+        function toggleExpand(el) {
+            el.classList.toggle('active');
+            el.querySelector('.expandable-icon').classList.toggle('open');
+            el.querySelector('.expandable-content').classList.toggle('open');
+        }
+
+        function submitQuiz() {
+            const answers = {
+                q1: 'a', q2: 'b', q3: 'b', q4: 'b', q5: 'b',
+                q6: 'a', q7: 'b', q8: 'c', q9: 'b', q10: 'b'
+            };
+
+            let score = 0;
+            for (let i = 1; i <= 10; i++) {
+                const userAnswer = document.querySelector(`input[name="q${i}"]:checked`);
+                if (userAnswer && userAnswer.value === answers[`q${i}`]) {
+                    score++;
+                }
+            }
+
+            const percentage = Math.round((score / 10) * 100);
+            const passed = percentage >= 70;
+
+            let resultHTML = `<div class="result ${!passed ? 'fail' : ''}">`;
+            resultHTML += `<h3>Quiz Complete! Score: ${score}/10 (${percentage}%)</h3>`;
+            resultHTML += passed ? 
+                `<p>✓ Congratulations! You've passed Beginner level. You're ready for Intermediate training.</p>` :
+                `<p>Review the expandable sections to reinforce key concepts, then try again. Focus on components and data flow.</p>`;
+            resultHTML += `</div>`;
+
+            document.getElementById('results').innerHTML = resultHTML;
+            document.getElementById('quizForm').style.display = 'none';
+            document.querySelector('.content').scrollTo(0, document.getElementById('results').offsetTop - 200);
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
