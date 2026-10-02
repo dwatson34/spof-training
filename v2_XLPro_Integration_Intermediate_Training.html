@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC | XLPro Integration - Intermediate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root{
+  --dxc-purple:    #5F249F;
+  --dxc-dark-pur:  #330072;
+  --dxc-teal:      #00968F;
+  --dxc-blue:      #00A3E1;
+  --dxc-dark-teal: #006975;
+  --dxc-green:     #6CC24A;
+  --dxc-orange:    #ED9B33;
+  --dxc-gold:      #FFCD00;
+  --dxc-lt-gray:   #D9D9D6;
+  --dxc-mid-gray:  #969696;
+  --dxc-dk-gray:   #63666A;
+
+  --dp:   var(--dxc-dark-pur);
+  --dm:   var(--dxc-purple);
+  --db:   #7B3BBC;
+  --dd:   #1a0a2e;
+  --teal: var(--dxc-teal);
+  --green: #1a7a4a;
+  --red:  #c0392b;
+  --off:  #F7F5FB;
+  --text: #1A1A1A;
+  --muted: #63666A;
+  --border: #E0D9EE;
+  --code-bg: #1E1E2E;
+  --r: 10px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Open Sans',Arial,sans-serif;
+  background:var(--off);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.hdr{background:var(--dp);height:54px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(51,0,114,.4)}
+.logo{display:flex;align-items:center;gap:.5rem}
+.logo-dxc{font-size:1.3rem;font-weight:800;color:#fff;letter-spacing:-.02em}
+.logo-sep{width:1px;height:20px;background:rgba(255,255,255,.25)}
+.logo-title{font-size:.8rem;color:#d4c8f0;font-weight:600}
+.hdr-r{display:flex;gap:1rem;align-items:center}
+.badge{font-size:.65rem;font-weight:700;padding:.3rem .7rem;border-radius:3px;text-transform:uppercase;letter-spacing:.08em}
+.badge.spof{background:var(--dxc-orange);color:#fff}
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--dxc-blue));transition:width .4s ease}
+.app{display:flex;flex:1}
+.sidebar{width:240px;background:#fff;border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0;position:sticky;top:54px;height:calc(100vh - 54px);padding:1rem 0;display:flex;flex-direction:column}
+.nav-items{flex:1;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:.6rem;padding:.55rem 1rem;font-size:.82rem;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .15s;background:none;border:none;font-family:'Open Sans',Arial,sans-serif;width:100%;text-align:left}
+.nav-item:hover{background:var(--off);color:var(--text)}
+.nav-item.active{background:#f0ebfa;color:var(--dm);border-left-color:var(--dm);font-weight:700}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:#ddd;flex-shrink:0;transition:background .3s}
+.nav-item.active .nav-dot{background:var(--dm)}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border);margin-top:auto}
+.quiz-btn{width:100%;padding:.6rem;background:var(--dm);color:#fff;border:none;border-radius:var(--r);font-weight:700;cursor:pointer;font-size:.8rem;transition:background .2s}
+.quiz-btn:hover{background:var(--db)}
+.content{flex:1;overflow-y:auto;background:var(--off)}
+.slide{display:none;animation:fadeIn .4s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(135deg,#1a0a2e 0%,#330072 50%,var(--dm) 100%);padding:3rem 2.5rem 2rem;color:#fff;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-100px;right:-100px;width:300px;height:300px;background:rgba(255,255,255,.03);border-radius:50%;pointer-events:none}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.badge-hero{display:inline-block;background:#ED9B33;color:#fff;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .8rem;border-radius:4px}
+.hero h1{font-size:2rem;font-weight:800;line-height:1.2;margin-bottom:.8rem;position:relative;z-index:10}
+.hero-sub{font-size:.95rem;opacity:.95;line-height:1.5;position:relative;z-index:10;margin-bottom:1.2rem}
+.tts-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:6px;cursor:pointer;font-weight:600;font-size:.82rem;transition:all .2s;position:relative;z-index:10}
+.tts-btn:hover{background:rgba(255,255,255,.25)}
+.tts-btn.speaking{background:rgba(237,155,51,.4);border-color:#ED9B33}
+.tts-dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.tts-btn.speaking .tts-dot{animation:pulse 0.8s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+.main-content{padding:2.5rem}
+.section{margin-bottom:3rem}
+.section h2{font-size:1.4rem;font-weight:700;color:var(--dp);margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:2px solid var(--border)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-bottom:2rem}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:all .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(95,36,159,.12);border-color:var(--dm)}
+.card-icon{font-size:1.8rem;margin-bottom:.8rem}
+.card h3{font-size:1rem;font-weight:700;color:var(--dp);margin-bottom:.6rem}
+.card p{font-size:.9rem;color:#666;line-height:1.6}
+.expander{margin-bottom:1.5rem}
+.expander-hdr{background:#fff;border:1px solid var(--border);padding:1rem 1.2rem;cursor:pointer;border-radius:var(--r);font-weight:700;color:var(--dm);display:flex;align-items:center;justify-content:space-between;transition:all .2s;user-select:none}
+.expander-hdr:hover{background:var(--off);border-color:var(--dm)}
+.expander-icon{display:inline-block;transition:transform .3s;font-size:1.2rem}
+.expander.open .expander-icon{transform:rotate(180deg)}
+.expander-body{display:none;background:#fff;border:1px solid var(--border);border-top:none;padding:1.2rem;border-radius:0 0 var(--r) var(--r);animation:slideDown .3s ease}
+.expander.open .expander-body{display:block}
+@keyframes slideDown{from{opacity:0;max-height:0;overflow:hidden}to{opacity:1;max-height:500px}}
+.scenario{background:linear-gradient(135deg,#f8f6fc 0%,#fff 100%);border-left:4px solid var(--dm);padding:1.5rem;border-radius:0 var(--r) var(--r) 0;margin:1.5rem 0}
+.scenario-q{font-weight:700;color:var(--dp);margin-bottom:1rem;font-size:1rem}
+.scenario-opts{display:grid;gap:.8rem;margin-bottom:1rem}
+.sc-opt{padding:.8rem 1rem;background:#fff;border:2px solid var(--border);border-radius:6px;cursor:pointer;text-align:left;font-family:'Open Sans',Arial,sans-serif;transition:all .15s}
+.sc-opt:hover{border-color:var(--dm);background:var(--off)}
+.sc-opt:disabled{cursor:not-allowed}
+.sc-opt.correct{background:#e8f5e9;border-color:var(--green);color:var(--green);font-weight:600}
+.sc-opt.wrong{background:#ffebee;border-color:var(--red);color:var(--red);text-decoration:line-through}
+.fb{display:none;padding:.8rem;border-radius:6px;font-size:.9rem;line-height:1.5}
+.fb.show{display:block}
+.fb.cfb{background:#e8f5e9;color:var(--green);border-left:3px solid var(--green)}
+.fb.wfb{background:#ffebee;color:var(--red);border-left:3px solid var(--red)}
+.code-block{background:var(--code-bg);color:#d4d4d4;padding:1.2rem;border-radius:var(--r);overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:.85rem;line-height:1.6;margin:1.5rem 0}
+.kw{color:#569CD6}.str{color:#CE9178}.fn{color:#DCDCAA}.var{color:#9CDCFE}.cmt{color:#6A9955}.typ{color:#4EC9B0}
+.steps{margin:1.5rem 0}
+.step{background:#fff;border-left:4px solid var(--teal);padding:1.2rem;margin-bottom:.8rem;border-radius:0 var(--r) var(--r) 0}
+.step-num{font-weight:700;color:var(--teal);margin-right:.5rem;font-size:.9rem}
+.nav-btns{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}
+.btn{padding:.65rem 1.5rem;border:none;border-radius:var(--r);cursor:pointer;font-weight:600;font-size:.9rem;transition:all .2s;font-family:'Open Sans',Arial,sans-serif}
+.btn-primary{background:var(--dm);color:#fff}
+.btn-primary:hover{background:var(--db)}
+.btn-secondary{background:#f0ebfa;color:var(--dm);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--off)}
+.quiz-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;z-index:500;align-items:center;justify-content:center;padding:2rem}
+.quiz-overlay.show{display:flex}
+.quiz-panel{background:#fff;border-radius:var(--r);max-width:700px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .4s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.quiz-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:1.8rem;cursor:pointer;color:var(--muted);z-index:10}
+.quiz-hdr{background:linear-gradient(135deg,#1a0a2e 0%,var(--dp) 100%);color:#fff;padding:2rem 2rem 1.5rem;position:relative}
+.quiz-hdr h2{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
+.quiz-info{font-size:.85rem;opacity:.9}
+.quiz-body{padding:2rem}
+.qintro{margin-bottom:1.5rem}
+.qintro p{font-size:.95rem;line-height:1.6;color:#666;margin-bottom:1rem}
+.q-item{margin-bottom:2rem;display:none}
+.q-item.show{display:block;animation:fadeIn .3s ease}
+.q-num{font-size:.8rem;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.q-text{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:1.2rem}
+.q-opts{display:grid;gap:.8rem;margin-bottom:1.2rem}
+.qopt{padding:1rem;background:var(--off);border:2px solid var(--border);border-radius:6px;cursor:pointer;font-family:'Open Sans',Arial,sans-serif;text-align:left;transition:all .15s}
+.qopt:hover{border-color:var(--dm);background:#fff}
+.qopt:disabled{cursor:not-allowed}
+.qopt.correct{background:#e8f5e9;border-color:var(--green);color:var(--green);font-weight:600}
+.qopt.wrong{background:#ffebee;border-color:var(--red);color:var(--red)}
+.qfb{padding:1rem;border-radius:6px;font-size:.9rem;line-height:1.6;margin-bottom:1.5rem;display:none}
+.qfb.show{display:block}
+.qfb.correct{background:#e8f5e9;color:#2e7d32;border-left:3px solid var(--green)}
+.qfb.wrong{background:#ffebee;color:#c62828;border-left:3px solid var(--red)}
+.q-nav{display:flex;gap:.8rem;justify-content:space-between;margin-top:1.5rem}
+.q-nav button{padding:.6rem 1rem;background:var(--off);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-weight:600;transition:all .2s;font-family:'Open Sans',Arial,sans-serif}
+.q-nav button:hover{background:var(--border)}
+.q-nav button:disabled{opacity:.4;cursor:not-allowed}
+.qresult{display:none}
+.qresult.show{display:block}
+.qresult-hdr{text-align:center;padding:1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.qscore{font-size:3rem;font-weight:800;color:var(--dm);margin-bottom:.5rem}
+.qstatus{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.qstatus.pass{color:var(--green)}
+.qstatus.fail{color:var(--red)}
+.qbreakdown{margin-bottom:1.5rem}
+.qstat{display:flex;justify-content:space-between;padding:.8rem;background:var(--off);border-radius:6px;margin-bottom:.6rem}
+.qstat-label{font-weight:600;color:var(--text)}
+.qstat-val{font-weight:700;color:var(--dm)}
+.q-actions{display:flex;gap:1rem;justify-content:center;padding:1rem 0;flex-wrap:wrap}
+.q-actions button{padding:.65rem 1.5rem;border:none;border-radius:var(--r);cursor:pointer;font-weight:700;font-size:.9rem;transition:all .2s;font-family:'Open Sans',Arial,sans-serif}
+.retry-btn{background:var(--dm);color:#fff}
+.retry-btn:hover{background:var(--db)}
+.exit-btn{background:#f0ebfa;color:var(--dm)}
+.exit-btn:hover{background:var(--off)}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">
+    <span class="logo-dxc">DXC</span>
+    <div class="logo-sep"></div>
+    <span class="logo-title">XLPro Integration Training</span>
+  </div>
+  <div class="hdr-r">
+    <span class="badge spof">INTERMEDIATE</span>
+  </div>
+</div>
+
+<div class="prog-wrap"><div class="prog-fill" id="progBar"></div></div>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="nav-items" id="navItems"></div>
+    <div class="sidebar-footer">
+      <button class="quiz-btn" id="quizBtn">Take the Quiz →</button>
+    </div>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-panel">
+    <button class="quiz-close" onclick="closeQuiz()">✕</button>
+    <div class="quiz-hdr">
+      <h2>Knowledge Check</h2>
+      <p class="quiz-info">10 questions • 70% to pass • Instant feedback • Retry wrong answers only</p>
+    </div>
+    <div class="quiz-body">
+      <div class="qintro" id="qIntro">
+        <h3 style="margin-bottom:1rem;color:var(--dp)">How it works:</h3>
+        <p>Select your answer for <strong>instant feedback</strong>. At the end you get a <strong>score breakdown</strong>. If you don't pass, click Retry to attempt only the incorrect questions.</p>
+      </div>
+      <div id="questionsContainer"></div>
+      <div class="qresult" id="qResult">
+        <div class="qresult-hdr">
+          <div class="qscore" id="qScorePct">75%</div>
+          <div class="qstatus" id="qPassFail">You're close!</div>
+          <p style="font-size:.9rem;color:#666;margin-top:.5rem">You need 70% to pass</p>
+        </div>
+        <div class="qbreakdown">
+          <div class="qstat"><span class="qstat-label">Questions Answered</span><span class="qstat-val" id="qAnswered">10/10</span></div>
+          <div class="qstat"><span class="qstat-label">Correct</span><span class="qstat-val" style="color:var(--green)" id="qCorrect">8</span></div>
+          <div class="qstat"><span class="qstat-label">Incorrect</span><span class="qstat-val" style="color:var(--red)" id="qIncorrect">2</span></div>
+        </div>
+        <div class="q-actions">
+          <button class="retry-btn" onclick="retryQuiz()">Retry Incorrect Only</button>
+          <button class="exit-btn" onclick="closeQuiz()">Back to Training</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const SLIDES = [
+  {
+    title: 'Installation & Configuration',
+    badge: 'INTERMEDIATE',
+    intro: 'This intermediate-level training covers how to install, configure, and deploy XLPro Integration in your environment. You\'ll learn the detailed installation steps, configuration parameters, environment variables, and deployment procedures.',
+    ttsText: 'Installation and Configuration. Learn how to install XLPro Integration, configure the message broker, set up routing rules, and deploy to your environment.',
+    content: `
+      <div class="section">
+        <h2>Installation Steps</h2>
+        <div class="steps">
+          <div class="step"><span class="step-num">1.</span> <strong>Download XLPro Package</strong> - Get the latest release from your artifact repository</div>
+          <div class="step"><span class="step-num">2.</span> <strong>Verify Prerequisites</strong> - Ensure Java 11+, database connectivity, and ports are open</div>
+          <div class="step"><span class="step-num">3.</span> <strong>Extract Package</strong> - Unzip to /opt/xlpro directory with proper permissions</div>
+          <div class="step"><span class="step-num">4.</span> <strong>Configure Properties</strong> - Update xlpro.properties with your environment details</div>
+          <div class="step"><span class="step-num">5.</span> <strong>Start Services</strong> - Run startup.sh and verify logs for successful startup</div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">After extraction, you run startup.sh and get "Port 5672 already in use". What does this mean?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">RabbitMQ or another service is already using that port</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Your Java installation is broken</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">The package extraction failed</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Your filesystem doesn't have enough space</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'Configuration Deep Dive',
+    badge: 'INTERMEDIATE',
+    intro: 'Understand the key configuration parameters that control how XLPro behaves. Learn which settings affect performance, reliability, and integration with external systems.',
+    ttsText: 'Configuration Deep Dive. Learn about message broker settings, routing rules, transformation rules, connection pools, and performance tuning.',
+    content: `
+      <div class="section">
+        <h2>Critical Configuration Parameters</h2>
+        <div class="code-block">
+          <div style="color:#6A9955">// xlpro.properties - Key Settings</div>
+          <div style="color:#9CDCFE">broker.host</span>=rabbitmq.prod</div>
+          <div style="color:#9CDCFE">broker.port</span>=5672</div>
+          <div style="color:#9CDCFE">broker.username</span>=xlpro-user</div>
+          <div style="color:#9CDCFE">broker.password</span>=<span style="color:#CE9178">${BROKER_PASSWORD}</span></div>
+          <div style="color:#9CDCFE">db.connection.pool.size</span>=20</div>
+          <div style="color:#9CDCFE">message.retry.max.attempts</span>=3</div>
+          <div style="color:#9CDCFE">message.retry.delay.ms</span>=5000</div>
+          <div style="color:#9CDCFE">performance.batch.size</span>=100</div>
+        </div>
+
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>Message Broker Settings</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <ul style="margin-left:2rem;line-height:1.8;margin-top:.8rem">
+              <li><strong>broker.host:</strong> Hostname of RabbitMQ server</li>
+              <li><strong>broker.port:</strong> AMQP port (default 5672)</li>
+              <li><strong>broker.username:</strong> Service account for XLPro</li>
+              <li><strong>broker.password:</strong> Use environment variable, never hardcode</li>
+              <li><strong>broker.vhost:</strong> Virtual host for isolation</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>Performance Tuning Parameters</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <ul style="margin-left:2rem;line-height:1.8;margin-top:.8rem">
+              <li><strong>db.connection.pool.size:</strong> Max concurrent database connections (default 20, adjust for load)</li>
+              <li><strong>message.batch.size:</strong> Messages to batch before commit (default 100)</li>
+              <li><strong>performance.thread.pool:</strong> Worker threads for message processing</li>
+              <li><strong>timeout.message.process.ms:</strong> Max processing time per message</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">You notice message processing is slow and CPU usage is low. What configuration should you check first?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">db.connection.pool.size - too low for current load</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Upgrade Java version</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Restart RabbitMQ</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Check firewall rules</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'Routing & Transformation Rules',
+    badge: 'INTERMEDIATE',
+    intro: 'Configure how messages are routed to different queues and how to transform message formats for different external systems. Learn the rule syntax and common patterns.',
+    ttsText: 'Routing and Transformation Rules. Create routing rules that match message types to subscriber queues, and transformation rules that convert message formats.',
+    content: `
+      <div class="section">
+        <h2>Creating Routing Rules</h2>
+        <div class="code-block">
+          <div style="color:#6A9955">// Routing Rule Example</div>
+          <div><span class="kw">rule</span>: <span class="str">"PolicyCreated"</span> {</div>
+          <div style="margin-left:2rem">
+            <span class="var">source</span>: <span class="str">"xuber.policy"</span>,<br>
+            <span class="var">topic</span>: <span class="str">"/policy/created"</span>,<br>
+            <span class="var">targetQueues</span>: [<br>
+            <span style="margin-left:1rem"><span class="str">"reinsurance-inbound"</span>,</span><br>
+            <span style="margin-left:1rem"><span class="str">"accounting-inbound"</span></span><br>
+            ],<br>
+            <span class="var">filter</span>: <span class="str">"status == 'ACTIVE'"</span>,<br>
+            <span class="var">priority</span>: <span class="num">10</span><br>
+          </div>
+          <div>}</div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">A new external system needs to receive policy updates, but it requires a different message format. What do you need to configure?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Add a new transformation rule that converts to the required format</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Modify the policy creation code in Xuber</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Create a new database table</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Ask the external system to change their format</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>Transformation Rule Syntax</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <p style="margin-bottom:1rem"><strong>Map fields between formats:</strong></p>
+            <div class="code-block">transformation {
+  source: "xuber.format"
+  target: "json.format"
+  fields: {
+    xuberPolicyId → jsonPolicyNumber
+    xuberStatus → jsonState
+    xuberEffectiveDate → jsonActivationDate
+  }
+}</div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'Monitoring & Health Checks',
+    badge: 'INTERMEDIATE',
+    intro: 'Learn how to monitor XLPro Integration health, track message processing metrics, and respond to alerts and issues.',
+    ttsText: 'Monitoring and Health Checks. Monitor queue depths, message throughput, error rates, and set up alerts for system issues.',
+    content: `
+      <div class="section">
+        <h2>Health Check Procedures</h2>
+        <div class="steps">
+          <div class="step"><span class="step-num">A.</span> <strong>Check Service Status:</strong> Verify XLPro process is running and responding</div>
+          <div class="step"><span class="step-num">B.</span> <strong>Monitor Queue Depths:</strong> Queues 0-10 normal, 10-100 investigate, 100+ critical</div>
+          <div class="step"><span class="step-num">C.</span> <strong>Check Dead Letter Queue:</strong> Any messages here need immediate attention</div>
+          <div class="step"><span class="step-num">D.</span> <strong>Review Error Logs:</strong> Check last 100 lines for patterns or repeated errors</div>
+          <div class="step"><span class="step-num">E.</span> <strong>Verify External Connectivity:</strong> Test connections to policy DB and downstream systems</div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">During morning health check, you see reinsurance-queue has 150 messages. What's your first action?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Investigate the reinsurance system - may be down or unreachable</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Delete the messages from the queue</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Restart XLPro Integration</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Wait and check again in 1 hour</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'Deployment Best Practices',
+    badge: 'INTERMEDIATE',
+    intro: 'Learn the recommended approach for deploying XLPro Integration updates safely in production environments with minimal disruption.',
+    ttsText: 'Deployment Best Practices. Use rolling deployments, monitor each step, have a rollback plan, and coordinate with downstream systems.',
+    content: `
+      <div class="section">
+        <h2>Safe Deployment Strategy</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="card-icon">🎯</div>
+            <h3>Pre-Deployment</h3>
+            <p>Test in staging, verify all services are healthy, notify stakeholders of maintenance window</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">📋</div>
+            <h3>Deployment</h3>
+            <p>Use blue-green or rolling deploy, monitor logs, verify routing and transformations work</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">✅</div>
+            <h3>Post-Deployment</h3>
+            <p>Run smoke tests, check queue depths, verify downstream systems received messages</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">⏮️</div>
+            <h3>Rollback Plan</h3>
+            <p>Have previous version ready, know how to revert database migrations, test rollback</p>
+          </div>
+        </div>
+
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>Rolling Deployment Steps</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <ol style="margin-left:2rem;line-height:1.8;margin-top:.8rem">
+              <li>Stop message processing on instance 1 (let queued messages drain)</li>
+              <li>Wait 30 seconds for pending messages to complete</li>
+              <li>Deploy new version to instance 1</li>
+              <li>Verify instance 1 health checks pass</li>
+              <li>Monitor instance 1 for 5 minutes</li>
+              <li>Repeat for instances 2, 3, etc.</li>
+              <li>Verify all instances healthy and queue depths normal</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">During deployment of a new version, you notice messages are accumulating in a queue. What should you do?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Pause deployment and investigate - new version may have a bug</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Continue deployment to other instances</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Delete messages from the queue</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Increase the queue size limit</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'Troubleshooting Guide',
+    badge: 'INTERMEDIATE',
+    intro: 'Systematic approach to diagnosing and resolving common XLPro Integration issues. Learn diagnostic commands and common solutions.',
+    ttsText: 'Troubleshooting Guide. Diagnose slow message processing, queue backups, transformation failures, and connectivity issues.',
+    content: `
+      <div class="section">
+        <h2>Common Issues & Solutions</h2>
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>Issue: Messages stuck in Dead Letter Queue</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <p><strong>Root causes:</strong></p>
+            <ul style="margin-left:2rem;line-height:1.8;margin-top:.8rem">
+              <li>Transformation rule mismatch (message format doesn't match expected format)</li>
+              <li>Routing rule filters out all messages (filter condition too restrictive)</li>
+              <li>External system credentials expired or permissions revoked</li>
+            </ul>
+            <p style="margin-top:1rem"><strong>Diagnostic steps:</strong></p>
+            <ol style="margin-left:2rem;line-height:1.8;margin-top:.5rem">
+              <li>Read DLQ message content and error details</li>
+              <li>Check routing rules match the message type</li>
+              <li>Verify transformation rules are correct</li>
+              <li>Test external system connectivity</li>
+              <li>Fix the issue and manually replay message</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>Issue: Slow message processing</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <p><strong>Check in order:</strong></p>
+            <ol style="margin-left:2rem;line-height:1.8;margin-top:.8rem">
+              <li>Database connection pool exhaustion (check active connections)</li>
+              <li>External system latency (measure response times)</li>
+              <li>Message batch size too large (causing timeouts)</li>
+              <li>CPU or memory constraints on XLPro servers</li>
+              <li>Network latency or packet loss</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">You're troubleshooting a transformation failure. The first diagnostic step should be:</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Read the error message in DLQ and compare message format to transformation rules</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Restart XLPro Integration</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Rebuild the transformation rule from scratch</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Check if the external system is online</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  }
+];
+
+const QUIZ_QUESTIONS = [
+  {q:'What is the first step when installing XLPro Integration?',opts:['Download the XLPro package from the artifact repository','Modify Java system properties','Update the database schema','Start RabbitMQ'],a:0,exp:'Always download and verify the package before proceeding with installation.'},
+  {q:'In xlpro.properties, why should broker.password use an environment variable?',opts:['To prevent hardcoding credentials in version control','Because passwords are encrypted automatically','To reduce file size','Because RabbitMQ requires it'],a:0,exp:'Environment variables keep secrets out of version control and configuration files.'},
+  {q:'What does a queue depth of 150 messages indicate?',opts:['Normal operation and no action needed','The consumer system may be down or unreachable - investigate immediately','The message broker is about to fail','Messages are being processed too fast'],a:1,exp:'Queue depth over 100 is critical and indicates messages are not being consumed.'},
+  {q:'When deploying a new version in production, what is the recommended approach?',opts:['Rolling deployment with health checks and monitoring at each step','Deploy all instances at once for speed','Deploy during peak traffic to test under load','Deploy without notifying stakeholders to minimize disruption'],a:0,exp:'Rolling deployment with monitoring ensures minimal disruption and allows for quick rollback.'},
+  {q:'A message reaches the Dead Letter Queue after 3 retries. What should you do?',opts:['Immediately replay the message to complete delivery','Investigate the root cause, fix it, then replay the message','Delete the message and move on','Contact the vendor'],a:1,exp:'Always investigate and fix the root cause before replaying to prevent infinite loops.'},
+  {q:'If db.connection.pool.size is set to 5 but you need to process 100 messages concurrently, what will happen?',opts:['Messages will queue waiting for available connections, causing delays','The system will automatically increase the pool size','Xuber will stop processing policies','The database will crash'],a:0,exp:'Messages will wait for connection pool availability, causing slowdowns. Increase pool size based on expected load.'},
+  {q:'In a routing rule, what does the filter parameter do?',opts:['Determines which messages match the rule and should be routed','Defines the message format conversion','Sets the priority of the rule','Specifies which database to use'],a:0,exp:'Filters restrict routing to only messages that match certain conditions.'},
+  {q:'What is a blue-green deployment?',opts:['Two production environments running simultaneously, switching traffic after verifying new version','A naming convention for development and staging environments','A color scheme for the monitoring dashboard','A backup strategy for the message broker'],a:0,exp:'Blue-green deployment allows instant rollback by switching between two identical production environments.'},
+  {q:'When checking XLPro health in the morning, you notice 500 messages in the DLQ. What is this a sign of?',opts:['A systemic problem occurred - multiple message processing failures need investigation','Normal and expected behavior','The message broker is too slow','External systems are working overtime'],a:0,exp:'Large DLQ depth indicates significant processing failures that require investigation.'},
+  {q:'What is the purpose of message retry configuration (max.attempts and delay)?',opts:['To automatically recover from transient failures by retrying with a delay between attempts','To prevent the same message from being processed twice','To increase processing speed','To compress messages before sending'],a:0,exp:'Retry logic handles temporary failures (system restart, network hiccup) automatically before giving up.'}
+];
+
+let currentSlide = 0;
+let quizAnswers = {};
+let currentQuestion = 0;
+let wrongAnswersOnly = [];
+
+function initUI(){
+  renderNav();goSlide(0);updateProgress();
+  document.querySelectorAll('.expander-hdr').forEach(hdr=>{hdr.addEventListener('click',function(){this.closest('.expander').classList.toggle('open')})});
+  document.getElementById('quizBtn').addEventListener('click',startQuiz);
+}
+
+function renderNav(){
+  const nav=document.getElementById('navItems');nav.innerHTML='';
+  SLIDES.forEach((s,i)=>{const b=document.createElement('button');b.className='nav-item';if(i===currentSlide)b.classList.add('active');
+  b.innerHTML=`<div class="nav-dot"></div><span class="nav-lbl">${s.title}</span><span class="nav-chk">✓</span>`;b.onclick=()=>goSlide(i);nav.appendChild(b)});
+}
+
+function goSlide(i){if(i<0||i>=SLIDES.length)return;currentSlide=i;renderNav();renderSlide();updateProgress();document.getElementById('content').scrollTop=0}
+
+function renderSlide(){
+  const s=SLIDES[currentSlide];
+  const c=document.getElementById('content');
+  c.innerHTML=`<div class="slide active"><div class="hero"><div class="hero-eyebrow"><span class="badge-hero">${s.badge}</span></div><h1>${s.title}</h1><p class="hero-sub">${s.intro}</p><button class="tts-btn" id="ttsBtn-${currentSlide}" data-slide="${currentSlide}"><span class="tts-dot"></span><span>Listen</span></button></div><div class="main-content">${s.content}<div class="nav-btns">${currentSlide>0?`<button class="btn btn-secondary" onclick="goSlide(${currentSlide-1})">← Previous</button>`:''}${currentSlide<SLIDES.length-1?`<button class="btn btn-primary" onclick="goSlide(${currentSlide+1})">Next →</button>`:''}</div></div></div>`;
+  setTimeout(()=>{
+    document.querySelectorAll('.expander-hdr').forEach(hdr=>{hdr.addEventListener('click',function(){this.closest('.expander').classList.toggle('open')})});
+    const b=document.getElementById(`ttsBtn-${currentSlide}`);if(b)b.addEventListener('click',handleTTS);
+  },0);
+}
+
+function handleTTS(e){
+  e.preventDefault();const b=e.currentTarget;const i=parseInt(b.getAttribute('data-slide'));const s=SLIDES[i];
+  if(!window.speechSynthesis){alert('Speech synthesis not supported');return}
+  if(window.speechSynthesis.speaking){window.speechSynthesis.cancel();b.classList.remove('speaking');return}
+  b.classList.add('speaking');const u=new SpeechSynthesisUtterance(s.ttsText);u.rate=1;u.pitch=1;u.volume=1;
+  u.onend=()=>b.classList.remove('speaking');u.onerror=()=>b.classList.remove('speaking');window.speechSynthesis.speak(u);
+}
+
+function checkScenario(btn,correctIdx){
+  const parent=btn.parentElement;const allBtns=parent.querySelectorAll('.sc-opt');const fb=parent.nextElementSibling;
+  const isCorrect=Array.from(allBtns).indexOf(btn)===correctIdx;
+  allBtns.forEach((b,idx)=>{b.disabled=true;if(idx===correctIdx)b.classList.add('correct');else if(b===btn&&!isCorrect)b.classList.add('wrong')});
+  if(isCorrect){fb.className='fb cfb show';fb.innerHTML='<strong>✓ Correct!</strong> Great job!'}else{fb.className='fb wfb show';fb.innerHTML=`<strong>Not quite.</strong> The correct answer is: <strong>${allBtns[correctIdx].textContent}</strong>`}
+}
+
+function updateProgress(){document.getElementById('progBar').style.width=((currentSlide+1)/SLIDES.length)*100+'%'}
+
+function startQuiz(){quizAnswers={};currentQuestion=0;wrongAnswersOnly=[];document.getElementById('quizOverlay').classList.add('show');renderQuizQuestions();showQuizQuestion(0)}
+
+function closeQuiz(){document.getElementById('quizOverlay').classList.remove('show')}
+
+function renderQuizQuestions(){
+  const c=document.getElementById('questionsContainer');c.innerHTML='';
+  const q=wrongAnswersOnly.length>0?wrongAnswersOnly:QUIZ_QUESTIONS;
+  q.forEach((qq,idx)=>{const qIdx=QUIZ_QUESTIONS.indexOf(qq);const d=document.createElement('div');d.className='q-item';
+  d.innerHTML=`<div class="q-num">Question ${idx+1} of ${q.length}</div><div class="q-text">${qq.q}</div><div class="q-opts">${qq.opts.map((o,oi)=>`<button class="qopt" onclick="answerQuestion(${qIdx},${oi})">${o}</button>`).join('')}</div><div class="qfb" id="qfb-${qIdx}"></div><div class="q-nav"><button onclick="prevQuestion()" ${idx===0?'disabled':''}>← Previous</button><button onclick="nextQuestion()" ${idx===q.length-1?'disabled':''}>Next →</button></div>`;
+  c.appendChild(d)});
+}
+
+function showQuizQuestion(i){document.querySelectorAll('.q-item').forEach((item,idx)=>{if(idx===i)item.classList.add('show');else item.classList.remove('show')});currentQuestion=i}
+
+function answerQuestion(qIdx,optIdx){
+  const q=QUIZ_QUESTIONS[qIdx];const isCorrect=optIdx===q.a;quizAnswers[qIdx]={chosen:optIdx,correct:isCorrect};
+  const fbDiv=document.getElementById(`qfb-${qIdx}`);const opts=document.querySelectorAll(`[onclick*="answerQuestion(${qIdx}"]`);
+  opts.forEach((opt,i)=>{opt.disabled=true;if(i===q.a)opt.classList.add('correct');if(i===optIdx&&!isCorrect)opt.classList.add('wrong')});
+  if(isCorrect){fbDiv.className='qfb show correct';fbDiv.innerHTML=`<strong>✓ Correct!</strong> ${q.exp}`}else{fbDiv.className='qfb show wrong';fbDiv.innerHTML=`<strong>✗ Incorrect.</strong> Right answer: <strong>${q.opts[q.a]}</strong>. ${q.exp}`}
+}
+
+function prevQuestion(){if(currentQuestion>0)showQuizQuestion(currentQuestion-1)}
+
+function nextQuestion(){
+  const q=wrongAnswersOnly.length>0?wrongAnswersOnly:QUIZ_QUESTIONS;
+  if(currentQuestion<q.length-1){showQuizQuestion(currentQuestion+1)}else{showQuizResult()}
+}
+
+function showQuizResult(){
+  const q=wrongAnswersOnly.length>0?wrongAnswersOnly:QUIZ_QUESTIONS;const correct=Object.values(quizAnswers).filter(a=>a.correct).length;
+  const total=q.length;const pct=Math.round((correct/total)*100);const passed=pct>=70;
+  document.getElementById('qIntro').style.display='none';document.getElementById('questionsContainer').style.display='none';
+  document.getElementById('qScorePct').textContent=pct+'%';document.getElementById('qPassFail').textContent=passed?'🎉 You Passed!':'You\'re close!';
+  document.getElementById('qPassFail').classList.add(passed?'pass':'fail');document.getElementById('qAnswered').textContent=total+'/'+total;
+  document.getElementById('qCorrect').textContent=correct;document.getElementById('qIncorrect').textContent=(total-correct);
+  if(passed){document.querySelector('.q-actions').innerHTML=`<button class="exit-btn" onclick="closeQuiz()">Back to Training</button>`}
+  else{wrongAnswersOnly=QUIZ_QUESTIONS.filter((qq,idx)=>!quizAnswers[idx]||!quizAnswers[idx].correct)}
+  document.getElementById('qResult').classList.add('show');
+}
+
+function retryQuiz(){document.getElementById('qResult').classList.remove('show');document.getElementById('qIntro').style.display='block';
+document.getElementById('questionsContainer').style.display='block';quizAnswers={};currentQuestion=0;renderQuizQuestions();showQuizQuestion(0)}
+
+document.addEventListener('DOMContentLoaded',initUI);
+
+</script>
+</body>
+</html>
