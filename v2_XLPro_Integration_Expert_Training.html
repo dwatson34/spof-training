@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC | XLPro Integration - Expert</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root{
+  --dxc-purple:    #5F249F;
+  --dxc-dark-pur:  #330072;
+  --dxc-teal:      #00968F;
+  --dxc-blue:      #00A3E1;
+  --dxc-dark-teal: #006975;
+  --dxc-green:     #6CC24A;
+  --dxc-orange:    #ED9B33;
+  --dxc-gold:      #FFCD00;
+  --dxc-lt-gray:   #D9D9D6;
+  --dxc-mid-gray:  #969696;
+  --dxc-dk-gray:   #63666A;
+  --black:         #000000;
+  --white:         #FFFFFF;
+
+  --dp:   var(--dxc-dark-pur);
+  --dm:   var(--dxc-purple);
+  --db:   #7B3BBC;
+  --dd:   #1a0a2e;
+  --teal: var(--dxc-teal);
+  --green: #1a7a4a;
+  --red:  #c0392b;
+  --off:  #F7F5FB;
+  --text: #1A1A1A;
+  --muted: var(--dxc-dk-gray);
+  --border: #E0D9EE;
+  --code-bg: #0d1117;
+  --r: 10px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Open Sans',Arial,sans-serif;
+  background:var(--off);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.hdr{
+  background:linear-gradient(135deg,#330072 0%,#5F249F 100%);
+  height:54px;
+  padding:0 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:300;
+  box-shadow:0 2px 20px rgba(51,0,114,.4);
+}
+
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--white);
+  letter-spacing:-.02em;
+}
+.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 .5rem;align-self:center}
+.logo-mod{font-size:.75rem;color:#d4c8f0;font-weight:600}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.hdr-badge{font-size:.65rem;font-weight:700;padding:.25rem .65rem;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.badge-spof{background:#c0392b;color:#fff}
+.badge-mode{background:rgba(255,255,255,.15);color:#fff}
+
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,#00968F,#00A3E1);transition:width .5s ease;width:0%}
+
+.app{display:flex;flex:1;min-height:calc(100vh - 57px)}
+
+.sidebar{
+  width:240px;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  padding:1rem 0;
+  flex-shrink:0;
+  overflow-y:auto;
+  position:sticky;
+  top:54px;
+  height:calc(100vh - 54px);
+}
+
+.nav-section{
+  padding:.4rem 1rem .2rem;
+  font-size:.62rem;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+
+button.nav-item{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  color:var(--muted);
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  width:100%;
+  background:none;
+  border:none;
+  text-align:left;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{
+  background:#f0ebfa;
+  color:var(--dm);
+  border-left-color:var(--dm);
+  font-weight:700;
+}
+
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+
+.nav-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--border);
+  flex-shrink:0;
+  transition:background .3s;
+}
+
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+
+.content{flex:1;overflow-y:auto}
+.slide{display:none;animation:fadeIn .3s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.hero{
+  background:linear-gradient(135deg,#150535 0%,#330072 50%,#5F249F 100%);
+  padding:2.5rem 2.5rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-eyebrow{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  margin-bottom:.9rem;
+  flex-wrap:wrap;
+}
+
+.hbadge{
+  display:inline-block;
+  background:#c0392b;
+  color:#fff;
+  font-size:.65rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:.25rem .7rem;
+  border-radius:0 6px 0 0;
+}
+
+.hbadge.blue{background:#00A3E1}
+.hbadge.gold{background:#FFCD00;color:#1a1a2e}
+.hbadge.teal{background:#00968F}
+
+.hero h1{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--white);
+  line-height:1.2;
+  margin-bottom:.75rem;
+}
+
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+
+.card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.2rem 1.2rem 1.2rem 1.4rem;
+  border-left:4px solid var(--dm);
+  box-shadow:0 2px 8px rgba(51,0,114,.06);
+}
+
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card.b{border-left-color:var(--dxc-blue)}
+.card.o{border-left-color:var(--dxc-orange)}
+
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+
+.tag{
+  display:inline-block;
+  background:#f0ebfa;
+  color:var(--dm);
+  font-size:.68rem;
+  font-weight:700;
+  padding:.15rem .5rem;
+  border-radius:10px;
+  margin-bottom:.5rem;
+}
+
+.tag.t{background:#e0f5f4;color:var(--teal)}
+.tag.b{background:#e0f2fb;color:var(--dxc-blue)}
+.tag.r{background:#fdf0ee;color:var(--red)}
+.tag.g{background:#e8f5ee;color:var(--green)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+
+.alert{
+  display:flex;
+  gap:.75rem;
+  padding:1rem 1.2rem;
+  border-radius:var(--r);
+  margin-bottom:1.5rem;
+  align-items:flex-start;
+}
+
+.alert.warn{background:#fff8e6;border-left:4px solid var(--dxc-gold)}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert.crit{background:#fdf0ee;border-left:4px solid var(--red)}
+
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+.callout{
+  background:#f0ebfa;
+  border-radius:var(--r);
+  padding:1rem 1.2rem;
+  margin-bottom:1.5rem;
+  font-size:.88rem;
+  line-height:1.6;
+  border-left:3px solid var(--dm);
+}
+
+.callout strong{color:var(--dp)}
+.callout.teal{background:#e0f5f4;border-left-color:var(--teal)}
+.callout.red{background:#fdf0ee;border-left-color:var(--red)}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.comp-box{border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.comp-head{padding:.6rem 1rem;font-size:.88rem;font-weight:700;color:var(--white)}
+.comp-body{padding:.85rem 1rem;font-size:.85rem;line-height:1.6}
+
+.comp-good{background:#e8f5ee}
+.comp-good .comp-head{background:#1a7a4a}
+.comp-bad{background:#fdf0ee}
+.comp-bad .comp-head{background:#c0392b}
+
+.slide-nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1.25rem 2.5rem;
+  border-top:1px solid var(--border);
+}
+
+.nav-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  padding:.6rem 1.3rem;
+  border-radius:7px;
+  font-family:inherit;
+  font-size:.85rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  border:none;
+}
+
+.nav-prev{background:#f7f5fb;color:#1a1a2e;border:1px solid var(--border)}
+.nav-prev:hover{background:var(--border)}
+.nav-next{background:#5F249F;color:#fff}
+.nav-next:hover{background:#330072}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.slide-pos{font-size:.78rem;color:var(--muted);font-weight:600}
+
+.issue{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1rem 1.2rem;
+  margin-bottom:.75rem;
+  border-left:4px solid var(--red);
+}
+
+.issue h4{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.issue p{font-size:.85rem;color:var(--muted);line-height:1.6}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .body{padding:1.25rem}
+  .hero{padding:1.75rem 1.25rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.25rem}
+}
+
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <span class="logo-dxc">DXC</span>
+    <div class="logo-sep"></div>
+    <span class="logo-mod">XLPro Integration - Expert</span>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-badge badge-spof">Expert</span>
+    <span class="hdr-badge badge-mode" id="hdrMode">Training</span>
+  </div>
+</header>
+<div class="prog-wrap"><div class="prog-fill" id="pf"></div></div>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-section">XI Integration Module</div>
+    <button class="nav-item active" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Overview</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">Troubleshooting</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">Performance</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">Monitoring</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">Best Practices</span><span class="nav-chk">✓</span></button>
+  </nav>
+  <div class="content" id="contentArea">
+
+    <div class="slide active" id="slide-0">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">XI Team - Expert</span>
+        </div>
+        <h1>XLPro Integration: Advanced Operations</h1>
+        <p class="hero-sub">Troubleshooting, performance optimization, and operational excellence - For senior architects and production support teams</p>
+      </div>
+      <div class="body">
+        <div class="alert crit" style="background:#fdf0ee;border-left:4px solid #c0392b;display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:10px;margin-bottom:1.5rem;align-items:flex-start"><span style="font-size:1.2rem">🔴</span><div><strong>Expert Level</strong><p style="font-size:.85rem;color:#5a5a7a;margin-top:.2rem">This module is for production support teams and architects. Topics cover diagnostic techniques, performance optimization, architecture patterns, and operational procedures for high-volume integrations. Assumes deep technical knowledge.</p></div></div>
+
+        <div class="grid g3">
+          <div class="card r"><div class="tag tag-r">Diagnostics</div><h3>Troubleshooting</h3><p>Systematic diagnostic approaches for diagnosing message failures, connection issues, performance bottlenecks, and data synchronization problems.</p></div>
+          <div class="card"><div class="tag">Optimization</div><h3>Performance Tuning</h3><p>Database indexing strategies, message batching, queue optimization, and resource allocation for high-volume production environments.</p></div>
+          <div class="card t"><div class="tag tag-t">Operations</div><h3>Monitoring</h3><p>Setting up comprehensive monitoring, alerting thresholds, capacity planning, and SLA management for production support.</p></div>
+          <div class="card o"><div class="tag">Architecture</div><h3>Advanced Patterns</h3><p>Multi-instance deployments, failover configurations, geographic distribution, and integration with enterprise message queuing.</p></div>
+          <div class="card g"><div class="tag tag-g">Procedures</div><h3>Best Practices</h3><p>Documented operational procedures, change management, disaster recovery, and lessons learned from production deployments.</p></div>
+          <div class="card b"><div class="tag tag-b">Support</div><h3>Support Escalations</h3><p>When and how to escalate issues, vendor support procedures, log collection, and RCA (root cause analysis) methodology.</p></div>
+        </div>
+
+        <div class="callout" style="margin-top:2rem">
+          <strong>Scope:</strong> Expert-level operations cover production environments with 1,000+ daily transactions. Concepts scale down to smaller deployments but are optimized for high-volume, mission-critical integrations.
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" disabled>← Previous</button>
+        <span class="slide-pos">1 / 5</span>
+        <button class="nav-btn nav-next" data-goto="1">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-1">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Diagnostics</span>
+        </div>
+        <h1>Troubleshooting Framework</h1>
+        <p class="hero-sub">Systematic diagnostic approach to resolving integration issues</p>
+      </div>
+      <div class="body">
+        <p class="intro">When the integration fails, a systematic diagnostic approach saves time and identifies root causes. This framework guides troubleshooting from initial symptom through resolution.</p>
+
+        <h2>Diagnostic Flow</h2>
+        <div style="margin-top:1.5rem;margin-bottom:2rem">
+          <div class="grid g2">
+            <div class="card b">
+              <h3 style="margin-bottom:.75rem">Step 1: Confirm Symptom</h3>
+              <p style="font-size:.85rem;line-height:1.6">
+                <strong>Question:</strong> What is the user experiencing?<br/>
+                <strong>Check:</strong> Are messages stuck in Xuber queue? Is XLPro database not receiving updates? Are services crashing?<br/>
+                <strong>Review:</strong> Event Viewer logs, integration service status, database connection tests.
+              </p>
+            </div>
+            <div class="card">
+              <h3 style="margin-bottom:.75rem">Step 2: Service Status</h3>
+              <p style="font-size:.85rem;line-height:1.6">
+                <strong>Check:</strong> Are integration services running on both servers?<br/>
+                <strong>Verify:</strong> Services started in correct order, no startup errors.<br/>
+                <strong>Look for:</strong> Service restart loops, permission errors, event log errors.
+              </p>
+            </div>
+            <div class="card t">
+              <h3 style="margin-bottom:.75rem">Step 3: Connectivity</h3>
+              <p style="font-size:.85rem;line-height:1.6">
+                <strong>Test:</strong> Can Xuber server reach XLPro database server?<br/>
+                <strong>Verify:</strong> Network connectivity, firewall rules, DNS resolution.<br/>
+                <strong>Use:</strong> `ping`, `telnet`, SQL Server client connection test.
+              </p>
+            </div>
+            <div class="card o">
+              <h3 style="margin-bottom:.75rem">Step 4: Authentication</h3>
+              <p style="font-size:.85rem;line-height:1.6">
+                <strong>Check:</strong> Service account credentials, database permissions.<br/>
+                <strong>Verify:</strong> Can service account connect to databases?<br/>
+                <strong>Test:</strong> Execute query with service account credentials.
+              </p>
+            </div>
+            <div class="card r">
+              <h3 style="margin-bottom:.75rem">Step 5: Message Flow</h3>
+              <p style="font-size:.85rem;line-height:1.6">
+                <strong>Check:</strong> Are messages being captured in Xuber?<br/>
+                <strong>Verify:</strong> Integration logs show event captures.<br/>
+                <strong>Monitor:</strong> Message queue depth, message rate.
+              </p>
+            </div>
+            <div class="card g">
+              <h3 style="margin-bottom:.75rem">Step 6: Processing</h3>
+              <p style="font-size:.85rem;line-height:1.6">
+                <strong>Check:</strong> Are messages being processed in XLPro?<br/>
+                <strong>Verify:</strong> USM Load service processing messages.<br/>
+                <strong>Monitor:</strong> Staging table growth and processing.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:2rem">Common Issues & Quick Fixes</h2>
+        <div style="margin-top:1rem">
+          <div class="issue">
+            <h4>Messages Stuck in Staging Table</h4>
+            <p><strong>Symptom:</strong> xlpro_staging table grows continuously, messages not being processed.</p>
+            <p style="margin-top:.5rem"><strong>Diagnosis:</strong> Check if USM Load service is running. Review xlpro_log table for processing errors. Check database permissions.</p>
+            <p style="margin-top:.5rem"><strong>Fix:</strong> (1) Restart USM Load service. (2) Clear staging if messages are corrupt. (3) Verify service account permissions on database.</p>
+          </div>
+          <div class="issue">
+            <h4>Service Fails to Start</h4>
+            <p><strong>Symptom:</strong> "DXC XLPro Integration" service appears in Services but shows Stopped or fails to start.</p>
+            <p style="margin-top:.5rem"><strong>Diagnosis:</strong> Check Event Viewer for service startup errors. Common causes: invalid database connection string, service account lacks permissions, port conflicts.</p>
+            <p style="margin-top:.5rem"><strong>Fix:</strong> (1) Verify connection string in config files. (2) Check service account permissions. (3) Review Event Viewer detailed error message and search support documentation.</p>
+          </div>
+          <div class="issue">
+            <h4>Partial Data Synchronization</h4>
+            <p><strong>Symptom:</strong> Some policy fields sync to XLPro, others don't. Data incomplete in XLPro database.</p>
+            <p style="margin-top:.5rem"><strong>Diagnosis:</strong> Check message transformation rules in messaging config. Verify XLPro database schema changes were applied completely. Review xlpro_log for transformation errors.</p>
+            <p style="margin-top:.5rem"><strong>Fix:</strong> (1) Re-run database setup scripts on XLPro database. (2) Review and update message mapping configuration. (3) Test with a simple policy with minimal fields to isolate issue.</p>
+          </div>
+          <div class="issue">
+            <h4>High Latency (Slow Synchronization)</h4>
+            <p><strong>Symptom:</strong> Data takes 5+ minutes to appear in XLPro after policy creation in Xuber.</p>
+            <p style="margin-top:.5rem"><strong>Diagnosis:</strong> Check database query performance, network latency, CPU/memory on servers. Review xlpro_staging table size and indexing.</p>
+            <p style="margin-top:.5rem"><strong>Fix:</strong> (1) Rebuild indexes on staging table. (2) Implement message batching. (3) Increase SQL Server memory allocation. (4) Profile and optimize slow queries.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="0">← Previous</button>
+        <span class="slide-pos">2 / 5</span>
+        <button class="nav-btn nav-next" data-goto="2">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-2">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge teal">Optimization</span>
+        </div>
+        <h1>Performance Tuning</h1>
+        <p class="hero-sub">Optimization strategies for high-volume production environments</p>
+      </div>
+      <div class="body">
+        <p class="intro">In high-volume environments, performance tuning prevents bottlenecks and ensures SLA compliance. Optimization focuses on database performance, queue management, and resource allocation.</p>
+
+        <h2>Database Optimization</h2>
+        <div class="grid g2" style="margin-top:1.5rem;margin-bottom:2rem">
+          <div class="card">
+            <h3 style="margin-bottom:.75rem">Index Strategy</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Clustered Index:</strong> Keep xlpro_staging clustered on (message_id, created_date) for efficient sequential scans.<br/>
+              <strong>Non-Clustered:</strong> Add indexes on (status, created_date) for filtering processed vs pending messages.<br/>
+              <strong>Maintenance:</strong> Schedule index rebuilds during low-usage windows to maintain performance.
+            </p>
+          </div>
+          <div class="card t">
+            <h3 style="margin-bottom:.75rem">Table Partitioning</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Strategy:</strong> Partition xlpro_staging by created_date (monthly partitions) to improve query performance and enable faster data archiving.<br/>
+              <strong>Benefit:</strong> Queries scan only relevant partitions, reducing I/O and improving speed.<br/>
+              <strong>Implementation:</strong> Requires Enterprise Edition of SQL Server.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:.75rem">Archive Strategy</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Policy:</strong> Archive processed messages older than 90 days to a separate table or database.<br/>
+              <strong>Benefit:</strong> Keeps active staging table lean, improves query performance.<br/>
+              <strong>Procedure:</strong> Weekly batch job to move completed messages to archive table with index.
+            </p>
+          </div>
+          <div class="card o">
+            <h3 style="margin-bottom:.75rem">Query Optimization</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Analysis:</strong> Use SQL Server Execution Plans to identify slow queries.<br/>
+              <strong>Optimization:</strong> Add computed columns for frequently filtered conditions, pre-aggregate counts in summary table.<br/>
+              <strong>Monitoring:</strong> Track query execution times and alert on degradation.
+            </p>
+          </div>
+        </div>
+
+        <h2>Message Processing Optimization</h2>
+        <div class="grid g2" style="margin-top:1.5rem;margin-bottom:2rem">
+          <div class="compare">
+            <div class="comp-box comp-bad">
+              <div class="comp-head">❌ Single Message Processing</div>
+              <div class="comp-body">
+                <strong>Behavior:</strong> USM Load processes one message at a time. High overhead for each message.<br/>
+                <strong>Impact:</strong> High latency, CPU underutilized, slow throughput.<br/>
+                <strong>Use:</strong> Low-volume dev/test environments only.
+              </div>
+            </div>
+            <div class="comp-box comp-good">
+              <div class="comp-head">✓ Batch Message Processing</div>
+              <div class="comp-body">
+                <strong>Behavior:</strong> USM Load batches 100-500 messages and processes together. Lower overhead per message.<br/>
+                <strong>Impact:</strong> 3-5x throughput improvement, lower CPU, better resource utilization.<br/>
+                <strong>Use:</strong> Production environments with 100+ messages/minute.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Resource Allocation</h2>
+        <div style="margin-top:1.5rem">
+          <div class="card b">
+            <h3 style="margin-bottom:.75rem">SQL Server Memory</h3>
+            <p style="font-size:.85rem;line-height:1.6"><strong>Recommendation:</strong> Allocate 60-75% of available server memory to SQL Server for production databases. Example: 16GB server → allocate 10-12GB to SQL Server. This enables larger buffer pool and better caching.</p>
+          </div>
+          <div class="card" style="margin-top:.75rem">
+            <h3 style="margin-bottom:.75rem">Connection Pool</h3>
+            <p style="font-size:.85rem;line-height:1.6"><strong>Setting:</strong> Configure max pool size = (CPU cores × 4) + 4. Example: 8-core server → pool size of 36. Prevents connection starvation under load.</p>
+          </div>
+          <div class="card g" style="margin-top:.75rem">
+            <h3 style="margin-bottom:.75rem">Message Queue</h3>
+            <p style="font-size:.85rem;line-height:1.6"><strong>Configuration:</strong> Set queue depth limit to 10,000 messages. Prevents unbounded memory growth if processing slows. Enables early detection of bottlenecks before queue exhaustion.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="1">← Previous</button>
+        <span class="slide-pos">3 / 5</span>
+        <button class="nav-btn nav-next" data-goto="3">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-3">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Operations</span>
+        </div>
+        <h1>Production Monitoring & Alerting</h1>
+        <p class="hero-sub">Setting up comprehensive monitoring for production support</p>
+      </div>
+      <div class="body">
+        <p class="intro">Production support requires proactive monitoring to identify issues before they impact users. Comprehensive monitoring covers service health, message flow, database performance, and business metrics.</p>
+
+        <h2>Monitoring Strategy</h2>
+        <div class="grid g3" style="margin-top:1.5rem;margin-bottom:2rem">
+          <div class="card r">
+            <h3 style="margin-bottom:.75rem">Service Health</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Monitors:</strong> Service running status, process CPU/memory usage, thread count.<br/>
+              <strong>Alert Thresholds:</strong> Service stopped, CPU > 80%, memory > 85%.<br/>
+              <strong>Action:</strong> Immediate notification to on-call support, automatic restart policies.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:.75rem">Message Flow</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Monitors:</strong> Messages received/processed per minute, queue depth, processing lag.<br/>
+              <strong>Alert Thresholds:</strong> Processing lag > 5 min, queue depth > 5,000, message rate drops > 50%.<br/>
+              <strong>Action:</strong> Alert support for investigation, automatic health check.
+            </p>
+          </div>
+          <div class="card o">
+            <h3 style="margin-bottom:.75rem">Database Performance</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Monitors:</strong> Query execution time, disk I/O, lock waits, table growth.<br/>
+              <strong>Alert Thresholds:</strong> Query > 5s, disk utilization > 90%, staging table > 100K rows.<br/>
+              <strong>Action:</strong> Performance analysis, index maintenance, archiving decisions.
+            </p>
+          </div>
+        </div>
+
+        <h2>Monitoring Tools</h2>
+        <div class="grid g2" style="margin-top:1.5rem;margin-bottom:1.5rem">
+          <div class="card b">
+            <h3 style="margin-bottom:.75rem">Event Viewer</h3>
+            <p style="font-size:.85rem;line-height:1.6"><strong>What:</strong> Windows application and system event logs. <strong>Where:</strong> Local monitoring on each server. <strong>Watch for:</strong> Service start/stop, permission errors, unhandled exceptions.</p>
+          </div>
+          <div class="card t">
+            <h3 style="margin-bottom:.75rem">SQL Server Logs</h3>
+            <p style="font-size:.85rem;line-height:1.6"><strong>What:</strong> SQL Server error log and agent logs. <strong>Where:</strong> SQL Server Management Studio → Management → SQL Server Logs. <strong>Watch for:</strong> Login failures, deadlocks, I/O errors.</p>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:.75rem">Integration Logs</h3>
+            <p style="font-size:.85rem;line-height:1.6"><strong>What:</strong> XLPro integration diagnostic logs. <strong>Where:</strong> C:\Program Files (x86)\DXC\Xuber XLPro Integration\logs\. <strong>Watch for:</strong> Message processing errors, database connection failures.</p>
+          </div>
+          <div class="card g">
+            <h3 style="margin-bottom:.75rem">SQL Queries</h3>
+            <p style="font-size:.85rem;line-height:1.6"><strong>What:</strong> Custom SQL queries for business metrics. <strong>Where:</strong> Query staging/log tables for sync status, message counts, error rates. <strong>Watch for:</strong> Declining message rate, increasing error counts.</p>
+          </div>
+        </div>
+
+        <h2 style="margin-top:2rem">SLA Definition</h2>
+        <div style="margin-top:1rem">
+          <div class="card">
+            <h3 style="margin-bottom:.5rem">Message Processing SLA: 99% within 2 minutes</h3>
+            <p style="font-size:.82rem;color:var(--muted)">99% of policy events created in Xuber are synchronized to XLPro database within 2 minutes of creation. Monitored via xlpro_staging table lag metric.</p>
+          </div>
+          <div class="card t" style="margin-top:.75rem">
+            <h3 style="margin-bottom:.5rem">Service Availability SLA: 99.5% uptime</h3>
+            <p style="font-size:.82rem;color:var(--muted)">Integration services remain available and processing messages for 99.5% of business hours. Excludes planned maintenance windows. Measured via service status monitoring.</p>
+          </div>
+          <div class="card g" style="margin-top:.75rem">
+            <h3 style="margin-bottom:.5rem">Error Rate SLA: < 0.1%</h3>
+            <p style="font-size:.82rem;color:var(--muted)">Less than 0.1% of incoming messages result in processing errors. Monitored via xlpro_log error count metric. Requires root cause analysis and fix for any trending increase.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="2">← Previous</button>
+        <span class="slide-pos">4 / 5</span>
+        <button class="nav-btn nav-next" data-goto="4">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-4">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge blue">Best Practices</span>
+        </div>
+        <h1>Operational Excellence</h1>
+        <p class="hero-sub">Proven practices for managing XLPro integration in production</p>
+      </div>
+      <div class="body">
+        <p class="intro">Operational excellence comes from consistent application of best practices. These practices reduce incidents, speed resolution, and improve overall system reliability.</p>
+
+        <h2>Change Management</h2>
+        <div class="grid g2" style="margin-top:1.5rem;margin-bottom:2rem">
+          <div class="card">
+            <h3 style="margin-bottom:.75rem">Pre-Deployment Testing</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Procedure:</strong> All configuration changes tested in UAT environment first. Test with production-like data volume (50-100k messages).<br/>
+              <strong>Validation:</strong> Message latency, error rate, resource utilization confirmed in test before applying to production.
+            </p>
+          </div>
+          <div class="card t">
+            <h3 style="margin-bottom:.75rem">Change Windows</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Policy:</strong> Deploy changes during low-volume windows (weekend mornings, 11pm-6am).<br/>
+              <strong>Communication:</strong> Notify business stakeholders 48 hours before changes. Have rollback procedure documented and tested.
+            </p>
+          </div>
+          <div class="card">
+            <h3 style="margin-bottom:.75rem">Rollback Procedure</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Documented:</strong> Rollback steps for every change, including database schema reverts and service restarts.<br/>
+              <strong>Testing:</strong> Rollback procedure tested in UAT before applying change to production.
+            </p>
+          </div>
+          <div class="card o">
+            <h3 style="margin-bottom:.75rem">Audit & Documentation</h3>
+            <p style="font-size:.85rem;line-height:1.6">
+              <strong>Change Log:</strong> Every deployment documented with date, change details, approver, and rollback test results.<br/>
+              <strong>Configuration Baseline:</strong> Keep snapshot of working configuration files for each release.
+            </p>
+          </div>
+        </div>
+
+        <h2>Operational Procedures</h2>
+        <div style="margin-top:1.5rem;margin-bottom:1.5rem">
+          <div class="callout">
+            <strong>Daily Health Check (5 minutes)</strong>
+            <div style="margin-top:.75rem;font-size:.88rem;line-height:1.7">
+              1. Check integration service status on both servers - should be "Started"<br/>
+              2. Query xlpro_staging table count - should match expected volume<br/>
+              3. Review integration logs for ERROR level entries - should be minimal<br/>
+              4. Check disk space on both servers - should be > 20% free<br/>
+              5. Document results in daily log
+            </div>
+          </div>
+          <div class="callout teal" style="margin-top:1rem">
+            <strong>Weekly Maintenance (30 minutes)</strong>
+            <div style="margin-top:.75rem;font-size:.88rem;line-height:1.7">
+              1. Rebuild indexes on xlpro_staging and related tables<br/>
+              2. Update database statistics for optimizer accuracy<br/>
+              3. Archive processed messages older than 90 days<br/>
+              4. Review performance metrics (latency, throughput)<br/>
+              5. Update runbook with any new issues encountered
+            </div>
+          </div>
+          <div class="callout red" style="margin-top:1rem">
+            <strong>Monthly Review (1 hour)</strong>
+            <div style="margin-top:.75rem;font-size:.88rem;line-height:1.7">
+              1. Capacity review - message volume trends, peak loads<br/>
+              2. Performance analysis - latency, error rates, SLA compliance<br/>
+              3. Error analysis - review top error patterns from xlpro_log<br/>
+              4. Infrastructure review - disk, CPU, memory headroom<br/>
+              5. Planning - identify upgrades or optimizations needed
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:2rem">Incident Response</h2>
+        <div style="margin-top:1rem">
+          <div class="grid g2">
+            <div class="card r">
+              <h3 style="margin-bottom:.75rem">P1 Incident (Severe)</h3>
+              <p style="font-size:.85rem;line-height:1.6"><strong>Condition:</strong> Integration down, no messages syncing, business operations impacted. <strong>Response Time:</strong> 15 minutes. <strong>Action:</strong> Page on-call support immediately, engage lead architect, begin RCA, enable verbose logging.</p>
+            </div>
+            <div class="card o">
+              <h3 style="margin-bottom:.75rem">P2 Incident (Moderate)</h3>
+              <p style="font-size:.85rem;line-height:1.6"><strong>Condition:</strong> Performance degraded (latency > 10 min), some messages delayed. <strong>Response Time:</strong> 1 hour. <strong>Action:</strong> Investigation, performance analysis, monitoring increase, potential database maintenance.</p>
+            </div>
+            <div class="card">
+              <h3 style="margin-bottom:.75rem">P3 Incident (Minor)</h3>
+              <p style="font-size:.85rem;line-height:1.6"><strong>Condition:</strong> Occasional sync delays, warning-level errors. <strong>Response Time:</strong> 4 hours. <strong>Action:</strong> Log issue, investigate during next change window, may defer to planned maintenance.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout" style="margin-top:2rem">
+          <strong>Root Cause Analysis (RCA):</strong> For all P1 and P2 incidents, document RCA within 24 hours. Include: symptom, timeline, contributing factors, root cause, corrective action, and preventive measures. Share with team for learning.
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="3">← Previous</button>
+        <span class="slide-pos">5 / 5</span>
+        <button class="nav-btn nav-next" disabled>Next →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const navItems = document.querySelectorAll('.nav-item');
+const pf = document.getElementById('pf');
+
+navItems.forEach((item, idx) => {
+  item.addEventListener('click', () => showSlide(idx));
+});
+
+document.querySelectorAll('[data-goto]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const idx = parseInt(e.target.getAttribute('data-goto'));
+    showSlide(idx);
+  });
+});
+
+function showSlide(idx) {
+  slides.forEach(s => s.classList.remove('active'));
+  navItems.forEach(n => n.classList.remove('active'));
+
+  slides[idx].classList.add('active');
+  navItems[idx].classList.add('active');
+
+  const progress = ((idx + 1) / slides.length) * 100;
+  pf.style.width = progress + '%';
+
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>

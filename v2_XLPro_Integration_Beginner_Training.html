@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC | XLPro Integration - Beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root{
+  --dxc-purple:    #5F249F;
+  --dxc-dark-pur:  #330072;
+  --dxc-teal:      #00968F;
+  --dxc-blue:      #00A3E1;
+  --dxc-dark-teal: #006975;
+  --dxc-green:     #6CC24A;
+  --dxc-orange:    #ED9B33;
+  --dxc-gold:      #FFCD00;
+  --dxc-lt-gray:   #D9D9D6;
+  --dxc-mid-gray:  #969696;
+  --dxc-dk-gray:   #63666A;
+  --black:         #000000;
+  --white:         #FFFFFF;
+
+  --dp:   var(--dxc-dark-pur);
+  --dm:   var(--dxc-purple);
+  --db:   #7B3BBC;
+  --dd:   #1a0a2e;
+  --teal: var(--dxc-teal);
+  --green: #1a7a4a;
+  --red:  #c0392b;
+  --off:  #F7F5FB;
+  --text: #1A1A1A;
+  --muted: var(--dxc-dk-gray);
+  --border: #E0D9EE;
+  --code-bg: #0d1117;
+  --r: 10px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Open Sans',Arial,sans-serif;
+  background:var(--off);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.hdr{
+  background:linear-gradient(135deg,#330072 0%,#5F249F 100%);
+  height:54px;
+  padding:0 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:300;
+  box-shadow:0 2px 20px rgba(51,0,114,.4);
+}
+
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--white);
+  letter-spacing:-.02em;
+}
+.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 .5rem;align-self:center}
+.logo-mod{font-size:.75rem;color:#d4c8f0;font-weight:600}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.hdr-badge{font-size:.65rem;font-weight:700;padding:.25rem .65rem;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.badge-spof{background:#6CC24A;color:#fff}
+.badge-mode{background:rgba(255,255,255,.15);color:#fff}
+
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,#00968F,#00A3E1);transition:width .5s ease;width:0%}
+
+.app{display:flex;flex:1;min-height:calc(100vh - 57px)}
+
+.sidebar{
+  width:240px;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  padding:1rem 0;
+  flex-shrink:0;
+  overflow-y:auto;
+  position:sticky;
+  top:54px;
+  height:calc(100vh - 54px);
+}
+
+.nav-section{
+  padding:.4rem 1rem .2rem;
+  font-size:.62rem;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+
+button.nav-item{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  color:var(--muted);
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  width:100%;
+  background:none;
+  border:none;
+  text-align:left;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{
+  background:#f0ebfa;
+  color:var(--dm);
+  border-left-color:var(--dm);
+  font-weight:700;
+}
+
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+
+.nav-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--border);
+  flex-shrink:0;
+  transition:background .3s;
+}
+
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+
+.content{flex:1;overflow-y:auto}
+.slide{display:none;animation:fadeIn .3s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.hero{
+  background:linear-gradient(135deg,#150535 0%,#330072 50%,#5F249F 100%);
+  padding:2.5rem 2.5rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-eyebrow{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  margin-bottom:.9rem;
+  flex-wrap:wrap;
+}
+
+.hbadge{
+  display:inline-block;
+  background:#00968F;
+  color:#fff;
+  font-size:.65rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:.25rem .7rem;
+  border-radius:0 6px 0 0;
+}
+
+.hbadge.blue{background:#00A3E1}
+.hbadge.gold{background:#FFCD00;color:#1a1a2e}
+.hbadge.green{background:#6CC24A}
+
+.hero h1{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--white);
+  line-height:1.2;
+  margin-bottom:.75rem;
+}
+
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+
+.card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.2rem 1.2rem 1.2rem 1.4rem;
+  border-left:4px solid var(--dm);
+  box-shadow:0 2px 8px rgba(51,0,114,.06);
+}
+
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card.b{border-left-color:var(--dxc-blue)}
+.card.o{border-left-color:var(--dxc-orange)}
+
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+
+.tag{
+  display:inline-block;
+  background:#f0ebfa;
+  color:var(--dm);
+  font-size:.68rem;
+  font-weight:700;
+  padding:.15rem .5rem;
+  border-radius:10px;
+  margin-bottom:.5rem;
+}
+
+.tag.t{background:#e0f5f4;color:var(--teal)}
+.tag.b{background:#e0f2fb;color:var(--dxc-blue)}
+.tag.g{background:#e8f5ee;color:var(--green)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+
+.alert{
+  display:flex;
+  gap:.75rem;
+  padding:1rem 1.2rem;
+  border-radius:var(--r);
+  margin-bottom:1.5rem;
+  align-items:flex-start;
+}
+
+.alert.warn{background:#fff8e6;border-left:4px solid var(--dxc-gold)}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert.blue{background:#e0f2fb;border-left:4px solid var(--dxc-blue)}
+
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+.callout{
+  background:#f0ebfa;
+  border-radius:var(--r);
+  padding:1rem 1.2rem;
+  margin-bottom:1.5rem;
+  font-size:.88rem;
+  line-height:1.6;
+  border-left:3px solid var(--dm);
+}
+
+.callout strong{color:var(--dp)}
+.callout.teal{background:#e0f5f4;border-left-color:var(--teal)}
+.callout.blue{background:#e0f2fb;border-left-color:var(--dxc-blue)}
+
+.stack{display:flex;flex-direction:column;gap:.5rem}
+.stk{padding:.7rem 1rem;border-radius:7px;text-align:center;font-size:.88rem;font-weight:600;color:var(--white)}
+
+.slide-nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1.25rem 2.5rem;
+  border-top:1px solid var(--border);
+}
+
+.nav-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  padding:.6rem 1.3rem;
+  border-radius:7px;
+  font-family:inherit;
+  font-size:.85rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  border:none;
+}
+
+.nav-prev{background:#f7f5fb;color:#1a1a2e;border:1px solid var(--border)}
+.nav-prev:hover{background:var(--border)}
+.nav-next{background:#5F249F;color:#fff}
+.nav-next:hover{background:#330072}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.slide-pos{font-size:.78rem;color:var(--muted);font-weight:600}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .body{padding:1.25rem}
+  .hero{padding:1.75rem 1.25rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.25rem}
+}
+
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <span class="logo-dxc">DXC</span>
+    <div class="logo-sep"></div>
+    <span class="logo-mod">XLPro Integration - Beginner</span>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-badge badge-spof">Beginner</span>
+    <span class="hdr-badge badge-mode" id="hdrMode">Training</span>
+  </div>
+</header>
+<div class="prog-wrap"><div class="prog-fill" id="pf"></div></div>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-section">XI Integration Module</div>
+    <button class="nav-item active" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Introduction</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">What Is XLPro</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">Integration Overview</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">Prerequisites</span><span class="nav-chk">✓</span></button>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">Architecture Overview</span><span class="nav-chk">✓</span></button>
+  </nav>
+  <div class="content" id="contentArea">
+
+    <div class="slide active" id="slide-0">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge green">XI Team - Beginner</span>
+        </div>
+        <h1>XLPro Integration Fundamentals</h1>
+        <p class="hero-sub">Getting started with Xuber Enterprise and GLOBAL XLPro integration - Essential concepts for developers and business analysts</p>
+      </div>
+      <div class="body">
+        <div class="alert" style="background:#e8f5ee;border-left:4px solid #6CC24A;display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:10px;margin-bottom:1.5rem;align-items:flex-start"><span style="font-size:1.2rem">ℹ️</span><div><strong>Beginner Level</strong><p style="font-size:.85rem;color:#5a5a7a;margin-top:.2rem">This module covers the fundamentals of XLPro integration. You'll learn what XLPro is, why it exists, how it fits into the Xuber stack, and the basic requirements to understand integration deployments.</p></div></div>
+
+        <div class="grid g3">
+          <div class="card"><div class="tag">Concepts</div><h3>What Is XLPro</h3><p>Understand the purpose of GLOBAL XLPro and how it acts as a reinsurance solution for Xuber Enterprise systems.</p></div>
+          <div class="card t"><div class="tag tag-t">Integration</div><h3>Why Integrate</h3><p>Learn why organizations deploy XLPro integration and what business benefits it provides to Xuber operations.</p></div>
+          <div class="card"><div class="tag">Architecture</div><h3>How It Works</h3><p>A high-level view of how XLPro processes data, the systems it connects, and the message flows involved.</p></div>
+          <div class="card b"><div class="tag tag-b">Requirements</div><h3>Prerequisites</h3><p>What components must be in place before XLPro integration can be deployed - Xuber, databases, and licensing.</p></div>
+          <div class="card t"><div class="tag tag-t">Components</div><h3>Key Parts</h3><p>The main software and database components that make up the XLPro integration solution.</p></div>
+          <div class="card"><div class="tag">Stack</div><h3>In The System</h3><p>Where XLPro sits in the broader Xuber Enterprise architecture and how it connects to other systems.</p></div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" disabled>← Previous</button>
+        <span class="slide-pos">1 / 5</span>
+        <button class="nav-btn nav-next" data-goto="1">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-1">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge green">Concept 1</span>
+        </div>
+        <h1>What Is GLOBAL XLPro</h1>
+        <p class="hero-sub">Understanding the purpose and role of XLPro in the Xuber ecosystem</p>
+      </div>
+      <div class="body">
+        <p class="intro">GLOBAL XLPro is a ceded reinsurance solution. It provides Xuber Enterprise with integration capabilities to enable seamless data synchronization between Xuber and GLOBAL XLPro systems. The integration ensures that business data created or modified in Xuber Enterprise is reliably transmitted to and processed by GLOBAL XLPro.</p>
+
+        <div class="two">
+          <div>
+            <h2>XLPro Purpose</h2>
+            <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:1rem">
+              <div class="card"><div class="tag tag-t">Ceded Reinsurance</div><h3>What It Does</h3><p>XLPro is a reinsurance platform that handles policies ceded (transferred) from primary insurers. It manages policy data, claims, and financial transactions for reinsured business.</p></div>
+              <div class="card b"><div class="tag tag-b">Data Integration</div><h3>Messaging Hub</h3><p>XLPro acts as an integration hub, receiving business events from Xuber and synchronizing policy and claims data between systems.</p></div>
+              <div class="card"><div class="tag tag-g">Reliability</div><h3>Guaranteed Delivery</h3><p>The integration ensures no data is lost. If the connection fails, messages queue and process when the connection is restored.</p></div>
+            </div>
+          </div>
+          <div>
+            <h2>In The Xuber Stack</h2>
+            <div class="stack" style="margin-top:1rem">
+              <div class="stk" style="background:#006975">GLOBAL XLPro - Reinsurance Platform</div>
+              <div class="stk" style="background:#ED9B33">Integration Layer - Data transformation</div>
+              <div class="stk" style="background:#5F249F">Xuber Enterprise - Primary system</div>
+              <div class="stk" style="background:#330072">Xuber Messaging - Event transport</div>
+            </div>
+            <div class="callout teal" style="margin-top:1rem"><strong>Key Point:</strong> When Xuber Enterprise creates a policy or claim, the XLPro integration automatically sends that data to GLOBAL XLPro for processing and synchronization.</div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:2rem">When XLPro Integration Is Needed</h2>
+        <div class="grid g2" style="margin-top:1rem">
+          <div class="card o">
+            <div class="tag">Scenario 1</div>
+            <h3>Reinsurance Operations</h3>
+            <p>Organizations that broker reinsurance or have reinsured business must integrate Xuber with GLOBAL XLPro to synchronize reinsured policies and claims.</p>
+          </div>
+          <div class="card b">
+            <div class="tag tag-b">Scenario 2</div>
+            <h3>Multi-System Deployments</h3>
+            <p>When Xuber Enterprise is used alongside GLOBAL XLPro systems, the integration bridges the two platforms and ensures data consistency.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="0">← Previous</button>
+        <span class="slide-pos">2 / 5</span>
+        <button class="nav-btn nav-next" data-goto="2">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-2">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Concept 2</span>
+        </div>
+        <h1>Integration Overview</h1>
+        <p class="hero-sub">How XLPro integration works at a high level</p>
+      </div>
+      <div class="body">
+        <p class="intro">The XLPro integration consists of two main installers that work together to synchronize data between Xuber Enterprise and GLOBAL XLPro. The process is automatic and continuous, handling policy events, claims, and financial transactions.</p>
+
+        <h2>The Two Parts Of XLPro Integration</h2>
+        <div class="grid g2" style="margin-top:1rem;margin-bottom:2rem">
+          <div class="card b">
+            <div class="tag tag-b">Part 1</div>
+            <h3>XLPro Integration (Xuber Side)</h3>
+            <p>Installed on Xuber Enterprise and Xuber Messaging servers. Listens for business events in Xuber and sends them to the XLPro database.</p>
+            <p style="margin-top:.5rem;font-size:.82rem;color:var(--muted)"><strong>Runs on:</strong> Xuber Enterprise server, Xuber Messaging server</p>
+          </div>
+          <div class="card t">
+            <div class="tag tag-t">Part 2</div>
+            <h3>USM 6-9 Load (XLPro Side)</h3>
+            <p>Installed on the GLOBAL XLPro database server. Processes messages from Xuber and loads them into the XLPro database tables.</p>
+            <p style="margin-top:.5rem;font-size:.82rem;color:var(--muted)"><strong>Runs on:</strong> XLPro database server</p>
+          </div>
+        </div>
+
+        <h2>Data Flow</h2>
+        <div style="margin-top:1rem;margin-bottom:1.5rem">
+          <div class="stack">
+            <div class="stk" style="background:#330072">1. Event Occurs in Xuber Enterprise</div>
+            <div class="stk" style="background:#ED9B33">2. Xuber Messaging sends event notification</div>
+            <div class="stk" style="background:#5F249F">3. XLPro Integration captures and transforms data</div>
+            <div class="stk" style="background:#00968F">4. Data sent to XLPro database staging area</div>
+            <div class="stk" style="background:#006975">5. USM 6-9 Load processes and loads into XLPro</div>
+          </div>
+        </div>
+
+        <div class="callout blue">
+          <strong>Message Queuing:</strong> If Xuber or the XLPro database is temporarily unavailable, messages queue on the Xuber Messaging server. When the connection is restored, queued messages automatically process in order, ensuring no data loss.
+        </div>
+
+        <h2 style="margin-top:2rem">What Gets Synchronized</h2>
+        <div class="grid g3" style="margin-top:1rem">
+          <div class="card o">
+            <div class="tag">Data Type</div>
+            <h3>Policy Events</h3>
+            <p>New policies, endorsements, renewals, cancellations - all policy lifecycle events from Xuber flow to XLPro.</p>
+          </div>
+          <div class="card">
+            <div class="tag">Data Type</div>
+            <h3>Claims</h3>
+            <p>Claim creation, reserve changes, claim payments - all claim activity synchronizes to XLPro for tracking.</p>
+          </div>
+          <div class="card g">
+            <div class="tag tag-g">Data Type</div>
+            <h3>Financial Data</h3>
+            <p>Premiums, payments, financial transactions - accounting data flows to XLPro for financial reconciliation.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="1">← Previous</button>
+        <span class="slide-pos">3 / 5</span>
+        <button class="nav-btn nav-next" data-goto="3">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-3">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge blue">Requirements</span>
+        </div>
+        <h1>Integration Prerequisites</h1>
+        <p class="hero-sub">What must be in place before deploying XLPro integration</p>
+      </div>
+      <div class="body">
+        <p class="intro">Before you deploy XLPro integration, your environment must meet specific requirements. These prerequisites ensure the integration works reliably and the two systems can communicate securely.</p>
+
+        <h2>Xuber Enterprise Requirements</h2>
+        <div class="grid g2" style="margin-top:1rem;margin-bottom:2rem">
+          <div class="card">
+            <div class="tag">Requirement</div>
+            <h3>Xuber Enterprise Deployment</h3>
+            <p>A complete Xuber Enterprise system must be installed and operational, including Xuber Enterprise server and Xuber Messaging server.</p>
+          </div>
+          <div class="card t">
+            <div class="tag tag-t">Requirement</div>
+            <h3>Messaging Service</h3>
+            <p>Xuber Messaging must be running and configured to handle event messages. The messaging service is the transport mechanism for integration.</p>
+          </div>
+        </div>
+
+        <h2>GLOBAL XLPro Requirements</h2>
+        <div class="grid g2" style="margin-top:1rem;margin-bottom:2rem">
+          <div class="card b">
+            <div class="tag tag-b">Version</div>
+            <h3>XLPro Version 2.8.30</h3>
+            <p>GLOBAL XLPro must be running version 2.8.30 or compatible. Earlier or later versions may not be compatible with the integration.</p>
+          </div>
+          <div class="card o">
+            <div class="tag">Requirement</div>
+            <h3>Database Access</h3>
+            <p>The XLPro database server must be accessible from the Xuber environment. Network connectivity between the systems is essential.</p>
+          </div>
+        </div>
+
+        <h2>Database Requirements</h2>
+        <div class="grid g2" style="margin-top:1rem;margin-bottom:2rem">
+          <div class="card">
+            <div class="tag">SQL Server</div>
+            <h3>GLOBAL XLPro Database</h3>
+            <p>A Microsoft SQL Server instance with XLPro database installed. Server must support the SQL Server Integration Services (SSIS) and Distributed Transaction Coordinator (MSDTC).</p>
+            <p style="margin-top:.5rem;font-size:.82rem;color:var(--muted)"><strong>Features:</strong> SQL Agent, Integration Services, MSDTC enabled</p>
+          </div>
+          <div class="card t">
+            <div class="tag tag-t">Credentials</div>
+            <h3>Database Access</h3>
+            <p>Database accounts must have appropriate permissions to read from and write to the XLPro database. DBO ownership or equivalent database role required.</p>
+          </div>
+        </div>
+
+        <div class="alert warn" style="background:#fff8e6;border-left:4px solid #ED9B33;display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:10px;margin-top:2rem;margin-bottom:1.5rem;align-items:flex-start"><span style="font-size:1.2rem">⚠️</span><div><strong>Verify Compatibility</strong><p style="font-size:.85rem;color:#5a5a7a;margin-top:.2rem">Before starting deployment, confirm that your GLOBAL XLPro version and SQL Server version are compatible with the XLPro integration release you are deploying. Version mismatches can cause installation failures or runtime errors.</p></div></div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="2">← Previous</button>
+        <span class="slide-pos">4 / 5</span>
+        <button class="nav-btn nav-next" data-goto="4">Next →</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-4">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Architecture</span>
+        </div>
+        <h1>Integration Architecture</h1>
+        <p class="hero-sub">Understanding the complete architecture and how components connect</p>
+      </div>
+      <div class="body">
+        <p class="intro">The XLPro integration architecture spans multiple servers and systems. Understanding how these components connect helps you troubleshoot issues and plan deployments effectively.</p>
+
+        <h2>System Architecture</h2>
+        <div style="margin-top:1.5rem;margin-bottom:2rem">
+          <div class="callout">
+            <strong>Xuber Environment</strong>
+            <div style="margin-top:.5rem;font-size:.88rem;line-height:1.7">
+              <div>• <strong>Xuber Enterprise Server</strong> - Creates and manages policies, claims, and business events</div>
+              <div>• <strong>Xuber Messaging Server</strong> - Broadcasts events to listening services</div>
+              <div>• <strong>XLPro Integration Components</strong> - Listen for events and prepare data for XLPro</div>
+            </div>
+          </div>
+          <div class="callout teal" style="margin-top:1rem">
+            <strong>XLPro Environment</strong>
+            <div style="margin-top:.5rem;font-size:.88rem;line-height:1.7">
+              <div>• <strong>GLOBAL XLPro Application</strong> - Reinsurance and policy management</div>
+              <div>• <strong>XLPro Database Server</strong> - Stores policy, claims, and financial data</div>
+              <div>• <strong>USM 6-9 Load Service</strong> - Processes incoming messages from Xuber</div>
+            </div>
+          </div>
+        </div>
+
+        <h2>Message Flow Sequence</h2>
+        <div style="margin-top:1.5rem">
+          <div class="grid g2" style="margin-bottom:1.5rem">
+            <div class="card b">
+              <div style="font-weight:700;color:var(--dp);margin-bottom:.5rem">Step 1: Event Creation</div>
+              <p>Underwriter creates a new policy in Xuber Enterprise. The policy data is stored in the Xuber database.</p>
+            </div>
+            <div class="card">
+              <div style="font-weight:700;color:var(--dp);margin-bottom:.5rem">Step 2: Event Broadcasting</div>
+              <p>Xuber Messaging publishes a "Policy Created" event to all registered listeners, including XLPro Integration.</p>
+            </div>
+            <div class="card t">
+              <div style="font-weight:700;color:var(--dp);margin-bottom:.5rem">Step 3: Data Capture</div>
+              <p>XLPro Integration listener receives the event, extracts policy details, and formats the data for XLPro.</p>
+            </div>
+            <div class="card o">
+              <div style="font-weight:700;color:var(--dp);margin-bottom:.5rem">Step 4: Transmission</div>
+              <p>Formatted message is sent to the XLPro database via a secure connection. If the connection fails, the message queues.</p>
+            </div>
+            <div class="card g">
+              <div style="font-weight:700;color:var(--dp);margin-bottom:.5rem">Step 5: Processing</div>
+              <p>USM 6-9 Load service on the XLPro database server receives and processes the message.</p>
+            </div>
+            <div class="card b">
+              <div style="font-weight:700;color:var(--dp);margin-bottom:.5rem">Step 6: Completion</div>
+              <p>Data is loaded into XLPro database tables. The policy is now visible in both Xuber and GLOBAL XLPro.</p>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-top:2rem">Key Architecture Points</h2>
+        <div style="margin-top:1rem">
+          <div class="card g">
+            <h3 style="margin-bottom:.5rem">Loose Coupling</h3>
+            <p>Xuber Enterprise does not wait for XLPro confirmation. It completes the policy transaction immediately. XLPro integration happens asynchronously in the background.</p>
+          </div>
+          <div class="card t" style="margin-top:.75rem">
+            <h3 style="margin-bottom:.5rem">Message Queuing</h3>
+            <p>If XLPro is temporarily offline, messages queue on Xuber Messaging. When XLPro is back online, queued messages process automatically in order.</p>
+          </div>
+          <div class="card" style="margin-top:.75rem">
+            <h3 style="margin-bottom:.5rem">Reliability</h3>
+            <p>No data is lost. The integration uses persistent message queues and database transactions to ensure guaranteed delivery and processing.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="3">← Previous</button>
+        <span class="slide-pos">5 / 5</span>
+        <button class="nav-btn nav-next" disabled>Next →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const navItems = document.querySelectorAll('.nav-item');
+const pf = document.getElementById('pf');
+
+navItems.forEach((item, idx) => {
+  item.addEventListener('click', () => showSlide(idx));
+});
+
+document.querySelectorAll('[data-goto]').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const idx = parseInt(e.target.getAttribute('data-goto'));
+    showSlide(idx);
+  });
+});
+
+function showSlide(idx) {
+  slides.forEach(s => s.classList.remove('active'));
+  navItems.forEach(n => n.classList.remove('active'));
+
+  slides[idx].classList.add('active');
+  navItems[idx].classList.add('active');
+
+  const progress = ((idx + 1) / slides.length) * 100;
+  pf.style.width = progress + '%';
+
+  window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
