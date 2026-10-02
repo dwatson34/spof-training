@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC | XLPro Integration - Beginner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root{
+  --dxc-purple:    #5F249F;
+  --dxc-dark-pur:  #330072;
+  --dxc-teal:      #00968F;
+  --dxc-blue:      #00A3E1;
+  --dxc-dark-teal: #006975;
+  --dxc-green:     #6CC24A;
+  --dxc-orange:    #ED9B33;
+  --dxc-gold:      #FFCD00;
+  --dxc-lt-gray:   #D9D9D6;
+  --dxc-mid-gray:  #969696;
+  --dxc-dk-gray:   #63666A;
+
+  --dp:   var(--dxc-dark-pur);
+  --dm:   var(--dxc-purple);
+  --db:   #7B3BBC;
+  --dd:   #1a0a2e;
+  --teal: var(--dxc-teal);
+  --green: #1a7a4a;
+  --red:  #c0392b;
+  --off:  #F7F5FB;
+  --text: #1A1A1A;
+  --muted: #63666A;
+  --border: #E0D9EE;
+  --code-bg: #1E1E2E;
+  --r: 10px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Open Sans',Arial,sans-serif;
+  background:var(--off);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+.hdr{
+  background:var(--dp);
+  height:54px;
+  padding:0 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:300;
+  box-shadow:0 2px 20px rgba(51,0,114,.4);
+}
+
+.logo{display:flex;align-items:center;gap:.5rem}
+.logo-dxc{font-size:1.3rem;font-weight:800;color:#fff;letter-spacing:-.02em}
+.logo-sep{width:1px;height:20px;background:rgba(255,255,255,.25)}
+.logo-title{font-size:.8rem;color:#d4c8f0;font-weight:600}
+.hdr-r{display:flex;gap:1rem;align-items:center}
+.badge{font-size:.65rem;font-weight:700;padding:.3rem .7rem;border-radius:3px;text-transform:uppercase;letter-spacing:.08em}
+.badge.spof{background:var(--dxc-green);color:#fff}
+
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--dxc-blue));transition:width .4s ease}
+
+.app{display:flex;flex:1}
+
+.sidebar{
+  width:240px;
+  background:#fff;
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+  flex-shrink:0;
+  position:sticky;
+  top:54px;
+  height:calc(100vh - 54px);
+  padding:1rem 0;
+  display:flex;
+  flex-direction:column;
+}
+
+.nav-items{flex:1;overflow-y:auto}
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.55rem 1rem;
+  font-size:.82rem;
+  color:var(--muted);
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  background:none;
+  border:none;
+  font-family:'Open Sans',Arial,sans-serif;
+  width:100%;
+  text-align:left;
+}
+
+.nav-item:hover{background:var(--off);color:var(--text)}
+.nav-item.active{
+  background:#f0ebfa;
+  color:var(--dm);
+  border-left-color:var(--dm);
+  font-weight:700;
+}
+
+.nav-dot{width:8px;height:8px;border-radius:50%;background:#ddd;flex-shrink:0;transition:background .3s}
+.nav-item.active .nav-dot{background:var(--dm)}
+.nav-item.done .nav-dot{background:var(--green)}
+
+.sidebar-footer{
+  padding:1rem;
+  border-top:1px solid var(--border);
+  margin-top:auto;
+}
+
+.quiz-btn{
+  width:100%;
+  padding:.6rem;
+  background:var(--dm);
+  color:#fff;
+  border:none;
+  border-radius:var(--r);
+  font-weight:700;
+  cursor:pointer;
+  font-size:.8rem;
+  transition:background .2s;
+}
+
+.quiz-btn:hover{background:var(--db)}
+
+.content{flex:1;overflow-y:auto;background:var(--off)}
+
+.slide{display:none;animation:fadeIn .4s ease}
+.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+.hero{
+  background:linear-gradient(135deg,#1a0a2e 0%,#330072 50%,var(--dm) 100%);
+  padding:3rem 2.5rem 2rem;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero::after{
+  content:'';
+  position:absolute;
+  top:-100px;
+  right:-100px;
+  width:300px;
+  height:300px;
+  background:rgba(255,255,255,.03);
+  border-radius:50%;
+  pointer-events:none;
+}
+
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.badge-hero{
+  display:inline-block;
+  background:#00968F;
+  color:#fff;
+  font-size:.6rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:.3rem .8rem;
+  border-radius:4px;
+}
+
+.hero h1{
+  font-size:2rem;
+  font-weight:800;
+  line-height:1.2;
+  margin-bottom:.8rem;
+  position:relative;
+  z-index:10;
+}
+
+.hero-sub{
+  font-size:.95rem;
+  opacity:.95;
+  line-height:1.5;
+  position:relative;
+  z-index:10;
+  margin-bottom:1.2rem;
+}
+
+.tts-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.5rem 1rem;
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:.82rem;
+  transition:all .2s;
+  position:relative;
+  z-index:10;
+}
+
+.tts-btn:hover{background:rgba(255,255,255,.25)}
+.tts-btn.speaking{background:rgba(0,150,143,.4);border-color:#00968F}
+.tts-dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.tts-btn.speaking .tts-dot{animation:pulse 0.8s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.2)}}
+
+.main-content{padding:2.5rem}
+.intro{margin-bottom:2.5rem}
+.intro p{
+  font-size:.95rem;
+  line-height:1.7;
+  color:#555;
+}
+
+.section{margin-bottom:3rem}
+.section h2{
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--dp);
+  margin-bottom:1.2rem;
+  padding-bottom:.8rem;
+  border-bottom:2px solid var(--border);
+}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:2rem}
+
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.5rem;
+  transition:all .25s;
+  cursor:pointer;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 24px rgba(95,36,159,.12);
+  border-color:var(--dm);
+}
+
+.card-icon{
+  font-size:2rem;
+  margin-bottom:.8rem;
+}
+
+.card h3{
+  font-size:1.1rem;
+  font-weight:700;
+  color:var(--dp);
+  margin-bottom:.6rem;
+}
+
+.card p{
+  font-size:.9rem;
+  color:#666;
+  line-height:1.6;
+}
+
+.expander{margin-bottom:1.5rem}
+.expander-hdr{
+  background:#fff;
+  border:1px solid var(--border);
+  padding:1rem 1.2rem;
+  cursor:pointer;
+  border-radius:var(--r);
+  font-weight:700;
+  color:var(--dm);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  transition:all .2s;
+  user-select:none;
+}
+
+.expander-hdr:hover{background:var(--off);border-color:var(--dm)}
+.expander-icon{display:inline-block;transition:transform .3s;font-size:1.2rem}
+.expander.open .expander-icon{transform:rotate(180deg)}
+
+.expander-body{
+  display:none;
+  background:#fff;
+  border:1px solid var(--border);
+  border-top:none;
+  padding:1.2rem;
+  border-radius:0 0 var(--r) var(--r);
+  animation:slideDown .3s ease;
+}
+
+.expander.open .expander-body{display:block}
+@keyframes slideDown{from{opacity:0;max-height:0}to{opacity:1;max-height:1000px}}
+
+.scenario{
+  background:linear-gradient(135deg,#f8f6fc 0%,#fff 100%);
+  border-left:4px solid var(--dm);
+  padding:1.5rem;
+  border-radius:0 var(--r) var(--r) 0;
+  margin:1.5rem 0;
+}
+
+.scenario-q{
+  font-weight:700;
+  color:var(--dp);
+  margin-bottom:1rem;
+  font-size:1rem;
+}
+
+.scenario-opts{display:grid;gap:.8rem;margin-bottom:1rem}
+
+.sc-opt{
+  padding:.8rem 1rem;
+  background:#fff;
+  border:2px solid var(--border);
+  border-radius:6px;
+  cursor:pointer;
+  text-align:left;
+  font-family:'Open Sans',Arial,sans-serif;
+  transition:all .15s;
+}
+
+.sc-opt:hover{border-color:var(--dm);background:var(--off)}
+.sc-opt:disabled{cursor:not-allowed}
+.sc-opt.correct{background:#e8f5e9;border-color:var(--green);color:var(--green);font-weight:600}
+.sc-opt.wrong{background:#ffebee;border-color:var(--red);color:var(--red);text-decoration:line-through}
+
+.fb{display:none;padding:.8rem;border-radius:6px;font-size:.9rem;line-height:1.5}
+.fb.show{display:block}
+.fb.cfb{background:#e8f5e9;color:var(--green);border-left:3px solid var(--green)}
+.fb.wfb{background:#ffebee;color:var(--red);border-left:3px solid var(--red)}
+
+.code-block{
+  background:var(--code-bg);
+  color:#d4d4d4;
+  padding:1.2rem;
+  border-radius:var(--r);
+  overflow-x:auto;
+  font-family:'JetBrains Mono',monospace;
+  font-size:.85rem;
+  line-height:1.6;
+  margin:1.5rem 0;
+}
+
+.kw{color:#569CD6}
+.str{color:#CE9178}
+.fn{color:#DCDCAA}
+.var{color:#9CDCFE}
+.cmt{color:#6A9955}
+.typ{color:#4EC9B0}
+.num{color:#B5CEA8}
+
+.flow{margin:1.5rem 0}
+.flow-step{
+  background:#fff;
+  border-left:4px solid var(--teal);
+  padding:1rem 1.2rem;
+  margin-bottom:.8rem;
+  border-radius:0 var(--r) var(--r) 0;
+  display:none;
+  animation:slideDown .3s ease;
+}
+
+.flow-step.show{display:block}
+.flow-num{font-weight:700;color:var(--teal);margin-right:.5rem}
+
+.flow-btn{
+  padding:.6rem 1.2rem;
+  background:var(--teal);
+  color:#fff;
+  border:none;
+  border-radius:var(--r);
+  cursor:pointer;
+  font-weight:600;
+  transition:background .2s;
+  margin:1.5rem 0;
+}
+
+.flow-btn:hover{background:var(--dxc-dark-teal)}
+
+.knowcheck{margin:2rem 0;padding:2rem;background:#fff;border:1px solid var(--border);border-radius:var(--r)}
+.knowcheck h3{color:var(--dp);margin-bottom:1rem;font-size:1.1rem}
+
+.nav-btns{display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap}
+.btn{
+  padding:.65rem 1.5rem;
+  border:none;
+  border-radius:var(--r);
+  cursor:pointer;
+  font-weight:600;
+  font-size:.9rem;
+  transition:all .2s;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+
+.btn-primary{background:var(--dm);color:#fff}
+.btn-primary:hover{background:var(--db)}
+
+.btn-secondary{background:#f0ebfa;color:var(--dm);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--off)}
+
+/* QUIZ STYLES */
+.quiz-overlay{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.6);
+  display:none;
+  z-index:500;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+}
+
+.quiz-overlay.show{display:flex}
+
+.quiz-panel{
+  background:#fff;
+  border-radius:var(--r);
+  max-width:700px;
+  width:100%;
+  max-height:90vh;
+  overflow-y:auto;
+  animation:slideUp .4s ease;
+}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+
+.quiz-close{
+  position:absolute;
+  top:1.5rem;
+  right:1.5rem;
+  background:none;
+  border:none;
+  font-size:1.8rem;
+  cursor:pointer;
+  color:var(--muted);
+  z-index:10;
+}
+
+.quiz-hdr{
+  background:linear-gradient(135deg,#1a0a2e 0%,var(--dp) 100%);
+  color:#fff;
+  padding:2rem 2rem 1.5rem;
+  position:relative;
+}
+
+.quiz-hdr h2{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
+.quiz-info{font-size:.85rem;opacity:.9}
+
+.quiz-body{padding:2rem}
+
+.qintro{margin-bottom:1.5rem}
+.qintro p{
+  font-size:.95rem;
+  line-height:1.6;
+  color:#666;
+  margin-bottom:1rem;
+}
+
+.q-item{margin-bottom:2rem;display:none}
+.q-item.show{display:block;animation:fadeIn .3s ease}
+
+.q-num{
+  font-size:.8rem;
+  font-weight:700;
+  color:var(--teal);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  margin-bottom:.5rem;
+}
+
+.q-text{
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:1.2rem;
+}
+
+.q-opts{display:grid;gap:.8rem;margin-bottom:1.2rem}
+
+.qopt{
+  padding:1rem;
+  background:var(--off);
+  border:2px solid var(--border);
+  border-radius:6px;
+  cursor:pointer;
+  font-family:'Open Sans',Arial,sans-serif;
+  text-align:left;
+  transition:all .15s;
+}
+
+.qopt:hover{border-color:var(--dm);background:#fff}
+.qopt:disabled{cursor:not-allowed}
+.qopt.correct{background:#e8f5e9;border-color:var(--green);color:var(--green);font-weight:600}
+.qopt.wrong{background:#ffebee;border-color:var(--red);color:var(--red)}
+
+.qfb{
+  padding:1rem;
+  border-radius:6px;
+  font-size:.9rem;
+  line-height:1.6;
+  margin-bottom:1.5rem;
+  display:none;
+}
+
+.qfb.show{display:block}
+.qfb.correct{background:#e8f5e9;color:#2e7d32;border-left:3px solid var(--green)}
+.qfb.wrong{background:#ffebee;color:#c62828;border-left:3px solid var(--red)}
+
+.q-nav{display:flex;gap:.8rem;justify-content:space-between;margin-top:1.5rem}
+.q-nav button{padding:.6rem 1rem;background:var(--off);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-weight:600;transition:all .2s}
+.q-nav button:hover{background:var(--border)}
+.q-nav button:disabled{opacity:.4;cursor:not-allowed}
+
+.qresult{display:none}
+.qresult.show{display:block}
+
+.qresult-hdr{
+  text-align:center;
+  padding:1.5rem;
+  border-bottom:1px solid var(--border);
+  margin-bottom:1.5rem;
+}
+
+.qscore{
+  font-size:3rem;
+  font-weight:800;
+  color:var(--dm);
+  margin-bottom:.5rem;
+}
+
+.qstatus{
+  font-size:1.1rem;
+  font-weight:700;
+  margin-bottom:.5rem;
+}
+
+.qstatus.pass{color:var(--green)}
+.qstatus.fail{color:var(--red)}
+
+.qbreakdown{margin-bottom:1.5rem}
+.qstat{display:flex;justify-content:space-between;padding:.8rem;background:var(--off);border-radius:6px;margin-bottom:.6rem}
+.qstat-label{font-weight:600;color:var(--text)}
+.qstat-val{font-weight:700;color:var(--dm)}
+
+.q-actions{
+  display:flex;
+  gap:1rem;
+  justify-content:center;
+  padding:1rem 0;
+  flex-wrap:wrap;
+}
+
+.q-actions button{
+  padding:.65rem 1.5rem;
+  border:none;
+  border-radius:var(--r);
+  cursor:pointer;
+  font-weight:700;
+  font-size:.9rem;
+  transition:all .2s;
+}
+
+.retry-btn{background:var(--dm);color:#fff}
+.retry-btn:hover{background:var(--db)}
+
+.exit-btn{background:#f0ebfa;color:var(--dm)}
+.exit-btn:hover{background:var(--off)}
+
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">
+    <span class="logo-dxc">DXC</span>
+    <div class="logo-sep"></div>
+    <span class="logo-title">XLPro Integration Training</span>
+  </div>
+  <div class="hdr-r">
+    <span class="badge spof">HIGH SPOF</span>
+  </div>
+</div>
+
+<div class="prog-wrap"><div class="prog-fill" id="progBar"></div></div>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="nav-items" id="navItems"></div>
+    <div class="sidebar-footer">
+      <button class="quiz-btn" id="quizBtn">Take the Quiz →</button>
+    </div>
+  </div>
+
+  <div class="content" id="content"></div>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-panel">
+    <button class="quiz-close" onclick="closeQuiz()">✕</button>
+    <div class="quiz-hdr">
+      <h2>Knowledge Check</h2>
+      <p class="quiz-info" id="quizInfo">10 questions • 70% to pass • Instant feedback • Retry wrong answers only</p>
+    </div>
+    <div class="quiz-body">
+      <div class="qintro" id="qIntro">
+        <h3 style="margin-bottom:1rem;color:var(--dp)">How it works:</h3>
+        <p>Select your answer for <strong>instant feedback</strong>. At the end you get a <strong>score breakdown</strong>. If you don't pass, click Retry to attempt only the incorrect questions.</p>
+      </div>
+      <div id="questionsContainer"></div>
+      <div class="qresult" id="qResult">
+        <div class="qresult-hdr">
+          <div class="qscore" id="qScorePct">75%</div>
+          <div class="qstatus" id="qPassFail">You're close!</div>
+          <p style="font-size:.9rem;color:#666;margin-top:.5rem">You need 70% to pass</p>
+        </div>
+        <div class="qbreakdown">
+          <div class="qstat"><span class="qstat-label">Questions Answered</span><span class="qstat-val" id="qAnswered">10/10</span></div>
+          <div class="qstat"><span class="qstat-label">Correct</span><span class="qstat-val" style="color:var(--green)" id="qCorrect">8</span></div>
+          <div class="qstat"><span class="qstat-label">Incorrect</span><span class="qstat-val" style="color:var(--red)" id="qIncorrect">2</span></div>
+        </div>
+        <div class="q-actions">
+          <button class="retry-btn" onclick="retryQuiz()">Retry Incorrect Only</button>
+          <button class="exit-btn" onclick="closeQuiz()">Back to Training</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const SLIDES = [
+  {
+    title: 'Welcome to XLPro Integration',
+    badge: 'HIGH SPOF',
+    intro: 'This training covers one of the most critical unmitigated Single Points of Failure in the Xuber Enterprise tech stack. Zero team members currently have formal knowledge. You will learn what XLPro is, how it integrates systems, what prerequisites are needed, the architecture components, and how to troubleshoot integration failures.',
+    ttsText: 'Welcome to XLPro Integration training. This is a high SPOF with zero documented expertise. You will learn what XLPro Integration is, how it integrates the Xuber ecosystem, prerequisites and architecture, and troubleshooting procedures.',
+    content: `
+      <div class="section">
+        <h2>Training Objectives</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="card-icon">🔗</div>
+            <h3>Understand XLPro</h3>
+            <p>Learn how XLPro Integration connects critical systems in the Xuber Enterprise ecosystem.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">⚙️</div>
+            <h3>Integration Basics</h3>
+            <p>Explore message flows, system connectivity, and data synchronization patterns.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🛠️</div>
+            <h3>Prerequisites & Setup</h3>
+            <p>Understand environment requirements and how to verify your system is ready.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🏗️</div>
+            <h3>Architecture Deep Dive</h3>
+            <p>Study the components, data flows, and architectural patterns of XLPro Integration.</p>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <h2>Why This Matters</h2>
+        <div class="scenario">
+          <div class="scenario-q">What happens if XLPro Integration goes offline?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Xuber continues locally but external systems don't get updates</button>
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Xuber stops processing all transactions</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Only real-time messages are affected</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">The integration automatically switches to a backup</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'What is XLPro Integration?',
+    badge: 'FOUNDATIONS',
+    intro: 'XLPro Integration is the middleware layer that connects Xuber Enterprise with reinsurance systems, policy administration platforms, and external data providers. It handles message routing, transformation, and guaranteed delivery.',
+    ttsText: 'Concept 1: XLPro Integration. XLPro is the integration middleware between Xuber Enterprise and GLOBAL XLPro, policy platforms, and external systems. It handles policy lifecycle events, claim notifications, financial messages and inbound data feeds. If XLPro stops, Xuber continues locally but nothing reaches external systems.',
+    content: `
+      <div class="section">
+        <h2>Core Concepts</h2>
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>Message Flow Architecture</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <p style="margin-bottom:1rem">XLPro Integration uses a publish-subscribe message pattern:</p>
+            <ul style="margin-left:2rem;line-height:1.8">
+              <li><strong>Publishers:</strong> Xuber Enterprise publishes policy, claim, and financial events</li>
+              <li><strong>Topics:</strong> Messages are organized by type (policy, claim, financial)</li>
+              <li><strong>Subscribers:</strong> External systems consume messages from topics they care about</li>
+              <li><strong>Guaranteed Delivery:</strong> Failed messages queue automatically for retry</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="expander">
+          <div class="expander-hdr">
+            <span>When You Need XLPro Integration</span>
+            <span class="expander-icon">▼</span>
+          </div>
+          <div class="expander-body">
+            <p><strong>XLPro Integration is required when:</strong></p>
+            <ul style="margin-left:2rem;line-height:1.8;margin-top:.8rem">
+              <li>Syncing policy data between Xuber and external systems</li>
+              <li>Sharing claim events and updates across platforms</li>
+              <li>Feeding financial data to reinsurance or accounting systems</li>
+              <li>Notifying external systems of policy lifecycle changes</li>
+              <li>Integrating with GLOBAL XLPro for multi-company scenarios</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">A policy is created in Xuber. What is the role of XLPro Integration?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Transform the policy event and route it to all subscribed external systems</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Store the policy data in a local database</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Create a backup copy of the policy</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Notify only the primary system administrator</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'How Integration Works',
+    badge: 'HOW IT WORKS',
+    intro: 'XLPro Integration operates on a message-driven architecture. Understanding the flow from event creation to external system delivery is critical for troubleshooting and maintenance.',
+    ttsText: 'Concept 2: Message Flow and Architecture. XLPro uses publish-subscribe. Xuber publishes events to topics. Routing rules send matching messages to subscriber queues. Consumers read from their queues. Failed messages go to the Dead Letter Queue. Full message flow from creation to delivery takes under 2 seconds normally.',
+    content: `
+      <div class="section">
+        <h2>Message Flow Visualization</h2>
+        <button class="flow-btn" onclick="toggleFlow()">Visualize the Flow →</button>
+        <div class="flow" id="flowViz">
+          <div class="flow-step"><span class="flow-num">1</span> <strong>Event Trigger:</strong> Policy created, claim filed, or payment processed in Xuber</div>
+          <div class="flow-step"><span class="flow-num">2</span> <strong>Publish:</strong> Event published to XLPro topic (e.g., /policy/created)</div>
+          <div class="flow-step"><span class="flow-num">3</span> <strong>Route:</strong> Routing rules match event to subscriber queues based on criteria</div>
+          <div class="flow-step"><span class="flow-num">4</span> <strong>Transform:</strong> Message transformer applies system-specific format rules</div>
+          <div class="flow-step"><span class="flow-num">5</span> <strong>Deliver:</strong> External system consumer polls queue and processes message</div>
+        </div>
+
+        <div class="code-block">
+          <div style="color:#6A9955;margin-bottom:1rem">// Example: Policy Created Event Flow</div>
+          <div><span class="kw">Event</span>: PolicyCreated {</div>
+          <div style="margin-left:2rem">
+            <span class="var">policyId</span>: <span class="str">"POL-2024-12345"</span>,<br>
+            <span class="var">status</span>: <span class="str">"ACTIVE"</span>,<br>
+            <span class="var">timestamp</span>: <span class="str">"2024-10-02T14:30:00Z"</span><br>
+          </div>
+          <div>}</div>
+          <div style="margin-top:1rem;color:#6A9955">→ Published to /policy/created</div>
+          <div style="margin-top:.5rem;color:#6A9955">→ Routed to [reinsurance-queue, accounting-queue, audit-queue]</div>
+          <div style="margin-top:.5rem;color:#6A9955">→ Each system formats and processes independently</div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">You see messages in the Dead Letter Queue. What does this mean?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Those messages failed delivery and require manual investigation</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">XLPro Integration has completely failed</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">The database is corrupted</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">All external systems are offline</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'Prerequisites & Environment Setup',
+    badge: 'SETUP',
+    intro: 'Before working with XLPro Integration, your environment must meet specific requirements. This section covers what you need to verify and how to confirm your system is ready.',
+    ttsText: 'Concept 3: Environment Prerequisites. Before you can work with XLPro Integration, your environment must have Java 11 or later, database connectivity to Xuber Enterprise, network access to GLOBAL XLPro servers, and proper message broker configuration.',
+    content: `
+      <div class="section">
+        <h2>System Requirements</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="card-icon">☕</div>
+            <h3>Java Runtime</h3>
+            <p><strong>Java 11 or later</strong> required. Check with: <code>java -version</code></p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🗄️</div>
+            <h3>Database</h3>
+            <p>Connection to <strong>Xuber Enterprise DB</strong>. Verify with: <code>sqlplus</code></p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🌐</div>
+            <h3>Network Access</h3>
+            <p><strong>Port 5672</strong> (AMQP) and <strong>15672</strong> (Management) open</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔐</div>
+            <h3>Credentials</h3>
+            <p>RabbitMQ user account with publish/subscribe permissions</p>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Pre-Flight Checklist</h2>
+          <div class="expander">
+            <div class="expander-hdr">
+              <span>How do I check if my environment is ready?</span>
+              <span class="expander-icon">▼</span>
+            </div>
+            <div class="expander-body">
+              <p style="margin-bottom:1rem"><strong>Step 1: Verify Java</strong></p>
+              <div class="code-block" style="margin-bottom:1rem">$ java -version<br>openjdk version "11.0.15" 2022-04-19</div>
+
+              <p style="margin-bottom:1rem"><strong>Step 2: Test Database Connection</strong></p>
+              <div class="code-block" style="margin-bottom:1rem">$ sqlplus username@xuber_db<br>Connected to Oracle Database 19c</div>
+
+              <p style="margin-bottom:1rem"><strong>Step 3: Check RabbitMQ Port</strong></p>
+              <div class="code-block" style="margin-bottom:1rem">$ nc -zv rabbitmq.prod 5672<br>Connection to rabbitmq.prod 5672 port succeeded</div>
+
+              <p style="margin-bottom:1rem"><strong>Step 4: Verify XLPro Service</strong></p>
+              <div class="code-block">$ curl -u admin:pass http://rabbitmq.prod:15672/api/whoami<br>{"name":"xlpro-user","tags":"administrator"}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">You run the pre-flight checklist and Java is not installed. What's your next action?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Contact your system administrator to install Java 11+</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Skip this check and continue with XLPro</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Use Python instead</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Wait for the next deployment</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: 'Architecture & Components',
+    badge: 'ARCHITECTURE',
+    intro: 'XLPro Integration consists of several interconnected components. Understanding how they work together is essential for monitoring, troubleshooting, and scaling.',
+    ttsText: 'Concept 4: XLPro Architecture. XLPro Integration has five main components: the message broker that queues events, transformers that format messages, routing engine that directs to subscribers, Dead Letter Queue for failures, and monitoring tools for visibility.',
+    content: `
+      <div class="section">
+        <h2>Key Architecture Components</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="card-icon">📨</div>
+            <h3>Message Broker</h3>
+            <p>RabbitMQ or Apache Kafka. Stores messages and guarantees delivery to subscribers.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔄</div>
+            <h3>Routing Engine</h3>
+            <p>Evaluates rules to determine which queues receive each message type.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🎭</div>
+            <h3>Message Transformer</h3>
+            <p>Converts Xuber format to system-specific formats (JSON, XML, CSV).</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">⚠️</div>
+            <h3>Dead Letter Queue (DLQ)</h3>
+            <p>Holds failed messages that exceed retry limits for manual review.</p>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div style="color:#6A9955;margin-bottom:1rem">// XLPro Integration Architecture</div>
+          <div style="color:#9CDCFE">XuberEnterprise</div>
+          <div style="margin-left:2rem">  ↓ (publishes events)</div>
+          <div style="color:#4EC9B0">MessageBroker</div>
+          <div style="margin-left:2rem">  ├→ <span style="color:#CE9178">"policy-created"</span> topic</div>
+          <div style="margin-left:2rem">  ├→ <span style="color:#CE9178">"claim-filed"</span> topic</div>
+          <div style="margin-left:2rem">  └→ <span style="color:#CE9178">"payment-processed"</span> topic</div>
+          <div style="margin-left:1rem">  ↓ (routing & transformation)</div>
+          <div style="color:#DCDCAA">SubscriberQueues</div>
+          <div style="margin-left:2rem">  ├→ reinsurance-system-queue</div>
+          <div style="margin-left:2rem">  ├→ accounting-system-queue</div>
+          <div style="margin-left:2rem">  └→ audit-system-queue</div>
+          <div style="margin-left:1rem">  ↓ (consumed by)</div>
+          <div style="color:#4EC9B0">ExternalSystems</div>
+          <div style="margin-left:2rem">  ├→ GLOBAL XLPro</div>
+          <div style="margin-left:2rem">  ├→ Accounting Platform</div>
+          <div style="margin-left:2rem">  └→ Audit Log System</div>
+        </div>
+
+        <div class="scenario">
+          <div class="scenario-q">You notice a message has been in the DLQ for 3 days. What should you do?</div>
+          <div class="scenario-opts">
+            <button class="sc-opt" onclick="checkScenario(this, 0)">Investigate why it failed, fix the issue, and manually replay it</button>
+            <button class="sc-opt" onclick="checkScenario(this, 1)">Delete it from the DLQ</button>
+            <button class="sc-opt" onclick="checkScenario(this, 2)">Wait for automatic retry</button>
+            <button class="sc-opt" onclick="checkScenario(this, 3)">Contact the vendor</button>
+          </div>
+          <div class="fb" style="margin-top:.8rem"></div>
+        </div>
+      </div>
+    `
+  }
+];
+
+const QUIZ_QUESTIONS = [
+  {
+    q: 'What is the primary function of XLPro Integration?',
+    opts: ['Connect Xuber Enterprise with external systems via message routing', 'Store all policy data in a backup database', 'Create user accounts for team members', 'Generate monthly financial reports'],
+    a: 0,
+    exp: 'XLPro Integration is middleware that connects Xuber Enterprise with reinsurance systems, policy platforms, and external data providers via publish-subscribe messaging.'
+  },
+  {
+    q: 'If XLPro Integration goes offline for 2 hours, what happens to Xuber Enterprise?',
+    opts: ['Xuber continues processing locally, but external systems don\'t receive updates', 'Xuber stops completely', 'Only real-time messages fail', 'Automatic failover to backup servers'],
+    a: 0,
+    exp: 'Xuber continues to process locally, but external systems don\'t receive updates. Messages queue when XLPro comes back online.'
+  },
+  {
+    q: 'What is the Dead Letter Queue (DLQ) used for?',
+    opts: ['Deleting old messages automatically', 'Storing messages that failed delivery and require manual review', 'Backing up all processed messages', 'Logging system errors'],
+    a: 1,
+    exp: 'The DLQ holds messages that failed delivery after all retries and require manual investigation and replay.'
+  },
+  {
+    q: 'Which Java version is required for XLPro Integration?',
+    opts: ['Java 8 or later', 'Java 11 or later', 'Java 16 or later', 'Any version works'],
+    a: 1,
+    exp: 'Java 11 or later is required. You can verify with the command: java -version'
+  },
+  {
+    q: 'In the message flow, what happens after a message is published to a topic?',
+    opts: ['The message is immediately deleted', 'Routing rules match the event to subscriber queues', 'The message goes to the DLQ', 'External systems process it without transformation'],
+    a: 1,
+    exp: 'After publishing, routing rules evaluate the message and route it to appropriate subscriber queues based on matching criteria.'
+  },
+  {
+    q: 'What does the Message Transformer component do?',
+    opts: ['Validates Java code syntax', 'Converts Xuber format to system-specific formats (JSON, XML, CSV)', 'Deletes duplicate messages', 'Encrypts all messages'],
+    a: 1,
+    exp: 'The transformer converts messages from Xuber\'s internal format to formats that external systems expect (JSON, XML, CSV, etc.).'
+  },
+  {
+    q: 'Which ports must be open for RabbitMQ connectivity?',
+    opts: ['80 and 443', '5672 and 15672', '3306 and 3307', '8000 and 8001'],
+    a: 1,
+    exp: 'Port 5672 is for AMQP (message broker) and port 15672 is for the RabbitMQ Management Console.'
+  },
+  {
+    q: 'What is the publish-subscribe pattern used by XLPro?',
+    opts: ['Publishers send to a central database that subscribers query', 'Publishers send messages to topics; subscribers consume from topic queues', 'All systems connect directly to each other', 'Messages are sent only during business hours'],
+    a: 1,
+    exp: 'In publish-subscribe, publishers post to topics, and subscribers consume messages from queues they\'re interested in—they don\'t communicate directly.'
+  },
+  {
+    q: 'Under normal load, what is the expected message delivery time from Xuber to external systems?',
+    opts: ['5-10 seconds', 'Under 2 seconds', '30+ seconds', '1+ minutes'],
+    a: 1,
+    exp: 'Under normal conditions, the full message flow from Xuber to external system delivery takes less than 2 seconds.'
+  },
+  {
+    q: 'If a message fails delivery after retries, what should you do before manually replaying it?',
+    opts: ['Immediately replay it without investigation', 'Contact the vendor and wait', 'Investigate why it failed and fix the underlying issue', 'Delete it from the DLQ'],
+    a: 2,
+    exp: 'Always investigate the root cause of failure (system down, format mismatch, auth issue) and fix it before replaying the message.'
+  }
+];
+
+let currentSlide = 0;
+let quizAnswers = {};
+let quizMode = false;
+let currentQuestion = 0;
+let wrongAnswersOnly = [];
+
+function initUI() {
+  renderNav();
+  goSlide(0);
+  updateProgress();
+}
+
+function renderNav() {
+  const nav = document.getElementById('navItems');
+  nav.innerHTML = '';
+  SLIDES.forEach((slide, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-item';
+    if (idx === currentSlide) btn.classList.add('active');
+    btn.innerHTML = `
+      <div class="nav-dot"></div>
+      <span class="nav-lbl">${slide.title}</span>
+      <span class="nav-chk">✓</span>
+    `;
+    btn.onclick = () => goSlide(idx);
+    nav.appendChild(btn);
+  });
+}
+
+function goSlide(idx) {
+  if (idx < 0 || idx >= SLIDES.length) return;
+  currentSlide = idx;
+  renderNav();
+  renderSlide();
+  updateProgress();
+  document.getElementById('content').scrollTop = 0;
+}
+
+function renderSlide() {
+  const slide = SLIDES[currentSlide];
+  const content = document.getElementById('content');
+  
+  content.innerHTML = `
+    <div class="slide active">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="badge-hero">${slide.badge}</span>
+        </div>
+        <h1>${slide.title}</h1>
+        <p class="hero-sub">${slide.intro}</p>
+        <button class="tts-btn" onclick="speak(${currentSlide})">
+          <span class="tts-dot"></span>
+          <span>Listen</span>
+        </button>
+      </div>
+      <div class="main-content">
+        ${slide.content}
+        <div class="nav-btns">
+          ${currentSlide > 0 ? `<button class="btn btn-secondary" onclick="goSlide(${currentSlide - 1})">← Previous</button>` : ''}
+          ${currentSlide < SLIDES.length - 1 ? `<button class="btn btn-primary" onclick="goSlide(${currentSlide + 1})">Next →</button>` : ''}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function speak(slideIdx) {
+  if (!window.speechSynthesis) {
+    alert('Speech synthesis not supported in this browser');
+    return;
+  }
+
+  const btn = event.target.closest('.tts-btn');
+  const slide = SLIDES[slideIdx];
+
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    btn.classList.remove('speaking');
+    return;
+  }
+
+  btn.classList.add('speaking');
+
+  const utterance = new SpeechSynthesisUtterance(slide.ttsText);
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+
+  utterance.onend = () => btn.classList.remove('speaking');
+  utterance.onerror = () => btn.classList.remove('speaking');
+
+  window.speechSynthesis.speak(utterance);
+}
+
+function checkScenario(btn, correctIdx) {
+  const parent = btn.parentElement;
+  const allBtns = parent.querySelectorAll('.sc-opt');
+  const fb = parent.nextElementSibling;
+  const isCorrect = allBtns.indexOf(btn) === correctIdx;
+
+  allBtns.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === correctIdx) {
+      b.classList.add('correct');
+    } else if (b === btn && !isCorrect) {
+      b.classList.add('wrong');
+    }
+  });
+
+  const msgs = [
+    'Correct! Great understanding of the integration flow.',
+    'Spot on! You\'ve got it.',
+    'That\'s right! You\'re getting it.',
+    'Excellent work!',
+    'Perfect! You understand this concept.'
+  ];
+
+  if (isCorrect) {
+    fb.className = 'fb cfb show';
+    fb.innerHTML = `<strong>✓ Correct!</strong> ${msgs[Math.floor(Math.random() * msgs.length)]}`;
+  } else {
+    const opts = allBtns.map((b, i) => i === correctIdx ? `<span style="color:var(--green);font-weight:700">${b.textContent}</span>` : b.textContent);
+    fb.className = 'fb wfb show';
+    fb.innerHTML = `<strong>Not quite.</strong> The correct answer is: <strong>${allBtns[correctIdx].textContent}</strong>`;
+  }
+}
+
+function toggleFlow() {
+  const steps = document.querySelectorAll('.flow-step');
+  if (steps[0].classList.contains('show')) {
+    steps.forEach(s => s.classList.remove('show'));
+  } else {
+    steps.forEach((s, idx) => {
+      setTimeout(() => s.classList.add('show'), idx * 200);
+    });
+  }
+}
+
+function updateProgress() {
+  const pct = ((currentSlide + 1) / SLIDES.length) * 100;
+  document.getElementById('progBar').style.width = pct + '%';
+}
+
+document.getElementById('quizBtn').addEventListener('click', startQuiz);
+
+function startQuiz() {
+  quizMode = true;
+  quizAnswers = {};
+  currentQuestion = 0;
+  wrongAnswersOnly = [];
+  document.getElementById('quizOverlay').classList.add('show');
+  renderQuizQuestions();
+  showQuizQuestion(0);
+}
+
+function closeQuiz() {
+  quizMode = false;
+  document.getElementById('quizOverlay').classList.remove('show');
+}
+
+function renderQuizQuestions() {
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+
+  const questionsToShow = wrongAnswersOnly.length > 0 ? wrongAnswersOnly : QUIZ_QUESTIONS;
+
+  questionsToShow.forEach((q, idx) => {
+    const qIdx = QUIZ_QUESTIONS.indexOf(q);
+    const div = document.createElement('div');
+    div.className = 'q-item';
+    div.innerHTML = `
+      <div class="q-num">Question ${idx + 1} of ${questionsToShow.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts">
+        ${q.opts.map((opt, oidx) => `
+          <button class="qopt" onclick="answerQuestion(${qIdx}, ${oidx})">${opt}</button>
+        `).join('')}
+      </div>
+      <div class="qfb" id="qfb-${qIdx}"></div>
+      <div class="q-nav">
+        <button onclick="prevQuestion()" ${idx === 0 ? 'disabled' : ''}>← Previous</button>
+        <button onclick="nextQuestion()" ${idx === questionsToShow.length - 1 ? 'disabled' : ''}>Next →</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function showQuizQuestion(idx) {
+  const items = document.querySelectorAll('.q-item');
+  items.forEach((item, i) => {
+    if (i === idx) item.classList.add('show');
+    else item.classList.remove('show');
+  });
+  currentQuestion = idx;
+}
+
+function answerQuestion(qIdx, optIdx) {
+  const q = QUIZ_QUESTIONS[qIdx];
+  const isCorrect = optIdx === q.a;
+  quizAnswers[qIdx] = { chosen: optIdx, correct: isCorrect };
+
+  const fbDiv = document.getElementById(`qfb-${qIdx}`);
+  const opts = document.querySelectorAll(`[onclick*="answerQuestion(${qIdx}"]`);
+
+  opts.forEach((opt, i) => {
+    opt.disabled = true;
+    if (i === q.a) opt.classList.add('correct');
+    if (i === optIdx && !isCorrect) opt.classList.add('wrong');
+  });
+
+  if (isCorrect) {
+    fbDiv.className = 'qfb show correct';
+    fbDiv.innerHTML = `<strong>✓ Correct!</strong> ${q.exp}`;
+  } else {
+    fbDiv.className = 'qfb show wrong';
+    fbDiv.innerHTML = `<strong>✗ Incorrect.</strong> Right answer: <strong>${q.opts[q.a]}</strong>. ${q.exp}`;
+  }
+}
+
+function prevQuestion() {
+  if (currentQuestion > 0) showQuizQuestion(currentQuestion - 1);
+}
+
+function nextQuestion() {
+  const questionsToShow = wrongAnswersOnly.length > 0 ? wrongAnswersOnly : QUIZ_QUESTIONS;
+  if (currentQuestion < questionsToShow.length - 1) {
+    showQuizQuestion(currentQuestion + 1);
+  } else {
+    showQuizResult();
+  }
+}
+
+function showQuizResult() {
+  const questionsToShow = wrongAnswersOnly.length > 0 ? wrongAnswersOnly : QUIZ_QUESTIONS;
+  
+  const correct = Object.values(quizAnswers).filter(a => a.correct).length;
+  const total = questionsToShow.length;
+  const pct = Math.round((correct / total) * 100);
+  const passed = pct >= 70;
+
+  document.getElementById('qIntro').style.display = 'none';
+  document.getElementById('questionsContainer').style.display = 'none';
+
+  document.getElementById('qScorePct').textContent = pct + '%';
+  document.getElementById('qPassFail').textContent = passed ? '🎉 You Passed!' : 'You\'re close!';
+  document.getElementById('qPassFail').classList.add(passed ? 'pass' : 'fail');
+  document.getElementById('qAnswered').textContent = total + '/' + total;
+  document.getElementById('qCorrect').textContent = correct;
+  document.getElementById('qIncorrect').textContent = (total - correct);
+
+  if (passed) {
+    document.querySelector('.q-actions').innerHTML = `
+      <button class="exit-btn" onclick="closeQuiz()">Back to Training</button>
+    `;
+  } else {
+    wrongAnswersOnly = QUIZ_QUESTIONS.filter((q, idx) => !quizAnswers[idx] || !quizAnswers[idx].correct);
+  }
+
+  document.getElementById('qResult').classList.add('show');
+}
+
+function retryQuiz() {
+  document.getElementById('qResult').classList.remove('show');
+  document.getElementById('qIntro').style.display = 'block';
+  document.getElementById('questionsContainer').style.display = 'block';
+  quizAnswers = {};
+  currentQuestion = 0;
+  renderQuizQuestions();
+  showQuizQuestion(0);
+}
+
+document.addEventListener('DOMContentLoaded', initUI);
+
+</script>
+
+</body>
+</html>
