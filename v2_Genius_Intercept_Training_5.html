@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC | Genius Bureau Processing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root{
+  /* Official DXC Brand Colours - Brand Guidelines June 2021 */
+  --dxc-purple:    #5F249F;  /* DXC Bright Purple - Pantone 267C - PRIMARY */
+  --dxc-dark-pur:  #330072;  /* DXC Dark Purple - Pantone 2685C */
+  --dxc-teal:      #00968F;  /* DXC Bright Teal - Pantone 7716C */
+  --dxc-blue:      #00A3E1;  /* DXC Blue - Pantone 2191C */
+  --dxc-dark-teal: #006975;  /* DXC Dark Teal - Pantone 2238C */
+  --dxc-green:     #6CC24A;  /* DXC Green - Pantone 360C */
+  --dxc-orange:    #ED9B33;  /* DXC Orange - Pantone 2011C */
+  --dxc-gold:      #FFCD00;  /* DXC Gold - Pantone 116C */
+  --dxc-lt-gray:   #D9D9D6;  /* DXC Light Gray - Pantone Cool Gray 1C */
+  --dxc-mid-gray:  #969696;  /* DXC Medium Gray - Pantone Cool Gray 6C */
+  --dxc-dk-gray:   #63666A;  /* DXC Dark Gray - Pantone Cool Gray 10C */
+  --black:         #000000;
+  --white:         #FFFFFF;
+
+  /* Semantic aliases */
+  --dp:   var(--dxc-dark-pur);
+  --dm:   var(--dxc-purple);
+  --db:   #7B3BBC;            /* Lighter purple for hover states */
+  --dd:   #1a0a2e;            /* Very dark purple for gradients */
+  --teal: var(--dxc-teal);
+  --green: #1a7a4a;           /* Accessible dark green for pass states */
+  --red:  #c0392b;            /* Accessible red for fail/error states */
+  --white: #FFFFFF;
+  --off:  #F7F5FB;            /* Near-white with purple tint */
+  --text: #1A1A1A;
+  --muted: var(--dxc-dk-gray);
+  --border: #E0D9EE;
+  --code-bg: #1E1E2E;
+  --r: 10px;
+
+  /* Syntax highlighting */
+  --skw:  #569CD6;
+  --sstr: #CE9178;
+  --sfn:  #DCDCAA;
+  --styp: #4EC9B0;
+  --svar: #9CDCFE;
+  --scmt: #6A9955;
+  --snum: #B5CEA8;
+  --sbase:#D4D4D4;
+}
+
+/* ── RESET ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Open Sans',Arial,sans-serif;
+  background:var(--off);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+.hdr{
+  background:var(--dp);
+  padding:0 1.5rem;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:200;
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--white);
+  font-family:'Open Sans',Arial,sans-serif;
+  letter-spacing:-.02em;
+}
+.logo-tech{
+  font-size:.62rem;
+  color:#c5b8e8;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-weight:400;
+}
+.hdr-r{display:flex;align-items:center;gap:1rem}
+.hdr-title{font-size:.75rem;color:#c5b8e8;font-weight:600}
+.hdr-mode{
+  font-size:.7rem;
+  background:var(--teal);
+  color:var(--white);
+  padding:.2rem .6rem;
+  border-radius:12px;
+  font-weight:700;
+}
+
+/* ── PROGRESS ────────────────────────────────────────────── */
+.prog-track{height:4px;background:var(--border)}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--teal),var(--dm));
+  transition:width .4s ease;
+  width:0%;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.app{display:flex;flex:1;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{
+  width:240px;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  padding:1rem 0;
+  flex-shrink:0;
+  overflow-y:auto;
+  position:sticky;
+  top:52px;
+  height:calc(100vh - 52px);
+}
+.nav-section{
+  padding:.4rem 1rem .2rem;
+  font-size:.62rem;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+button.nav-item{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  color:var(--muted);
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  width:100%;
+  background:none;
+  border-top:none;
+  border-right:none;
+  border-bottom:none;
+  text-align:left;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{
+  background:#f0ebfa;
+  color:var(--dm);
+  border-left-color:var(--dm);
+  font-weight:700;
+}
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+.nav-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--border);
+  flex-shrink:0;
+  transition:background .3s;
+}
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border)}
+.quiz-launch-btn{
+  width:100%;
+  background:var(--dm);
+  color:var(--white);
+  border:none;
+  padding:.7rem 1rem;
+  border-radius:7px;
+  font-size:.82rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.quiz-launch-btn:hover{background:var(--db)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto}
+.slide{display:none}
+.slide.active{display:block;animation:fs .3s ease}
+@keyframes fs{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ────────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(135deg,var(--dd) 0%,var(--dp) 55%,var(--dm) 100%);
+  padding:3rem 2.5rem 2.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  bottom:-60px;right:-60px;
+  width:280px;height:280px;
+  border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+/* DXC tab box - brand element */
+.badge{
+  display:inline-block;
+  background:var(--teal);
+  color:var(--white);
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:.28rem .75rem;
+  border-radius:0 6px 0 0; /* DXC tab box: rounded top-right only */
+  margin-bottom:1rem;
+}
+.badge.red{background:var(--red)}
+.badge.quiz{background:var(--dm)}
+.badge.gold{background:var(--dxc-gold);color:var(--text)}
+.hero h1{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--white);
+  line-height:1.2;
+  margin-bottom:.75rem;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+
+/* ── BODY ────────────────────────────────────────────────── */
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.2rem 1.2rem 1.2rem 1.4rem;
+  border-left:4px solid var(--dm);
+  box-shadow:0 2px 8px rgba(51,0,114,.06);
+}
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card.b{border-left-color:var(--dxc-blue)}
+.card.o{border-left-color:var(--dxc-orange)}
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+.tag{
+  display:inline-block;
+  background:#f0ebfa;
+  color:var(--dm);
+  font-size:.68rem;
+  font-weight:700;
+  padding:.15rem .5rem;
+  border-radius:10px;
+  margin-bottom:.5rem;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.tag.t{background:#e0f5f4;color:var(--teal)}
+.tag.b{background:#e0f2fb;color:var(--dxc-blue)}
+.tag.g{background:#e8f5ee;color:var(--green)}
+
+/* ── TWO-COL ─────────────────────────────────────────────── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.two.hl{grid-template-columns:3fr 2fr}
+.two.hr{grid-template-columns:2fr 3fr}
+
+/* ── STACK ───────────────────────────────────────────────── */
+.stack{display:flex;flex-direction:column;gap:.5rem}
+.stk{padding:.7rem 1rem;border-radius:7px;text-align:center;font-size:.88rem;font-weight:600;color:var(--white)}
+
+/* ── STATS ───────────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--white);border-radius:var(--r);padding:1.2rem;text-align:center;border:1px solid var(--border)}
+.stat .n{font-size:2.4rem;font-weight:800;line-height:1}
+.stat .n.red{color:var(--red)}.stat .n.pur{color:var(--dm)}.stat .n.teal{color:var(--teal)}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem}
+
+/* ── ALERT ───────────────────────────────────────────────── */
+.alert{display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:var(--r);margin-bottom:1.5rem;align-items:flex-start}
+.alert.warn{background:#fff8e6;border-left:4px solid var(--dxc-gold)}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert.blue{background:#e0f2fb;border-left:4px solid var(--dxc-blue)}
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+/* ── CODE ────────────────────────────────────────────────── */
+.code{background:var(--code-bg);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.code-fn{font-size:.75rem;color:#888;font-family:'Open Sans',monospace}
+.code-lg{font-size:.65rem;background:var(--dm);color:var(--white);padding:.15rem .5rem;border-radius:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.code-body{padding:1.2rem;overflow-x:auto}
+.code-body pre{font-family:Consolas,'Courier New',monospace;font-size:.85rem;line-height:1.7;color:var(--sbase);margin:0;white-space:pre}
+.kw{color:var(--skw)}.str{color:var(--sstr)}.fn{color:var(--sfn)}.typ{color:var(--styp)}.var{color:var(--svar)}.cmt{color:var(--scmt)}.num{color:var(--snum)}
+
+/* ── CALLOUT ─────────────────────────────────────────────── */
+.callout{background:#f0ebfa;border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.6;border-left:3px solid var(--dm)}
+.callout strong{color:var(--dp)}
+.callout.teal{background:#e0f5f4;border-left-color:var(--teal)}
+.callout.blue{background:#e0f2fb;border-left-color:var(--dxc-blue)}
+
+/* ── STEP LIST ───────────────────────────────────────────── */
+.step-list{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.step{display:flex;gap:.85rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.step-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.25rem}
+.step-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+/* ── LAB ─────────────────────────────────────────────────── */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1.5rem}
+.lab-step{display:flex;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.lab-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.lab-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.3rem}
+.lab-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.lab-time{font-size:.7rem;font-weight:700;margin-top:.3rem}
+
+/* ── OPS LIST ────────────────────────────────────────────── */
+.ops{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.op{display:flex;align-items:flex-start;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem}
+.op-name{font-family:Consolas,monospace;font-size:.85rem;font-weight:700;min-width:160px;color:var(--teal);flex-shrink:0}
+.op-desc{font-size:.85rem;color:var(--text);line-height:1.5}
+
+/* ── COMPARE ─────────────────────────────────────────────── */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.comp-box{border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.comp-head{padding:.6rem 1rem;font-size:.88rem;font-weight:700;color:var(--white)}
+.comp-body{padding:.85rem 1rem;font-size:.85rem;line-height:1.6}
+
+/* ── SLIDE NAV ───────────────────────────────────────────── */
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2.5rem;border-top:1px solid var(--border);margin-top:.5rem}
+.nb{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:'Open Sans',Arial,sans-serif}
+.nb.prev{background:var(--off);color:var(--text);border:1px solid var(--border)}
+.nb.prev:hover{background:var(--border)}
+.nb.next{background:var(--dm);color:var(--white)}
+.nb.next:hover{background:var(--db)}
+.nb:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.8rem;color:var(--muted);font-weight:600}
+
+/* ── QUIZ ────────────────────────────────────────────────── */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.q-cnt{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.q-topic{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:20px}
+.q-text{font-size:1.1rem;font-weight:700;color:var(--dp);line-height:1.5;margin-bottom:1.2rem}
+.opts{display:flex;flex-direction:column;gap:.6rem}
+button.opt{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 1rem;border:2px solid var(--border);border-radius:9px;cursor:pointer;background:var(--white);text-align:left;width:100%;font-size:.9rem;line-height:1.5;color:var(--text);transition:border-color .15s,background .15s,transform .1s;font-family:'Open Sans',Arial,sans-serif}
+button.opt:hover:not(:disabled){border-color:var(--dm);background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--off);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;color:var(--muted);transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:var(--dm);border-color:var(--dm);color:var(--white)}
+button.opt.correct{border-color:var(--green);background:#edf7f1}
+button.opt.correct .opt-l{background:var(--green);border-color:var(--green);color:var(--white)}
+button.opt.wrong{border-color:var(--red);background:#fdf0ee}
+button.opt.wrong .opt-l{background:var(--red);border-color:var(--red);color:var(--white)}
+.fb{display:none;margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid var(--green);color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid var(--red);color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background .3s}
+.dot.c{background:var(--green)}.dot.w{background:var(--red)}.dot.cur{background:var(--dm)}
+
+/* ── RESULTS ─────────────────────────────────────────────── */
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:7px solid;margin:0 auto 1rem}
+.ring.pass{border-color:var(--green);background:#f0faf5}
+.ring.fail{border-color:var(--red);background:#fdf4f3}
+.ring-pct{font-size:2.2rem;font-weight:800;line-height:1}
+.ring.pass .ring-pct{color:var(--green)}.ring.fail .ring-pct{color:var(--red)}
+.ring-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.res-status{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.res-status.pass{color:var(--green)}.res-status.fail{color:var(--red)}
+.res-msg{color:var(--muted);font-size:.88rem;max-width:460px;margin:0 auto 1rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.2rem;height:28px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--white);opacity:.35;transition:opacity .3s;text-align:center;line-height:1.2}
+.bseg.on{opacity:1}
+.be{background:var(--green);flex:2}.bp{background:var(--teal);flex:2}.bd{background:var(--dm);flex:3}.bf{background:var(--red);flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.2rem}
+.sb{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center}
+.sb .sv{font-size:1.5rem;font-weight:800}.sv.g{color:var(--green)}.sv.r{color:var(--red)}
+.sb .sl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.ri{border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer;user-select:none;background:var(--white);transition:background .15s}
+.rq:hover{background:var(--off)}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:var(--green)}.rdot.w{background:var(--red)}
+.rqt{font-size:.82rem;font-weight:600;flex:1;color:var(--text)}
+.rbadge{font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:var(--green)}.rbadge.w{background:#fdf0ee;color:var(--red)}
+.rchev{font-size:.65rem;color:var(--muted);transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.65rem .9rem .85rem;background:var(--off);border-top:1px solid var(--border);font-size:.82rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:var(--red);font-weight:600}.ra{color:var(--green);font-weight:600}
+.expl{color:var(--muted);margin-top:.35rem}
+.res-acts{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* ── BUTTONS ─────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.5rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:'Open Sans',Arial,sans-serif}
+.btn.p{background:var(--dm);color:var(--white)}.btn.p:hover{background:var(--db);transform:translateY(-1px)}
+.btn.s{background:transparent;color:var(--dm);border:2px solid var(--dm)}.btn.s:hover{background:#f0ebfa}
+.btn.teal{background:var(--teal);color:var(--white)}.btn.teal:hover{background:var(--dxc-dark-teal)}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .two,.two.hl,.two.hr,.grid.g2,.grid.g3,.lab,.compare{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .body,.res-body{padding:1.2rem}
+  .hero{padding:1.8rem 1.2rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.2rem}
+}
+
+/* Extra v2 styles */
+.hdr{background:linear-gradient(135deg,#330072 0%,#5F249F 100%);height:54px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(51,0,114,.4)}
+.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 .5rem;align-self:center}
+.logo-mod{font-size:.75rem;color:#d4c8f0;font-weight:600}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.hdr-badge{font-size:.65rem;font-weight:700;padding:.25rem .65rem;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.badge-spof{background:#c0392b;color:#fff}
+.badge-mode{background:rgba(255,255,255,.15);color:#fff}
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,#00968F,#00A3E1);transition:width .5s ease;width:0%}
+.app{display:flex;flex:1;min-height:calc(100vh - 57px)}
+.content{flex:1;overflow-y:auto}
+.slide{display:none;animation:fadeIn .3s ease}.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(135deg,#150535 0%,#330072 50%,#5F249F 100%);padding:2.5rem 2.5rem 2rem;position:relative;overflow:hidden}
+.hero-eyebrow{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap}
+.hbadge{display:inline-block;background:#00968F;color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border-radius:0 6px 0 0}
+.hbadge.red{background:#c0392b}.hbadge.blue{background:#00A3E1}.hbadge.gold{background:#FFCD00;color:#1a1a2e}
+.tts-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .7rem;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.tts-btn:hover{background:rgba(255,255,255,.2)}
+.tts-btn.speaking{background:#00968F;border-color:#00968F;color:#fff}
+.tts-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tts-btn.speaking .tts-dot{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+/* Code */
+.code{background:#0d1117;border-radius:10px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.07)}
+.code-dots{display:flex;gap:5px}.code-dot{width:10px;height:10px;border-radius:50%}
+.code-fn{font-size:.72rem;color:#6e7681;font-family:'JetBrains Mono',monospace;flex:1;text-align:center}
+.code-lang{font-size:.62rem;background:#5F249F;color:#fff;padding:.18rem .55rem;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.code-body{padding:1.2rem 1.3rem;overflow-x:auto}
+.code-body pre{font-family:'JetBrains Mono','Courier New',monospace;font-size:.82rem;line-height:1.75;color:#e6edf3;margin:0;white-space:pre}
+.kw{color:#ff7b72}.str{color:#a5d6ff}.fn{color:#d2a8ff}.typ{color:#79c0ff}.var{color:#ffa657}.cmt{color:#8b949e}
+/* Flow */
+.flow-wrap{margin-bottom:1.5rem}
+.flow-controls{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;flex-wrap:wrap}
+.flow-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem 1.1rem;border-radius:7px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.flow-btn.start{background:#5F249F;color:#fff}.flow-btn.start:hover{background:#330072}
+.flow-btn.reset{background:#fff;color:#63666A;border:1px solid #e0d9ee}.flow-btn.reset:hover{background:#f0eef8}
+.flow-status{font-size:.78rem;color:#63666A;font-style:italic}
+.flow-steps{display:flex;flex-direction:column}
+.flow-step{display:none;align-items:flex-start;gap:1rem;padding:.85rem 1rem;background:#fff;border:1px solid #e0d9ee;border-radius:10px;margin-bottom:.5rem}
+.flow-step.visible{display:flex;animation:stepIn .35s ease forwards}
+@keyframes stepIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.flow-connector{display:none;width:2px;height:12px;background:#e0d9ee;margin:0 0 .5rem 23px}
+.flow-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;flex-shrink:0}
+.flow-body h4{font-size:.88rem;font-weight:700;color:#330072;margin-bottom:.2rem}
+.flow-body p{font-size:.82rem;color:#5a5a7a;line-height:1.5}
+/* Scenario */
+.scenario{background:#fff;border:1px solid #e0d9ee;border-radius:14px;overflow:hidden;margin-bottom:1.5rem}
+.scenario-hdr{background:linear-gradient(135deg,#330072,#5F249F);padding:1rem 1.25rem}
+.scenario-eyebrow{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.scenario-q{font-size:1rem;font-weight:700;color:#fff;line-height:1.4}
+.scenario-body{padding:1.25rem}
+.scenario-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+button.sc-opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem 1rem;border:1.5px solid #e0d9ee;border-radius:9px;background:#f7f5fb;font-family:inherit;font-size:.87rem;color:#1a1a2e;cursor:pointer;text-align:left;transition:all .18s}
+button.sc-opt:hover:not(:disabled){border-color:#5F249F;background:#f8f5ff;transform:translateX(4px)}
+button.sc-opt:disabled{cursor:default}
+button.sc-opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.sc-opt.wrong{border-color:#c0392b;background:#fdf0ee}
+.sc-letter{width:24px;height:24px;border-radius:50%;background:#e0d9ee;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#5a5a7a;flex-shrink:0;transition:all .18s}
+button.sc-opt.correct .sc-letter{background:#1a7a4a;color:#fff}
+button.sc-opt.wrong .sc-letter{background:#c0392b;color:#fff}
+.sc-feedback{display:none;padding:.85rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6}
+.sc-feedback.show{display:block}
+.sc-feedback.good{background:#edf7f1;border-left:3px solid #1a7a4a;color:#0f4d2a}
+.sc-feedback.bad{background:#fdf0ee;border-left:3px solid #c0392b;color:#7a1e14}
+.sc-reset{margin-top:.75rem;padding:.5rem 1rem;border-radius:7px;background:#f7f5fb;border:1px solid #e0d9ee;font-family:inherit;font-size:.8rem;font-weight:600;color:#5a5a7a;cursor:pointer;display:none}
+.sc-reset.show{display:inline-block}
+/* Status codes */
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin-bottom:1.25rem}
+.status-card{padding:.8rem;border-radius:10px;border:1.5px solid #e0d9ee;cursor:pointer;transition:all .2s;text-align:center;background:#fff}
+.status-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.status-num{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
+.status-name{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#5a5a7a}
+.s2xx .status-num{color:#1a7a4a}.s2xx.sel{border-color:#1a7a4a;background:#edf7f1}
+.s400 .status-num{color:#ED9B33}.s400.sel{border-color:#ED9B33;background:#fff8e6}
+.s401 .status-num{color:#5F249F}.s401.sel{border-color:#5F249F;background:#f0ebfa}
+.s403 .status-num{color:#00A3E1}.s403.sel{border-color:#00A3E1;background:#e0f2fb}
+.s404 .status-num{color:#00968F}.s404.sel{border-color:#00968F;background:#e0f5f4}
+.s500 .status-num{color:#c0392b}.s500.sel{border-color:#c0392b;background:#fdf0ee}
+.status-detail{background:#fff;border:1px solid #e0d9ee;border-radius:10px;padding:1.1rem 1.25rem;min-height:80px;margin-bottom:1.25rem;transition:border-color .2s}
+/* Quiz */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.q-cnt{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.1em}
+.q-topic-pill{background:rgba(255,255,255,.15);color:#fff;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
+.q-text{font-size:1.05rem;font-weight:700;color:#fff;line-height:1.5;margin-bottom:1.1rem}
+.opts{display:flex;flex-direction:column;gap:.55rem}
+button.opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem .95rem;border:2px solid #e0d9ee;border-radius:9px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:.88rem;line-height:1.5;color:#1a1a2e;transition:all .15s;font-family:inherit}
+button.opt:hover:not(:disabled){border-color:#5F249F;background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#f7f5fb;border:2px solid #e0d9ee;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.72rem;color:#5a5a7a;transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:#5F249F;border-color:#5F249F;color:#fff}
+button.opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.opt.correct .opt-l{background:#1a7a4a;border-color:#1a7a4a;color:#fff}
+button.opt.wrong{border-color:#c0392b;background:#fdf0ee}
+button.opt.wrong .opt-l{background:#c0392b;border-color:#c0392b;color:#fff}
+.fb{display:none;margin-top:.85rem;padding:.8rem 1rem;border-radius:8px;font-size:.84rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid #1a7a4a;color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid #c0392b;color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid #e0d9ee}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:#e0d9ee;transition:background .3s}
+.dot.c{background:#1a7a4a}.dot.w{background:#c0392b}.dot.cur{background:#5F249F}
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:6px solid;margin:0 auto 1rem}
+.ring.pass{border-color:#1a7a4a;background:#f0faf5}.ring.fail{border-color:#c0392b;background:#fdf4f3}
+.ring-pct{font-size:2rem;font-weight:800;line-height:1}
+.ring.pass .ring-pct{color:#1a7a4a}.ring.fail .ring-pct{color:#c0392b}
+.ring-lbl{font-size:.58rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+.res-status{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
+.res-status.pass{color:#1a7a4a}.res-status.fail{color:#c0392b}
+.res-msg{color:#5a5a7a;font-size:.86rem;max-width:440px;margin:0 auto .85rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.1rem;height:26px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#fff;opacity:.3;transition:opacity .3s}
+.bseg.on{opacity:1}
+.be{background:#1a7a4a;flex:2}.bp{background:#00968F;flex:2}.bd{background:#5F249F;flex:3}.bf{background:#c0392b;flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.1rem}
+.sb-stat{background:#f7f5fb;border:1px solid #e0d9ee;border-radius:8px;padding:.75rem;text-align:center}
+.sb-stat .sv{font-size:1.4rem;font-weight:800}.sv.g{color:#1a7a4a}.sv.r{color:#c0392b}
+.sb-stat .sl{font-size:.62rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.72rem;font-weight:700;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.55rem}
+.ri{border:1px solid #e0d9ee;border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;cursor:pointer;user-select:none;background:#fff;transition:background .15s}
+.rq:hover{background:#f7f5fb}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:#1a7a4a}.rdot.w{background:#c0392b}
+.rqt{font-size:.8rem;font-weight:600;flex:1;color:#1a1a2e}
+.rbadge{font-size:.62rem;font-weight:700;padding:.13rem .4rem;border-radius:8px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:#1a7a4a}.rbadge.w{background:#fdf0ee;color:#c0392b}
+.rchev{font-size:.62rem;color:#5a5a7a;transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.6rem .85rem .8rem;background:#f7f5fb;border-top:1px solid #e0d9ee;font-size:.8rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:#c0392b;font-weight:600}.ra{color:#1a7a4a;font-weight:600}
+.expl{color:#5a5a7a;margin-top:.3rem}
+.res-acts{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.9rem}
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2.5rem;border-top:1px solid #e0d9ee}
+.nav-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border-radius:7px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none}
+.nav-prev{background:#f7f5fb;color:#1a1a2e;border:1px solid #e0d9ee}.nav-prev:hover{background:#e0d9ee}
+.nav-next{background:#5F249F;color:#fff}.nav-next:hover{background:#330072}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.78rem;color:#5a5a7a;font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn-p{background:#5F249F;color:#fff}.btn-p:hover{background:#330072}
+.btn-s{background:transparent;color:#5F249F;border:2px solid #5F249F}.btn-s:hover{background:#f0ebfa}
+@media(max-width:768px){
+  .sidebar{display:none}
+  .body,.res-body{padding:1.25rem}
+  .hero{padding:1.75rem 1.25rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.25rem}
+}
+
+/* Module extra */
+.hdr{background:linear-gradient(135deg,#330072 0%,#5F249F 100%);height:54px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(51,0,114,.4)}
+.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 .5rem;align-self:center}
+.logo-mod{font-size:.75rem;color:#d4c8f0;font-weight:600}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.hdr-badge{font-size:.65rem;font-weight:700;padding:.25rem .65rem;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.badge-spof{background:#ED9B33;color:#fff}
+.badge-mode{background:rgba(255,255,255,.15);color:#fff}
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,#00968F,#00A3E1);transition:width .5s ease;width:0%}
+.app{display:flex;flex:1;min-height:calc(100vh - 57px)}
+.content{flex:1;overflow-y:auto}
+.slide{display:none;animation:fadeIn .3s ease}.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(135deg,#150535 0%,#330072 50%,#5F249F 100%);padding:2.5rem 2.5rem 2rem;position:relative;overflow:hidden}
+.hero-eyebrow{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap}
+.hbadge{display:inline-block;background:#00968F;color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border-radius:0 6px 0 0}
+.hbadge.red{background:#c0392b}.hbadge.blue{background:#00A3E1}.hbadge.gold{background:#FFCD00;color:#1a1a2e}.hbadge.warn{background:#ED9B33}
+.tts-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .7rem;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.tts-btn:hover{background:rgba(255,255,255,.2)}
+.tts-btn.speaking{background:#00968F;border-color:#00968F;color:#fff}
+.tts-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tts-btn.speaking .tts-dot{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.code{background:#0d1117;border-radius:10px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.07)}
+.code-dots{display:flex;gap:5px}.code-dot{width:10px;height:10px;border-radius:50%}
+.code-fn{font-size:.72rem;color:#6e7681;font-family:'JetBrains Mono',monospace;flex:1;text-align:center}
+.code-lang{font-size:.62rem;background:#5F249F;color:#fff;padding:.18rem .55rem;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.code-body{padding:1.2rem 1.3rem;overflow-x:auto}
+.code-body pre{font-family:'JetBrains Mono','Courier New',monospace;font-size:.82rem;line-height:1.75;color:#e6edf3;margin:0;white-space:pre}
+.kw{color:#ff7b72}.str{color:#a5d6ff}.fn{color:#d2a8ff}.typ{color:#79c0ff}.var{color:#ffa657}.cmt{color:#8b949e}
+.flow-wrap{margin-bottom:1.5rem}
+.flow-controls{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;flex-wrap:wrap}
+.flow-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem 1.1rem;border-radius:7px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.flow-btn.start{background:#5F249F;color:#fff}.flow-btn.start:hover{background:#330072}
+.flow-btn.reset{background:#fff;color:#63666A;border:1px solid #e0d9ee}.flow-btn.reset:hover{background:#f0eef8}
+.flow-status{font-size:.78rem;color:#63666A;font-style:italic}
+.flow-steps{display:flex;flex-direction:column}
+.flow-step{display:none;align-items:flex-start;gap:1rem;padding:.85rem 1rem;background:#fff;border:1px solid #e0d9ee;border-radius:10px;margin-bottom:.5rem}
+.flow-step.visible{display:flex;animation:stepIn .35s ease forwards}
+@keyframes stepIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.flow-connector{display:none;width:2px;height:12px;background:#e0d9ee;margin:0 0 .5rem 23px}
+.flow-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;flex-shrink:0}
+.flow-body h4{font-size:.88rem;font-weight:700;color:#330072;margin-bottom:.2rem}
+.flow-body p{font-size:.82rem;color:#5a5a7a;line-height:1.5}
+.scenario{background:#fff;border:1px solid #e0d9ee;border-radius:14px;overflow:hidden;margin-bottom:1.5rem}
+.scenario-hdr{background:linear-gradient(135deg,#330072,#5F249F);padding:1rem 1.25rem}
+.scenario-eyebrow{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.scenario-q{font-size:1rem;font-weight:700;color:#fff;line-height:1.4}
+.scenario-body{padding:1.25rem}
+.scenario-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+button.sc-opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem 1rem;border:1.5px solid #e0d9ee;border-radius:9px;background:#f7f5fb;font-family:inherit;font-size:.87rem;color:#1a1a2e;cursor:pointer;text-align:left;transition:all .18s}
+button.sc-opt:hover:not(:disabled){border-color:#5F249F;background:#f8f5ff;transform:translateX(4px)}
+button.sc-opt:disabled{cursor:default}
+button.sc-opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.sc-opt.wrong{border-color:#c0392b;background:#fdf0ee}
+.sc-letter{width:24px;height:24px;border-radius:50%;background:#e0d9ee;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#5a5a7a;flex-shrink:0;transition:all .18s}
+button.sc-opt.correct .sc-letter{background:#1a7a4a;color:#fff}
+button.sc-opt.wrong .sc-letter{background:#c0392b;color:#fff}
+.sc-feedback{display:none;padding:.85rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6}
+.sc-feedback.show{display:block}
+.sc-feedback.good{background:#edf7f1;border-left:3px solid #1a7a4a;color:#0f4d2a}
+.sc-feedback.bad{background:#fdf0ee;border-left:3px solid #c0392b;color:#7a1e14}
+.sc-reset{margin-top:.75rem;padding:.5rem 1rem;border-radius:7px;background:#f7f5fb;border:1px solid #e0d9ee;font-family:inherit;font-size:.8rem;font-weight:600;color:#5a5a7a;cursor:pointer;display:none}
+.sc-reset.show{display:inline-block}
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin-bottom:1.25rem}
+.status-card{padding:.8rem;border-radius:10px;border:1.5px solid #e0d9ee;cursor:pointer;transition:all .2s;text-align:center;background:#fff}
+.status-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.status-num{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
+.status-name{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#5a5a7a}
+.s2xx .status-num{color:#1a7a4a}.s2xx.sel{border-color:#1a7a4a;background:#edf7f1}
+.s400 .status-num{color:#ED9B33}.s400.sel{border-color:#ED9B33;background:#fff8e6}
+.s401 .status-num{color:#5F249F}.s401.sel{border-color:#5F249F;background:#f0ebfa}
+.s403 .status-num{color:#00A3E1}.s403.sel{border-color:#00A3E1;background:#e0f2fb}
+.s404 .status-num{color:#00968F}.s404.sel{border-color:#00968F;background:#e0f5f4}
+.s500 .status-num{color:#c0392b}.s500.sel{border-color:#c0392b;background:#fdf0ee}
+.status-detail{background:#fff;border:1px solid #e0d9ee;border-radius:10px;padding:1.1rem 1.25rem;min-height:80px;margin-bottom:1.25rem;transition:border-color .2s}
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.q-cnt{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.1em}
+.q-topic-pill{background:rgba(255,255,255,.15);color:#fff;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
+.q-text{font-size:1.05rem;font-weight:700;color:#fff;line-height:1.5;margin-bottom:1.1rem}
+.opts{display:flex;flex-direction:column;gap:.55rem}
+button.opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem .95rem;border:2px solid #e0d9ee;border-radius:9px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:.88rem;line-height:1.5;color:#1a1a2e;transition:all .15s;font-family:inherit}
+button.opt:hover:not(:disabled){border-color:#5F249F;background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#f7f5fb;border:2px solid #e0d9ee;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.72rem;color:#5a5a7a;transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:#5F249F;border-color:#5F249F;color:#fff}
+button.opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.opt.correct .opt-l{background:#1a7a4a;border-color:#1a7a4a;color:#fff}
+button.opt.wrong{border-color:#c0392b;background:#fdf0ee}
+button.opt.wrong .opt-l{background:#c0392b;border-color:#c0392b;color:#fff}
+.fb{display:none;margin-top:.85rem;padding:.8rem 1rem;border-radius:8px;font-size:.84rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid #1a7a4a;color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid #c0392b;color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid #e0d9ee}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:#e0d9ee;transition:background .3s}
+.dot.c{background:#1a7a4a}.dot.w{background:#c0392b}.dot.cur{background:#5F249F}
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:6px solid;margin:0 auto 1rem}
+.ring.pass{border-color:#1a7a4a;background:#f0faf5}.ring.fail{border-color:#c0392b;background:#fdf4f3}
+.ring-pct{font-size:2rem;font-weight:800;line-height:1}
+.ring.pass .ring-pct{color:#1a7a4a}.ring.fail .ring-pct{color:#c0392b}
+.ring-lbl{font-size:.58rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+.res-status{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
+.res-status.pass{color:#1a7a4a}.res-status.fail{color:#c0392b}
+.res-msg{color:#5a5a7a;font-size:.86rem;max-width:440px;margin:0 auto .85rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.1rem;height:26px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#fff;opacity:.3;transition:opacity .3s}
+.bseg.on{opacity:1}
+.be{background:#1a7a4a;flex:2}.bp{background:#00968F;flex:2}.bd{background:#5F249F;flex:3}.bf{background:#c0392b;flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.1rem}
+.sb-stat{background:#f7f5fb;border:1px solid #e0d9ee;border-radius:8px;padding:.75rem;text-align:center}
+.sb-stat .sv{font-size:1.4rem;font-weight:800}.sv.g{color:#1a7a4a}.sv.r{color:#c0392b}
+.sb-stat .sl{font-size:.62rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.72rem;font-weight:700;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.55rem}
+.ri{border:1px solid #e0d9ee;border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;cursor:pointer;user-select:none;background:#fff;transition:background .15s}
+.rq:hover{background:#f7f5fb}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:#1a7a4a}.rdot.w{background:#c0392b}
+.rqt{font-size:.8rem;font-weight:600;flex:1;color:#1a1a2e}
+.rbadge{font-size:.62rem;font-weight:700;padding:.13rem .4rem;border-radius:8px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:#1a7a4a}.rbadge.w{background:#fdf0ee;color:#c0392b}
+.rchev{font-size:.62rem;color:#5a5a7a;transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.6rem .85rem .8rem;background:#f7f5fb;border-top:1px solid #e0d9ee;font-size:.8rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:#c0392b;font-weight:600}.ra{color:#1a7a4a;font-weight:600}
+.expl{color:#5a5a7a;margin-top:.3rem}
+.res-acts{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.9rem}
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2.5rem;border-top:1px solid #e0d9ee}
+.nav-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border-radius:7px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none}
+.nav-prev{background:#f7f5fb;color:#1a1a2e;border:1px solid #e0d9ee}.nav-prev:hover{background:#e0d9ee}
+.nav-next{background:#5F249F;color:#fff}.nav-next:hover{background:#330072}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.78rem;color:#5a5a7a;font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn-p{background:#5F249F;color:#fff}.btn-p:hover{background:#330072}
+.btn-s{background:transparent;color:#5F249F;border:2px solid #5F249F}.btn-s:hover{background:#f0ebfa}
+@media(max-width:768px){
+  .sidebar{display:none}
+  .body,.res-body{padding:1.25rem}
+  .hero{padding:1.75rem 1.25rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.25rem}
+}
+
+.tab-bar{display:flex;gap:.35rem;margin-bottom:1rem;flex-wrap:wrap}
+.tab-btn{padding:.4rem .9rem;border-radius:6px;border:1.5px solid var(--border);background:#fff;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .18s;color:var(--muted)}
+.tab-btn.active{background:var(--dm);color:#fff;border-color:var(--dm)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.screen-mock{background:#1a1a2e;border-radius:10px;overflow:hidden;margin:1rem 0;font-family:'Courier New',monospace;font-size:.78rem}
+.screen-hdr{background:#330072;color:#fff;padding:.45rem .85rem;display:flex;justify-content:space-between;font-size:.75rem}
+.screen-body{padding:.85rem;color:#d4d4d4;line-height:1.65;white-space:pre}
+.screen-body .hl{color:#ffcd00;font-weight:bold}
+.screen-body .err{color:#ff6b6b}
+.screen-body .ok{color:#6cc24a}
+.screen-body .fld{color:#79c0ff}
+.screen-body .lbl{color:#a0c4ff}
+.proc-step{display:flex;gap:.75rem;align-items:flex-start;padding:.7rem .9rem;border-radius:8px;background:#fff;border:1px solid var(--border);margin-bottom:.5rem;cursor:pointer;transition:background .15s}
+.proc-step:hover{background:#f7f5fb}.proc-step.open{background:#f0ebfa;border-color:var(--dm)}
+.proc-num{min-width:1.7rem;height:1.7rem;border-radius:50%;background:var(--dm);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:.1rem}
+.proc-detail{display:none;padding:.6rem .9rem .6rem 3.1rem;font-size:.83rem;color:#5a5a7a;line-height:1.65;border-top:1px solid var(--border);background:#f9f7fd}
+.proc-step.open + .proc-detail{display:block}
+.err-explorer{display:grid;grid-template-columns:1fr 1.6fr;gap:1rem;margin-top:1rem}
+.err-list{display:flex;flex-direction:column;gap:.35rem;max-height:380px;overflow-y:auto;padding-right:.25rem}
+.err-chip{padding:.5rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:all .18s;font-size:.8rem}
+.err-chip:hover{border-color:var(--dm);background:#f7f5fb}
+.err-chip.active{background:var(--dm);color:#fff;border-color:var(--dm)}
+.err-chip .ec-id{font-weight:700;font-family:monospace;margin-right:.4rem}
+.err-chip .ec-sev{font-size:.72rem;padding:.1rem .35rem;border-radius:4px;background:#f0ebfa;color:var(--dm);float:right}
+.err-chip.active .ec-sev{background:rgba(255,255,255,.2);color:#fff}
+.err-chip.sev99{border-left:3px solid #c0392b}
+.err-chip.sev50{border-left:3px solid #e67e22}
+.err-chip.sev40{border-left:3px solid #f1c40f}
+.err-chip.sev30{border-left:3px solid #3498db}
+.err-detail{background:#f7f5fb;border-radius:10px;padding:1.1rem 1.2rem;min-height:200px;font-size:.84rem;line-height:1.65}
+.err-detail h3{font-size:.95rem;color:var(--dp);margin-bottom:.4rem}
+.err-detail .ed-sev{display:inline-block;padding:.2rem .55rem;border-radius:5px;font-size:.75rem;font-weight:700;margin-bottom:.7rem}
+.err-detail .ed-fix{background:#eafaf1;border-left:3px solid #1a7a4a;padding:.65rem .85rem;border-radius:6px;margin-top:.75rem;font-size:.82rem}
+.pipeline-vis{display:flex;align-items:stretch;gap:0;margin:1.2rem 0;overflow-x:auto;padding-bottom:.5rem}
+.pv-step{min-width:90px;flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;padding:.6rem .3rem;border-radius:8px;transition:background .15s;text-align:center}
+.pv-step:hover{background:#f0ebfa}.pv-step.active{background:var(--dm);color:#fff}
+.pv-icon{width:2.2rem;height:2.2rem;border-radius:50%;background:#f0ebfa;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.pv-step.active .pv-icon{background:rgba(255,255,255,.2)}
+.pv-label{font-size:.7rem;font-weight:600;line-height:1.3}
+.pv-arrow{align-self:center;color:var(--muted);font-size:1.1rem;flex-shrink:0}
+.pv-detail{background:#f0ebfa;border-radius:10px;padding:1.1rem 1.3rem;margin-top:.75rem;min-height:100px;font-size:.84rem;line-height:1.65;border-left:3px solid var(--dm)}
+.pv-detail h3{font-size:.92rem;color:var(--dp);margin-bottom:.5rem}
+.bureau-compare{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.6rem;margin:1rem 0}
+.bc-col{border-radius:10px;overflow:hidden;border:1.5px solid var(--border)}
+.bc-head{padding:.55rem .7rem;font-size:.78rem;font-weight:700;text-align:center;color:#fff}
+.bc-row{padding:.45rem .7rem;font-size:.78rem;border-top:1px solid var(--border);line-height:1.5}
+.bc-row:nth-child(odd){background:#f9f7fd}
+.bc-lbl{font-size:.7rem;color:var(--muted);font-weight:600;display:block;margin-bottom:.1rem}
+.notice{background:#fff8e6;border-left:3px solid var(--dxc-orange);padding:.75rem 1rem;border-radius:8px;font-size:.84rem;margin:.75rem 0}
+.tip{background:#eafaf1;border-left:3px solid #1a7a4a;padding:.75rem 1rem;border-radius:8px;font-size:.84rem;margin:.75rem 0}
+.accordion-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.accordion-hdr{width:100%;text-align:left;padding:.7rem 1rem;background:#fff;border:none;cursor:pointer;font-size:.86rem;font-weight:600;color:var(--dp);display:flex;justify-content:space-between;align-items:center}
+.accordion-hdr:hover{background:#f7f5fb}.accordion-hdr .ac-arrow{transition:transform .2s;font-size:.7rem;color:var(--muted)}
+.accordion-hdr.open .ac-arrow{transform:rotate(180deg)}
+.accordion-body{display:none;padding:.75rem 1rem;font-size:.83rem;line-height:1.7;color:#3a3a5a;border-top:1px solid var(--border);background:#fafafa}
+.accordion-body code{background:#f0ebfa;padding:.1rem .35rem;border-radius:4px;font-family:monospace;font-size:.82rem;color:var(--dp)}
+
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <span class="logo-dxc">DXC</span>
+    <div class="logo-sep"></div>
+    <span class="logo-mod">Genius Bureau Processing</span>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-badge badge-spof">High SPOF</span>
+    <span class="hdr-badge badge-mode" id="hdrMode">Training</span>
+  </div>
+</header>
+<div class="prog-wrap"><div class="prog-fill" id="pf"></div></div>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-section">Genius Team Module</div>
+    <button class="nav-item active" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Introduction</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">The 8-Step Pipeline</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">Closings On-line Edit</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">GBCM11 &amp; Error Messages</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">Claims, ELASS &amp; Downloads</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="5"><div class="nav-dot"></div><span class="nav-lbl">Configuration &amp; Parameters</span><span class="nav-chk">&#10003;</span></button>
+    <div class="nav-section" style="margin-top:.5rem">Assessment</div>
+    <button class="nav-item" data-slide="6"><div class="nav-dot"></div><span class="nav-lbl">Knowledge Quiz</span><span class="nav-chk">&#10003;</span></button>
+    <div class="sidebar-footer"><button class="quiz-launch-btn" id="quizLaunchBtn">Take the Quiz &#8594;</button></div>
+  </nav>
+  <div class="content" id="contentArea">
+
+    <div class="slide active" id="slide-0">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class=" hbadge warn">Genius Team - High SPOF</span>
+          <button class="tts-btn" onclick="tts(0)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>Genius Bureau Processing</h1>
+        <p class="hero-sub">6 comprehensive modules covering the full pipeline, on-line edit, error diagnosis, ELASS rules, downloads and configuration</p>
+      </div>
+      <div class="body">
+
+        <div class="alert" style="background:#fff8e6;border-left:4px solid #ED9B33;display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:10px;margin-bottom:1.5rem;align-items:flex-start"><span style="font-size:1.2rem">&#9888;&#65039;</span><div><strong>High SPOF — 2 SMEs only</strong><p style="font-size:.85rem;color:#5a5a7a;margin-top:.2rem">Genius Bureau receives premium and claims data electronically from the London Market. Only two people in the team currently hold deep knowledge of this subsystem. This module aims to change that by combining analysis of 354 real source programs from UKMDGN02 with original Xchanging Bureau documentation dating from 2003 to 2013.</p></div></div>
+
+        <p class="intro">The Genius Bureau subsystem connects Genius to the London Insurance Market. It receives, validates and processes electronic messages from four bureau organisations — LIRMA, ILU, ELASS and CLAMS — covering premiums, claim payments and loss advices. Without Bureau, all of these transactions would need to be manually entered into Genius.</p>
+
+        <div class="grid g3" style="margin-bottom:1.5rem">
+          <div class="card"><div class="tag tag-p">Module 1</div><h3>The Full Pipeline</h3><p>How a bureau message travels from the London Market mailbox to Genius statistics and ledger files. All 8 steps, all 4 bureau types, and why the sequence matters at every stage.</p></div>
+          <div class="card t"><div class="tag tag-t">Module 2</div><h3>Bureau Closings In Depth</h3><p>Everything GBCM00 and GBCM01 do. The selection screen fields explained. How the error severity system works. What every screen option does and what the edit screen is showing you.</p></div>
+          <div class="card"><div class="tag tag-p">Module 3</div><h3>The OPNQRYF Builder and Errors</h3><p>How GBCM11 dynamically builds the closings list query. The exact logic behind every selection field. Why a closing disappears and how to find it — plus an interactive error message explorer.</p></div>
+          <div class="card t"><div class="tag tag-t">Module 4</div><h3>Bureau Claims, ELASS and Downloads</h3><p>GBKM structure and how it mirrors GBCM. ELASS record type processing sequence. UCR matching and UTD0951. How to diagnose and fix all three download chains.</p></div>
+          <div class="card"><div class="tag tag-p">Module 5</div><h3>Configuration and Parameters</h3><p>Key parameters, data areas and cross-reference codes. The GGNBURMSGF vs UTMGREP issue. What a new Bureau implementation requires and what to check when things are newly set up.</p></div>
+          <div class="card t"><div class="tag tag-t">Assessment</div><h3>Knowledge Quiz</h3><p>10 questions covering the full pipeline, error messages, ELASS processing rules and configuration — drawing on real source code and original Xchanging documentation.</p></div>
+        </div>
+
+        <div class="callout"><strong>What you should know after this module:</strong> You should be able to explain the full Bureau pipeline end-to-end, diagnose the five most common on-line edit errors independently, understand what GBCM00 does before any screen appears, know exactly why a closing might not show on the list, and resolve the most common ELASS UCR matching issue without escalating.</div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" disabled>&#8592; Previous</button>
+        <span class="slide-pos">1 / 7</span>
+        <button class="nav-btn nav-next" data-goto="1">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-1">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Concept 1</span>
+          <button class="tts-btn" onclick="tts(1)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>How Bureau Processing Works — The Full 8-Step Pipeline</h1>
+        <p class="hero-sub">What Intercept is and why it is critical to Xuber operations</p>
+      </div>
+      <div class="body">
+
+        <p class="intro">Every Bureau transaction — whether a LIRMA premium signing or an ELASS loss advice — travels through the same eight-step pipeline from the London Market mailbox to the Genius ledger. The pipeline is shared by all four bureau types; only the download programs and file names differ at the front end. Understanding each step tells you exactly where to look when something goes wrong.</p>
+
+        <h2 style="margin-bottom:.5rem">Click a step to explore it in detail</h2>
+        <div class="pipeline-vis" id="pvBar">
+          <div class="pv-step active" onclick="pvSelect(0)" data-pv="0"><div class="pv-icon">&#128229;</div><div class="pv-label">1. Download</div></div>
+          <div class="pv-arrow">&#8250;</div>
+          <div class="pv-step" onclick="pvSelect(1)" data-pv="1"><div class="pv-icon">&#9989;</div><div class="pv-label">2. Data Valid.</div></div>
+          <div class="pv-arrow">&#8250;</div>
+          <div class="pv-step" onclick="pvSelect(2)" data-pv="2"><div class="pv-icon">&#128196;</div><div class="pv-label">3. Create</div></div>
+          <div class="pv-arrow">&#8250;</div>
+          <div class="pv-step" onclick="pvSelect(3)" data-pv="3"><div class="pv-icon">&#128269;</div><div class="pv-label">4. Validate</div></div>
+          <div class="pv-arrow">&#8250;</div>
+          <div class="pv-step" onclick="pvSelect(4)" data-pv="4"><div class="pv-icon">&#9998;</div><div class="pv-label">5. On-line Edit</div></div>
+          <div class="pv-arrow">&#8250;</div>
+          <div class="pv-step" onclick="pvSelect(5)" data-pv="5"><div class="pv-icon">&#128203;</div><div class="pv-label">6. Tx Requests</div></div>
+          <div class="pv-arrow">&#8250;</div>
+          <div class="pv-step" onclick="pvSelect(6)" data-pv="6"><div class="pv-icon">&#128200;</div><div class="pv-label">7. Stats/Ledger</div></div>
+          <div class="pv-arrow">&#8250;</div>
+          <div class="pv-step" onclick="pvSelect(7)" data-pv="7"><div class="pv-icon">&#128176;</div><div class="pv-label">8. Settlement</div></div>
+        </div>
+        <div class="pv-detail" id="pvDetail">
+          <h3 id="pvTitle">Step 1 — Download</h3>
+          <p id="pvBody">Intercept (third-party software, requires library <code>ST400OBJ54</code> in the library list) connects to the Insure FTP mailbox using credentials stored in data area <strong>GGNLIRFTP</strong>. It retrieves all outstanding raw EDI data, maps it to iSeries buffer files according to the Entity Definition, and writes the data to the appropriate capture file. LIRMA messages are compressed flat files (DSIGNS format). ELASS messages use EDIFACT standard layouts. The Genius Bureau system separates the retrieved records into different buffer files ready for the next step.<br/><br/><strong>Programs:</strong> GBDI03 (ILU initiate) &middot; GBDE03 (ELASS initiate) &middot; GBDL02/GBDL03 (LIRMA) &middot; Intercept GE entity<br/><strong>If this fails:</strong> Check WRKACTJOB for the job stream subsystem. If stuck in submitted state, blank data areas <code>GGNLIRDLJB</code> and <code>GGNLIRDLST</code> to reset.</p>
+        </div>
+
+        <div class="two" style="margin-top:1.5rem">
+          <div>
+            <h2>The four bureau types</h2>
+            <p style="font-size:.84rem;color:#5a5a7a;margin-bottom:.75rem">All four follow the same pipeline. LIRMA and ILU share the Bureau Closings chain (GBCM). ELASS and CLAMS share the Bureau Claims chain (GBKM). Once the Closings/Claims are created, everything from On-line Edit onward is common.</p>
+            <div class="bureau-compare">
+              <div class="bc-col">
+                <div class="bc-head" style="background:#330072">LIRMA</div>
+                <div class="bc-row"><span class="bc-lbl">Type</span>Non-marine Signings</div>
+                <div class="bc-row"><span class="bc-lbl">Bureau code</span>PS</div>
+                <div class="bc-row"><span class="bc-lbl">Menu entry</span>LIRMA menu</div>
+                <div class="bc-row"><span class="bc-lbl">Data</span>Premiums + claim payments</div>
+                <div class="bc-row"><span class="bc-lbl">Format</span>DSIGNS flat file</div>
+                <div class="bc-row"><span class="bc-lbl">Chain</span>GBCM (closings)</div>
+              </div>
+              <div class="bc-col">
+                <div class="bc-head" style="background:#006975">ILU</div>
+                <div class="bc-row"><span class="bc-lbl">Type</span>Marine Signings</div>
+                <div class="bc-row"><span class="bc-lbl">Bureau code</span>IL</div>
+                <div class="bc-row"><span class="bc-lbl">Menu entry</span>ILUCSM menu</div>
+                <div class="bc-row"><span class="bc-lbl">Data</span>Premiums + claim payments</div>
+                <div class="bc-row"><span class="bc-lbl">Format</span>ILUCSM format</div>
+                <div class="bc-row"><span class="bc-lbl">Chain</span>GBCM (closings)</div>
+              </div>
+              <div class="bc-col">
+                <div class="bc-head" style="background:#6B3FA0">ELASS</div>
+                <div class="bc-row"><span class="bc-lbl">Type</span>LIRMA Loss Advices</div>
+                <div class="bc-row"><span class="bc-lbl">Bureau code</span>PS</div>
+                <div class="bc-row"><span class="bc-lbl">Menu entry</span>ELASS menu</div>
+                <div class="bc-row"><span class="bc-lbl">Data</span>Claim reserves + payments</div>
+                <div class="bc-row"><span class="bc-lbl">Format</span>EDIFACT</div>
+                <div class="bc-row"><span class="bc-lbl">Chain</span>GBKM (claims)</div>
+              </div>
+              <div class="bc-col">
+                <div class="bc-head" style="background:#00968F">CLAMS</div>
+                <div class="bc-row"><span class="bc-lbl">Type</span>ILU Loss Advices</div>
+                <div class="bc-row"><span class="bc-lbl">Bureau code</span>IL</div>
+                <div class="bc-row"><span class="bc-lbl">Menu entry</span>CLAMS menu</div>
+                <div class="bc-row"><span class="bc-lbl">Data</span>Claim reserves + payments</div>
+                <div class="bc-row"><span class="bc-lbl">Format</span>CLAMS format</div>
+                <div class="bc-row"><span class="bc-lbl">Chain</span>GBKM (claims)</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2>Key files created at each pipeline stage</h2>
+            <p style="font-size:.84rem;color:#5a5a7a;margin-bottom:.75rem">Each stage writes to specific iSeries files. Knowing which file holds what tells you where to look when diagnosing a problem at any point in the pipeline.</p>
+            <div class="accordion-item">
+              <button class="accordion-hdr" onclick="toggleAcc(this)">After Download — buffer/capture files <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Raw message data is held in bureau buffer files. A member is created per day's batch in <code>UTNMCPP</code> (Bureau Signings Capture File) and <code>UTELCPP</code> (Bureau Claims Capture File). These are the raw files before Genius has validated or mapped anything.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-hdr" onclick="toggleAcc(this)">After Create — bureau header files <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body"><code>ZBO1DL01</code> — Bureau Closings Header (one record per closing, updated by GBCM01). Logical file ZBO1DL04 is the primary access path for the OPNQRYF. ZBO1DL05 provides the instalment access path.<br/><code>UTKBREL4</code> — Bureau Claims equivalent. One record per claim message. GBKM01 reads and updates this file.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-hdr" onclick="toggleAcc(this)">During On-line Edit — QTEMP work files <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">GBCM00 creates <code>ZBO1WKP</code>, <code>ZBO2WKP</code> and <code>UTCIWKP</code> in QTEMP. GBKM00 creates <code>UTKBWKP</code> and <code>UTKFWKP</code>. These are session-scoped — cleared on entry and exit. If you see these files in QTEMP, an On-line Edit session is active (or ended abnormally).</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-hdr" onclick="toggleAcc(this)">Bureau Status Control — FUTBOREL0 <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Tracks how many closings remain to be processed per member (field <code>BORHQY</code>). GBCM01 decrements this count each time a closing is successfully processed (subroutine FBDEBO). GBKU02 can adjust the counts if the file gets out of sync. This file drives the Member Status Maintenance screen count.</div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-hdr" onclick="toggleAcc(this)">Message files — GGNBURMSGF and UTMGREP <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body"><code>GGNBURMSGF</code> holds message text and default severity. <code>UTMGREP</code> holds user-adjusted severities and tolerances. Bureau validation uses UTMGREP. The on-line edit screen shows GGNBURMSGF severity. If they differ, the displayed severity will not match what actually blocks processing — a common source of confusion. Maintain via LIRMA menu or ELASS menu → Parameter Maintenance → Message Severity/Tolerance.</div>
+            </div>
+          </div>
+        </div>
+        <div class="notice"><strong>Common mistake:</strong> Jumping to On-line Edit before confirming downloads ran. If downloads did not run or failed, work files ZBO1WKP and ZBO2WKP are empty and GBCM01 shows no records. Always check WRKACTJOB for the download jobs first.</div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="0">&#8592; Previous</button>
+        <span class="slide-pos">2 / 7</span>
+        <button class="nav-btn nav-next" data-goto="2">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-2">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Concept 2</span>
+          <button class="tts-btn" onclick="tts(2)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>Bureau Closings On-line Edit — Deep Dive</h1>
+        <p class="hero-sub">Five tabbed sections: GBCM00 session setup, selection screen fields, the closings list, the edit screen, and the severity system</p>
+      </div>
+      <div class="body">
+<p class="intro">Bureau Closings On-line Edit is the main daily interface. GBCM00 (a CL program) builds the session environment before any screen appears. Understanding GBCM00 explains what happens when processing fails mid-way through.</p>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="showTab('t2a',this)">GBCM00 Session Setup</button>
+          <button class="tab-btn" onclick="showTab('t2b',this)">Selection Screen</button>
+          <button class="tab-btn" onclick="showTab('t2c',this)">The Closings List</button>
+          <button class="tab-btn" onclick="showTab('t2d',this)">The Edit Screen</button>
+          <button class="tab-btn" onclick="showTab('t2e',this)">Severity and Limits</button>
+        </div>
+
+        <div class="tab-panel active" id="t2a">
+          <div class="two">
+            <div>
+              <h2>What GBCM00 does before the screen appears</h2>
+              <p style="font-size:.84rem;color:#5a5a7a;margin-bottom:.85rem">GBCM00 is called by the ILU or LIRMA menu with &amp;SYC2 (PS=LIRMA, IL=ILU) and &amp;SYSB (subsystem code). It runs entirely before the user sees anything.</p>
+              <div class="proc-step open" onclick="toggleProc(this)">
+                <div class="proc-num">1</div><div><strong style="font-size:.86rem">Create/clear work files in QTEMP</strong><br/><span style="font-size:.8rem;color:#5a5a7a">ZBO1WKP, ZBO2WKP, ZBO2WKL0, ZBO2WKL1, UTCIWKP</span></div>
+              </div>
+              <div class="proc-detail">CHKOBJ tests each file; CPYF with CRTFILE(*YES) creates if missing; CLRPFM clears. ZBO2WKP needs logical files ZBO2WKL0/ZBO2WKL1 via CRTDUPOBJ. If either logical is missing, the physical is rebuilt from scratch. This is why Bureau files appear in QTEMP during a session.</div>
+              <div class="proc-step" onclick="toggleProc(this)">
+                <div class="proc-num">2</div><div><strong style="font-size:.86rem">Start commitment control</strong><br/><span style="font-size:.8rem;color:#5a5a7a">STRCMTCTL LCKLVL(*CHG) NFYOBJ(*NONE)</span></div>
+              </div>
+              <div class="proc-detail">Lock level *CHG holds records read with intent to update under commitment. Protects ZBO1DL01 and FUTBOREL0 from partial updates. If the session ends abnormally, MONMSG RPG9001 issues ROLLBACK.</div>
+              <div class="proc-step" onclick="toggleProc(this)">
+                <div class="proc-num">3</div><div><strong style="font-size:.86rem">Override files to QTEMP and set locking</strong><br/><span style="font-size:.8rem;color:#5a5a7a">ZBO1DL04 overridden with *SHRUPD SHARE(*YES)</span></div>
+              </div>
+              <div class="proc-detail">Five OVRDBFs redirect work files to QTEMP. ZBO1DL04 gets RCDFMTLCK(@O1DL04A *SHRUPD) and SHARE(*YES) — shared update locking allows other users to read while someone edits. UTO0REP gets WAITRCD(*IMMED) to avoid waiting on a locked report file.</div>
+              <div class="proc-step" onclick="toggleProc(this)">
+                <div class="proc-num">4</div><div><strong style="font-size:.86rem">Call GBCM01</strong><br/><span style="font-size:.8rem;color:#5a5a7a">CALL GBCM01 PARM(&amp;SYC2 &amp;SYSB)</span></div>
+              </div>
+              <div class="proc-detail">GBCM01 reads data areas, sets up the selection screen and runs until the user exits. GBCM00 waits here.</div>
+              <div class="proc-step" onclick="toggleProc(this)">
+                <div class="proc-num">5</div><div><strong style="font-size:.86rem">Error handling &mdash; MONMSG RPG9001</strong><br/><span style="font-size:.8rem;color:#5a5a7a">ROLLBACK, send BUR0001, call GBUT21 to print messages</span></div>
+              </div>
+              <div class="proc-detail">If GBCM01 ends with RPG9001: ROLLBACK undoes all uncommitted changes. SNDPGMMSG sends BUR0001 to GGNBURMSGF. CALL GBUT21 receives and prints all program messages. BUR0001 in a joblog is the signature of this path. Check GBUT21 spooled output for the actual cause.</div>
+              <div class="proc-step" onclick="toggleProc(this)">
+                <div class="proc-num">6</div><div><strong style="font-size:.86rem">Cleanup &mdash; always runs on exit</strong><br/><span style="font-size:.8rem;color:#5a5a7a">ENDCMTCTL, CLRPFM, DLTOVR, RCLRSC</span></div>
+              </div>
+              <div class="proc-detail">Whether normal or error: ENDCMTCTL, CLRPFM work files, DLTOVR all overrides, CLOF ZBO1DL04, RCLRSC. Guarantees clean state for the next session.</div>
+            </div>
+            <div>
+              <h2>GBCM01 startup &mdash; data areas read</h2>
+              <div class="card" style="margin-bottom:.6rem"><div class="tag tag-p">UTTPRCA4 &mdash; Error Limit</div><h3>The processing threshold</h3><p>Read into WRVEMX. Messages at or above this severity block processing. Typically 30. If blank, limit is zero (no limit).</p></div>
+              <div class="card" style="margin-bottom:.6rem"><div class="tag tag-t">GGNBURCDSO &mdash; Override Limit</div><h3>User override threshold</h3><p>Sets WAVECO. Cannot exceed WRVEMX &mdash; capped automatically. Allows processing up to a slightly higher threshold without changing the master limit.</p></div>
+              <div class="card" style="margin-bottom:.6rem"><div class="tag tag-p">GGNSPLCLM &mdash; LIRMA Claim Ref Mode</div><h3>Which column on the list</h3><p>LIRMA only (PS). Value 1 = Claim Reference column (indicator 20 ON, format #BCM01S2). Value 0 = Claim Number column (#BCM01S1).</p></div>
+              <div class="card"><div class="tag tag-t">Bureau type indicators</div><h3>PS vs IL controls layout</h3><p>SYC2=PS: indicator 88 ON &mdash; FDO field shown. SYC2=IL: indicator 87 ON &mdash; Product Code shown, FDO hidden and forced to N.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t2b">
+          <div class="two">
+            <div>
+              <h2>Selection Screen &mdash; field by field</h2>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Transaction type flags &mdash; Premiums, Claims, Treaties, FDOs <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Four Y/N flags. All default Y. At least one must be Y (UTD0642 if all N). Each N flag adds an exclusion to the OPNQRYF: Claims=N adds O1CLOT!="C". O1CLOT: P=Premium, C=Claim, T=Treaty, F=FDO. FDOs only for LIRMA (PS).</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Review / Non-review flags <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Both cannot be N (UTD0643). Review=Y Non-review=N adds O1VUFQ="Y". Review=N Non-review=Y adds O1VUFQ!="Y". Both Y means no review filter (both types included).</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Deleted Closings flag <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Default N. N adds O1SSCD!="D". O1SSCD: blank=open, D=deleted, U=processed. Deleted closings can only be viewed (5) or reinstated (7) &mdash; options 1/2 raise UTD0649.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Reference fields and wildcards <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Member Company, Bureau Reference, Member Reference all support * wildcard &mdash; GBCM11 uses %WLDCRD when any position contains *. Member Company validates against FUTMBREL0 if no wildcard. Entering ? invokes a prompt window.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Product Code &mdash; ILU only (CR023662, 2018) <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Shown when SYC2=IL (indicator 87). When entered, GBCM11 joins ZBO1DL04 to ZUMADL10 on MAPORF and adds MAMAPC=product-code. If ZUMADL10 has no match, the closing is excluded.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">F9=Process List vs F4=Closings List <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">F9 calls CBPROS &mdash; processes all matching closings without showing the list. Displays Skip/Limit window first (GBUT62) with limits by number, minutes, or time-of-day. F4 calls CCPRO2 &mdash; builds the subfile list for individual selection.</div></div>
+            </div>
+            <div>
+              <h2>Mock selection screen</h2>
+              <div class="screen-mock">
+                <div class="screen-hdr"><span>GBCM01 &mdash; Bureau Closings On-line Edit</span><span>LIRMA</span></div>
+                <div class="screen-body"><span class="lbl"> Transaction Types:                              </span>
+<span class="lbl">   Premiums . . . . . </span><span class="fld">Y</span><span class="lbl">  Claims . . </span><span class="fld">Y</span><span class="lbl">           </span>
+<span class="lbl">   Treaties . . . . . </span><span class="fld">Y</span><span class="lbl">  FDOs . . . </span><span class="fld">Y</span><span class="lbl"> (LIRMA only)</span>
+<span class="lbl"> Review: </span><span class="fld">Y</span><span class="lbl">  Non-review: </span><span class="fld">Y</span><span class="lbl">  Deleted: </span><span class="fld">N</span><span class="lbl">         </span>
+<span class="lbl"> Transaction Date: </span><span class="fld">      </span><span class="lbl">  Member Company: </span><span class="fld">      </span><span class="lbl">  </span>
+<span class="lbl"> Bureau Reference: </span><span class="fld">                 </span><span class="lbl">               </span>
+<span class="lbl"> Member Reference: </span><span class="fld">               </span><span class="lbl">                 </span>
+<span class="lbl"> Trans Ref:        </span><span class="fld">   </span><span class="lbl">  Error Limit: </span><span class="hl">30</span><span class="lbl">           </span>
+<span class="lbl">                                                   </span>
+<span class="lbl"> F4=Closings List   F9=Process List   F3=Exit       </span></div>
+              </div>
+              <div class="tip">Error Limit comes from UTTPRCA4. Check with WRKDTAARA UTTPRCA4 if a user says it has changed unexpectedly.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t2c">
+          <div class="two">
+            <div>
+              <h2>The Closings List (CCPRO2 / DCBLDP)</h2>
+              <div class="screen-mock">
+                <div class="screen-hdr"><span>GBCM01 &mdash; Bureau Closings List</span><span>Sev 50/30</span></div>
+                <div class="screen-body"><span class="lbl">Opt LIRMA Ref          Member Ref       Mbr Date  Sev</span>
+<span class="lbl"> _  </span><span class="fld">AB123456         </span><span class="lbl"> XUK0012768MU03A </span><span class="fld">A47</span><span class="ok"> 01/11  20</span>
+<span class="lbl"> _  </span><span class="fld">AB123457         </span><span class="lbl"> XUK0012880PR03A </span><span class="fld">A47</span><span class="err"> 01/11  50</span>
+<span class="lbl"> </span><span class="hl">1</span><span class="lbl">  </span><span class="fld">AB123458         </span><span class="lbl"> XUK0013001CA01A </span><span class="fld">A47</span><span class="ok"> 01/11   0</span>
+<span class="lbl"> _  </span><span class="err">** DELETED **    </span><span class="lbl"> XUK0013003LI01A </span><span class="fld">A47</span><span class="lbl"> 01/11   D</span>
+<span class="lbl"> _  </span><span class="ok">* PROCESSED *    </span><span class="lbl"> XUK0013004CA01A </span><span class="fld">A47</span><span class="ok"> 31/10   U</span>
+<span class="lbl">                                                    </span>
+<span class="lbl">Options: 1=Process 2=Amend 4=Delete 5=View 7=Reinstate</span></div>
+              </div>
+              <div class="notice">Severity column: red (&ge;30)=blocked. Green (&lt;30)=warning only. D=deleted. U=processed.</div>
+            </div>
+            <div>
+              <h2>List options</h2>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">1=Process <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">EBOPTB &rarr; EZPROS &rarr; GBCM02 in Process mode. Locks member and instalment surrogates. If error-free, posts automatically. If errors&ge;limit, shows edit screen. On success, FBDEBO decrements Bureau Status Control count. SFL shows * PROCESSED *.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">2=Amend <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">EBOPTB &rarr; EZPROS &rarr; GBCM02 in Amend mode. Edit screen shown. F6=Continue updates Bureau Closing files only &mdash; no Transaction Requests. Closing remains open.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">4=Delete <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">ECOPTA. Sets O1SSCD=D on all ZBO1DL01 records. Decrements BORHQY. Writes to audit report GBCM1A. NOT physically removed until File Cleardown. Reversible with option 7.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">5=View &nbsp; 7=Reinstate &nbsp; Mixed options (UTD0646) <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">5=View calls EDOPTC &rarr; GBCM02 in View mode (display only). 7=Reinstate calls ECOPTA &mdash; sets O1SSCD back to blank, valid only on deleted closings (UTD0647 if not deleted). Mixed options (different numbers on same submission) raises UTD0646.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t2d">
+          <div class="two">
+            <div>
+              <h2>The Bureau Closings Edit screen (GBCM02)</h2>
+              <div class="screen-mock">
+                <div class="screen-hdr"><span>GBCM02 &mdash; Closings Edit</span><span>50/30</span></div>
+                <div class="screen-body"><span class="lbl"> Bureau Ref: </span><span class="fld">AB123457       </span><span class="lbl"> Type: </span><span class="fld">P</span><span class="lbl"> (Premium)  </span>
+<span class="lbl"> Member Ref: </span><span class="fld">XUK0012880PR03A</span><span class="lbl"> (editable)         </span>
+<span class="lbl"> Broker:     </span><span class="fld">0001</span><span class="lbl">   Trans Ref: </span><span class="fld">   </span><span class="lbl">               </span>
+<span class="lbl"> Acct From:  </span><span class="fld">010104</span><span class="lbl">  Acct To: </span><span class="fld">311204</span><span class="lbl">           </span>
+<span class="lbl"> Orig Ccy: </span><span class="fld">USD</span><span class="lbl"> Orig Amt: </span><span class="fld">  125,333.54-</span><span class="lbl">         </span>
+<span class="lbl">                                                    </span>
+<span class="err"> UTD0386 Policy XUK0012880PR03A/001 not found   50</span>
+<span class="lbl">                                                    </span>
+<span class="lbl"> F6=Validate/Continue  F3=Exit  F12=Previous        </span></div>
+              </div>
+            </div>
+            <div>
+              <h2>Edit screen details</h2>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Editable fields &mdash; Bureau Information tab <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Member Reference (links to Genius policy), Broker, Transaction Reference, Posting Account, Accounting From Date, Accounting To Date. For claim payments: also First and Final Flag, Loss Date, Advised Date, Catastrophe Code. Member Reference + Accounting From Date determine the policy endorsement and section structure.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Master Information tab &mdash; read-only <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Populated from Genius based on Member Reference and Accounting From Date. Shows Master Number, Sequence, Endorsement, policy terms and sections. If Member Reference is wrong or policy does not exist, this tab is blank.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Process vs Amend vs View mode <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Process: F6 posts to Genius statistics and ledger. Transaction Requests created. Closing marked U on success. Amend: F6 updates Bureau files only &mdash; no posting. View: all fields display-only. Mode passed from GBCM01 in WSSLFG (1=Process, 2=Amend, 5=View).</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Available options from edit screen <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Bureau Signings Details (original Bureau data) &middot; Narrative (view/amend) &middot; Split Amounts (multi-section policies) &middot; Instalments (for instalment premiums) &middot; View Amounts (amounts by Revenue Code).</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t2e">
+          <div class="two">
+            <div>
+              <h2>The severity system</h2>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Error limit UTTPRCA4 <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Severity &ge; limit = Error (blocks processing). Severity &lt; limit = Warning. Typically 30. View: WRKDTAARA UTTPRCA4. Do not raise without understanding which messages are blocking.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Two message files &mdash; GGNBURMSGF vs UTMGREP <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">GGNBURMSGF = default severity (shown on screen). UTMGREP = user-adjusted severity (used by validation). If they differ, the displayed severity does not match what blocks processing. Maintain via bureau menu &rarr; Parameter Maintenance &rarr; Message Severity/Tolerance.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Cascading messages <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">One critical error triggers several related ones. UTD0951 (claim not found) also raises: "Claim Section must be selected", "Invalid Loss Advised Date", etc. Resolve highest severity first &mdash; others clear automatically.</div></div>
+            </div>
+            <div>
+              <h2>Severity reference</h2>
+              <div style="display:grid;grid-template-columns:auto 1fr;gap:.5rem .85rem;font-size:.83rem;align-items:start">
+                <span style="font-weight:700;color:#c0392b">99</span><span><strong>Critical.</strong> UTD1310, UTD1410, UTD0011. Cannot be overridden.</span>
+                <span style="font-weight:700;color:#e67e22">50&ndash;77</span><span><strong>Severe.</strong> UTD0386, UTD0387, UTD1010, UTD0339.</span>
+                <span style="font-weight:700;color:#f1c40f">30&ndash;49</span><span><strong>Error at limit 30.</strong> UTD0951 (40), UTD1130 (40), BUR0011 (40).</span>
+                <span style="font-weight:700;color:#3498db">10&ndash;29</span><span><strong>Warning at limit 30.</strong> BUR0010 (15), BUR0016 (10).</span>
+                <span style="font-weight:700;color:#1a7a4a">1&ndash;9</span><span><strong>Informational.</strong> BUR9995 (1).</span>
+              </div>
+              <div class="tip" style="margin-top:1rem">If messages block unexpectedly: check UTTPRCA4 (the limit) AND UTMGREP (the severities). Either could have changed.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="1">&#8592; Previous</button>
+        <span class="slide-pos">3 / 7</span>
+        <button class="nav-btn nav-next" data-goto="3">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-3">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Concept 3</span>
+          <button class="tts-btn" onclick="tts(3)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>GBCM11, Missing Closings and Error Message Reference</h1>
+        <p class="hero-sub">The OPNQRYF filter logic, three interactive diagnostic scenarios, and a clickable explorer for the most important Bureau error messages</p>
+      </div>
+      <div class="body">
+
+        <p class="intro">GBCM11 is called every time the closings list needs building. It takes 14 parameters and assembles an OPNQRYF string. Knowing its logic means you can answer "why isn't this closing showing?" without guessing.</p>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="showTab('t3a',this)">How GBCM11 Works</button>
+          <button class="tab-btn" onclick="showTab('t3b',this)">Diagnostic Scenarios</button>
+          <button class="tab-btn" onclick="showTab('t3c',this)">Error Explorer</button>
+        </div>
+
+        <div class="tab-panel active" id="t3a">
+          <div class="two hl">
+            <div>
+              <h2>GBCM11 complete filter logic (QCLR009)</h2>
+              <div class="code">
+                <div class="code-hdr"><div class="code-dots"><div class="code-dot" style="background:#ff5f57"></div><div class="code-dot" style="background:#febc2e"></div><div class="code-dot" style="background:#28c840"></div></div><span class="code-fn">GBCM11 &mdash; filter assembly</span><span class="code-lang">CL</span></div>
+                <div class="code-body"><pre><span class="cmt">/* Always first: */</span>
+O1SYC2 = <span class="str">"PS"</span> &amp; BOSYSB = <span class="str">"SG"</span>
+
+<span class="cmt">/* Date (if entered): */</span>
+&amp; O1FGTD = [CYMD date]
+
+<span class="cmt">/* References &mdash; wildcard or exact: */</span>
+* in BORF &rarr; O1BORF = %WLDCRD(<span class="str">"ABC*"</span>)
+no *      &rarr; O1BORF = <span class="str">"exact value"</span>
+<span class="cmt">/* Same for MBRF, MBCO, TRRF */</span>
+
+<span class="cmt">/* Type flags &mdash; N means EXCLUDE: */</span>
+PRFQ=N &rarr; O1CLOT != <span class="str">"P"</span>  <span class="cmt">Premiums</span>
+CMFQ=N &rarr; O1CLOT != <span class="str">"C"</span>  <span class="cmt">Claims</span>
+TYFQ=N &rarr; O1CLOT != <span class="str">"T"</span>  <span class="cmt">Treaties</span>
+FDFQ=N &rarr; O1CLOT != <span class="str">"F"</span>  <span class="cmt">FDOs</span>
+
+<span class="cmt">/* Review: */</span>
+RVFQ=Y &amp; NRFQ=N &rarr; O1VUFQ = <span class="str">"Y"</span>
+RVFQ=N &amp; NRFQ=Y &rarr; O1VUFQ != <span class="str">"Y"</span>
+
+<span class="cmt">/* Deleted: */</span>
+RCFG=<span class="str">'D'</span> &rarr; O1SSCD != <span class="str">"D"</span>
+
+<span class="cmt">/* ILU product code (CR023662): */</span>
+MAPC != blank:
+  JOIN ZBO1DL04 to ZUMADL10
+  ON O1MBRF = MAPORF
+  WHERE MAMAPC = <span class="str">"[code]"</span></pre></div>
+              </div>
+              <div class="notice"><strong>N means exclude, not include.</strong> Claims=N excludes Claim-type records. Claims=Y does not add a filter &mdash; Claims are simply not excluded.</div>
+            </div>
+            <div>
+              <h2>ZBO1DL04 key fields</h2>
+              <div class="card" style="margin-bottom:.6rem"><div class="tag tag-p">O1SSCD &mdash; Status Code</div><p>blank=Open &nbsp; D=Deleted &nbsp; U=Processed<br/><span style="font-size:.78rem;color:#5a5a7a">SFL: blank shows nothing, D="*** DELETED ***", U="* PROCESSED *" or "* GGI TRN CRTD*"</span></p></div>
+              <div class="card" style="margin-bottom:.6rem"><div class="tag tag-t">O1CLOT &mdash; Closing Type</div><p>P=Premium &nbsp; C=Claim &nbsp; T=Treaty &nbsp; F=FDO<br/><span style="font-size:.78rem;color:#5a5a7a">Set at Create Closings. Wrong type means it will not appear under the correct filter. Check: SELECT O1BORF, O1CLOT FROM ZBO1DL04 WHERE O1BORF='ref'</span></p></div>
+              <div class="card"><div class="tag tag-p">O1VUFQ &mdash; Review Flag</div><p>Y=Review &nbsp; blank=Non-review<br/><span style="font-size:.78rem;color:#5a5a7a">Set during Create Closings. Determines which Review/Non-review filter applies.</span></p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t3b">
+          <div class="two">
+            <div>
+              <div class="scenario">
+                <div style="padding:.85rem 1rem;background:#f0ebfa;border-bottom:1px solid var(--border)"><strong style="font-size:.88rem;color:var(--dp)">&#128270; Scenario A &mdash; Closing known to exist but not on list</strong></div>
+                <div style="padding:.85rem 1rem">
+                  <p style="font-size:.84rem;margin-bottom:.75rem">A LIRMA closing AB123457 was downloaded yesterday. It does not appear regardless of selection criteria. What should you check first?</p>
+                  <div id="sc1opts" style="display:flex;flex-direction:column;gap:.4rem">
+                    <button class="sc-btn" onclick="sc(1,'A',false)">A &mdash; The download job is still running and ZBO1DL04 is locked</button>
+                    <button class="sc-btn" onclick="sc(1,'B',false)">B &mdash; GBCM11 has a syntax error and is not executing</button>
+                    <button class="sc-btn" onclick="sc(1,'C',true)">C &mdash; Check O1SYC2, O1CLOT, O1SSCD and O1VUFQ in ZBO1DL04 against the selection screen settings</button>
+                    <button class="sc-btn" onclick="sc(1,'D',false)">D &mdash; Run CLRPFM on ZBO1DL04 and re-run the download</button>
+                  </div>
+                  <div id="sc1fb" class="sc-feedback"></div>
+                  <button id="sc1reset" class="sc-reset" onclick="scReset(1)" style="display:none">&#8635; Reset</button>
+                </div>
+              </div>
+              <div class="scenario">
+                <div style="padding:.85rem 1rem;background:#f0ebfa;border-bottom:1px solid var(--border)"><strong style="font-size:.88rem;color:var(--dp)">&#128270; Scenario B &mdash; Closing shows * PROCESSED * unexpectedly</strong></div>
+                <div style="padding:.85rem 1rem">
+                  <p style="font-size:.84rem;margin-bottom:.75rem">A closing shows "* PROCESSED *" but the user insists they have not processed it today. Most likely explanation?</p>
+                  <div id="sc2opts" style="display:flex;flex-direction:column;gap:.4rem">
+                    <button class="sc-btn" onclick="sc(2,'A',false)">A &mdash; CSD status array in GBCM01 is corrupted</button>
+                    <button class="sc-btn" onclick="sc(2,'B',true)">B &mdash; Another user processed it, or F9=Process List ran it in batch &mdash; check the audit report spool file from GBCM1A</button>
+                    <button class="sc-btn" onclick="sc(2,'C',false)">C &mdash; ZBO1DL04 and ZBO1DL01 are out of sync</button>
+                    <button class="sc-btn" onclick="sc(2,'D',false)">D &mdash; Reinstating from deletion resets the status to processed</button>
+                  </div>
+                  <div id="sc2fb" class="sc-feedback"></div>
+                  <button id="sc2reset" class="sc-reset" onclick="scReset(2)" style="display:none">&#8635; Reset</button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="scenario">
+                <div style="padding:.85rem 1rem;background:#f0ebfa;border-bottom:1px solid var(--border)"><strong style="font-size:.88rem;color:var(--dp)">&#128270; Scenario C &mdash; ILU closing absent when product code entered</strong></div>
+                <div style="padding:.85rem 1rem">
+                  <p style="font-size:.84rem;margin-bottom:.75rem">A closing visible without product code filter disappears when a product code is entered on the ILU screen. Why?</p>
+                  <div id="sc3opts" style="display:flex;flex-direction:column;gap:.4rem">
+                    <button class="sc-btn" onclick="sc(3,'A',false)">A &mdash; Product code is case-sensitive and must be upper case</button>
+                    <button class="sc-btn" onclick="sc(3,'B',false)">B &mdash; Product code filter only works via F9=Process List</button>
+                    <button class="sc-btn" onclick="sc(3,'C',true)">C &mdash; The closing's O1MBRF has no matching ZUMADL10 record with that product code &mdash; the JOIN excludes it</button>
+                    <button class="sc-btn" onclick="sc(3,'D',false)">D &mdash; The closing has O1CLOT=P and product code only filters Claim-type closings</button>
+                  </div>
+                  <div id="sc3fb" class="sc-feedback"></div>
+                  <button id="sc3reset" class="sc-reset" onclick="scReset(3)" style="display:none">&#8635; Reset</button>
+                </div>
+              </div>
+              <h2 style="margin-top:1rem">Diagnostic SQL</h2>
+              <div class="code">
+                <div class="code-hdr"><div class="code-dots"><div class="code-dot" style="background:#ff5f57"></div><div class="code-dot" style="background:#febc2e"></div><div class="code-dot" style="background:#28c840"></div></div><span class="code-fn">ZBO1DL04 &mdash; STRSQL</span><span class="code-lang">SQL</span></div>
+                <div class="code-body"><pre><span class="cmt">-- Check key fields on one closing:</span>
+<span class="fn">SELECT</span> O1BORF,O1CLOT,O1SSCD,O1VUFQ,O1SYC2
+<span class="fn">FROM</span>   <span class="var">ZBO1DL04</span>
+<span class="fn">WHERE</span>  O1BORF = <span class="str">'AB123457'</span>
+
+<span class="cmt">-- All open LIRMA closings:</span>
+<span class="fn">SELECT</span> O1BORF,O1CLOT,O1SSCD
+<span class="fn">FROM</span>   <span class="var">ZBO1DL04</span>
+<span class="fn">WHERE</span>  O1SYC2 = <span class="str">'PS'</span>
+  <span class="fn">AND</span>  O1SSCD NOT IN (<span class="str">'U'</span>,<span class="str">'D'</span>)
+
+<span class="cmt">-- ILU product code join check:</span>
+<span class="fn">SELECT</span> D.O1BORF,D.O1MBRF,M.MAMAPC
+<span class="fn">FROM</span>   <span class="var">ZBO1DL04</span> D
+<span class="fn">JOIN</span>   <span class="var">ZUMADL10</span> M ON D.O1MBRF=M.MAPORF
+<span class="fn">WHERE</span>  D.O1SYC2 = <span class="str">'IL'</span></pre></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t3c">
+          <h2 style="margin-bottom:.3rem">Interactive Error Message Explorer</h2>
+          <p style="font-size:.84rem;color:#5a5a7a;margin-bottom:.9rem">From the real Bureau_error_messages.xls (883 messages in GGNBURMSGF). Click any message for cause and fix. Severity: <span style="color:#c0392b;font-weight:700">99</span> critical &nbsp; <span style="color:#e67e22;font-weight:700">50+</span> severe &nbsp; <span style="color:#f39c12;font-weight:700">30&ndash;49</span> error &nbsp; <span style="color:#3498db;font-weight:700">&lt;30</span> warning</p>
+          <div class="err-explorer">
+            <div class="err-list" id="errList">
+              <div class="err-chip sev50 active" onclick="showErr('UTD0386')"><span class="ec-id">UTD0386</span>Policy does not exist<span class="ec-sev">50</span></div>
+              <div class="err-chip sev50" onclick="showErr('UTD0387')"><span class="ec-id">UTD0387</span>Policy/endorsement not found<span class="ec-sev">50</span></div>
+              <div class="err-chip sev40" onclick="showErr('UTD0951')"><span class="ec-id">UTD0951</span>Matched claim not found<span class="ec-sev">40</span></div>
+              <div class="err-chip sev50" onclick="showErr('UTD1010')"><span class="ec-id">UTD1010</span>Policy number not identified<span class="ec-sev">50</span></div>
+              <div class="err-chip sev50" onclick="showErr('UTD1102')"><span class="ec-id">UTD1102</span>Signed line % tolerance exceeded<span class="ec-sev">50</span></div>
+              <div class="err-chip sev40" onclick="showErr('UTD1130')"><span class="ec-id">UTD1130</span>Accounting terms not found<span class="ec-sev">40</span></div>
+              <div class="err-chip sev99" onclick="showErr('UTD1310')"><span class="ec-id">UTD1310</span>Error in signing details<span class="ec-sev">99</span></div>
+              <div class="err-chip sev99" onclick="showErr('UTD1410')"><span class="ec-id">UTD1410</span>Signed line % is zero<span class="ec-sev">99</span></div>
+              <div class="err-chip sev50" onclick="showErr('UTD0339')"><span class="ec-id">UTD0339</span>Claim matched to deleted claim<span class="ec-sev">50</span></div>
+              <div class="err-chip sev30" onclick="showErr('BUR0001')"><span class="ec-id">BUR0001</span>Errors during Closings On-line Edit<span class="ec-sev">0</span></div>
+              <div class="err-chip sev30" onclick="showErr('BUR1001')"><span class="ec-id">BUR1001</span>Errors during Claims On-line Edit<span class="ec-sev">0</span></div>
+              <div class="err-chip sev30" onclick="showErr('UTD0641')"><span class="ec-id">UTD0641</span>No closings found<span class="ec-sev">0</span></div>
+              <div class="err-chip sev30" onclick="showErr('UTD0643')"><span class="ec-id">UTD0643</span>Both review flags are N<span class="ec-sev">0</span></div>
+              <div class="err-chip sev30" onclick="showErr('UTD0646')"><span class="ec-id">UTD0646</span>Mixed options found<span class="ec-sev">0</span></div>
+              <div class="err-chip sev30" onclick="showErr('UTD0650')"><span class="ec-id">UTD0650</span>Member already locked<span class="ec-sev">0</span></div>
+              <div class="err-chip sev30" onclick="showErr('UTD0651')"><span class="ec-id">UTD0651</span>Closing already locked<span class="ec-sev">0</span></div>
+              <div class="err-chip sev30" onclick="showErr('UTD0734')"><span class="ec-id">UTD0734</span>Closing already processed<span class="ec-sev">0</span></div>
+            </div>
+            <div class="err-detail" id="errDetail">
+              <h3>UTD0386 &mdash; Policy &amp;1/&amp;2/&amp;3/&amp;4 does not exist</h3>
+              <span class="ed-sev" style="background:#fdf0ee;color:#c0392b">Severity 50 &nbsp;&middot;&nbsp; Change Allowed: N &nbsp;&middot;&nbsp; Area: POLICY</span>
+              <p>The Member Reference on the closing does not match any policy in the Genius database.</p>
+              <div class="ed-fix"><strong>&#9989; Fix:</strong> Correct the Member Reference to a valid Genius policy reference. Verify via Genius Underwriting &rarr; Policy &rarr; Enquiry. Ensure the Accounting From Date falls within a valid endorsement period. Common causes: policy set up under wrong reference; bureau sending an outdated reference; endorsement not yet created in Genius.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="2">&#8592; Previous</button>
+        <span class="slide-pos">4 / 7</span>
+        <button class="nav-btn nav-next" data-goto="4">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" 
+    <div class="slide" id="slide-4">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge warn">Genius Team - High SPOF</span>
+          <button class="tts-btn" onclick="tts(4)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>Bureau Claims, ELASS Rules, UCR Matching and Downloads</h1>
+        <p class="hero-sub">Four tabbed sections: GBKM vs GBCM, mandatory ELASS processing order, step-by-step UCR fixing, and download failure diagnosis</p>
+      </div>
+      <div class="body">
+
+        <p class="intro">Bureau Claims mirrors Closings in structure but handles ELASS and CLAMS loss advices. The ELASS record type sequence and UCR matching rules are the most operationally important things to know — getting them wrong creates issues that are time-consuming to resolve.</p>
+
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="showTab('t4a',this)">GBKM vs GBCM</button>
+          <button class="tab-btn" onclick="showTab('t4b',this)">ELASS Processing Rules</button>
+          <button class="tab-btn" onclick="showTab('t4c',this)">UCR Matching</button>
+          <button class="tab-btn" onclick="showTab('t4d',this)">Download Failures</button>
+        </div>
+
+        <div class="tab-panel active" id="t4a">
+          <div class="two">
+            <div>
+              <h2>GBKM00 &mdash; identical structure to GBCM00</h2>
+              <div class="code">
+                <div class="code-hdr"><div class="code-dots"><div class="code-dot" style="background:#ff5f57"></div><div class="code-dot" style="background:#febc2e"></div><div class="code-dot" style="background:#28c840"></div></div><span class="code-fn">GBCM00 vs GBKM00 &mdash; differences only</span><span class="code-lang">CL</span></div>
+                <div class="code-body"><pre><span class="cmt">             GBCM00           GBKM00</span>
+<span class="cmt">Called by:   </span><span class="var">ILU/LIRMA</span>       <span class="var">ELASS/CLAMS</span>
+<span class="cmt">Work file 1: </span><span class="var">ZBO1WKP</span>         <span class="var">UTKBWKP</span>
+<span class="cmt">Work file 2: </span><span class="var">ZBO2WKP</span>         <span class="var">UTKFWKP</span>
+<span class="cmt">Shared file: </span><span class="var">ZBO1DL04</span>        <span class="var">UTKBREL4</span>
+<span class="cmt">Error msg:   </span><span class="var">BUR0001</span>         <span class="var">BUR1001</span>
+<span class="cmt">RPG ctrl:    </span><span class="var">GBCM01</span>          <span class="var">GBKM01</span>
+
+<span class="cmt">-- Identical: STRCMTCTL, ROLLBACK,</span>
+<span class="cmt">   GBUT21, ENDCMTCTL, CLRPFM, DLTOVR</span></pre></div>
+              </div>
+              <div class="notice"><strong>Tip:</strong> BUR1001 in a joblog = GBKM01 ended abnormally (Claims). BUR0001 = GBCM01 (Closings). Always identify the chain first.</div>
+            </div>
+            <div>
+              <h2>Claims-specific behaviour</h2>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">CLASS message codes &mdash; CAA and YES only <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">ELASS messages carry a CLASS status code: MAN=entered not reviewed; CAA=loss advice accepted; YES=payment accepted; FIL=file requested; INF=more info needed. Only CAA and YES should enter Genius. Other types appearing in Genius indicate a Bureau or Intercept configuration error.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">ELASS record types &mdash; 01, 02, 03, 04 <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">01=First Advice (new claim, no payment). 03=First Advice and Settlement. 02=Subsequent Advice (update to existing). 04=Subsequent Advice and Settlement. Must be processed in sequence 01&rarr;03&rarr;02&rarr;04 per Transmission Date. Wrong order causes duplicate claims or broken UCR links.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Member Status Maintenance &mdash; check before processing <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Before processing any date, check Member Status Maintenance (option 11 from ELASS Bureau Menu). The date should show <strong>Claims Validated</strong>. Any other status means upstream pipeline steps have not completed &mdash; do not process that date.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t4b">
+          <div class="two">
+            <div>
+              <h2>ELASS processing sequence &mdash; mandatory order</h2>
+              <p style="font-size:.84rem;color:#5a5a7a;margin-bottom:.75rem">From Bureau ELASS User Process v1 (Xchanging/AXA 2005). This is not a guideline.</p>
+              <div class="screen-mock">
+                <div class="screen-hdr"><span>ELASS Claims On-line Edit &mdash; Select</span></div>
+                <div class="screen-body"><span class="lbl"> Transmission Date: </span><span class="fld">01/11/04</span><span class="lbl"> (one date at a time)  </span>
+<span class="lbl">                                                      </span>
+<span class="lbl"> Step 1: Record Type </span><span class="fld">01</span><span class="lbl"> First Advice            </span>
+<span class="lbl">         Process all 01 records, return             </span>
+<span class="lbl"> Step 2: Record Type </span><span class="fld">03</span><span class="lbl"> First Advice+Settlement  </span>
+<span class="lbl">         Process all 03 records, return             </span>
+<span class="lbl"> Step 3: Record Type </span><span class="fld">02</span><span class="lbl"> Subsequent Advice        </span>
+<span class="lbl">         Process all 02 records, return             </span>
+<span class="lbl"> Step 4: Record Type </span><span class="fld">04</span><span class="lbl"> Subsequent+Settlement    </span>
+<span class="lbl">         Process all 04 records, return             </span>
+<span class="lbl"> Step 5: Record Type </span><span class="fld">  </span><span class="lbl"> (blank) catch remaining   </span>
+<span class="lbl">                                                      </span>
+<span class="lbl"> Then process LIRMA claims for same date             </span></div>
+              </div>
+            </div>
+            <div>
+              <h2>Why the sequence matters</h2>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">01 before 03 &mdash; First Advice before First+Settlement <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">01 creates the initial claim structure. 03 also creates a claim but with settlement. Processing 03 first creates a claim with only the settlement portion, losing the loss advice context. 01 first establishes the claim, then 03 adds the settlement.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">02/04 after 01/03 &mdash; Subsequent after First <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">02/04 update an existing claim via UCR. If processed before 01/03, there is no claim to link to &mdash; UTD0951 fires for every subsequent advice. Requires manual UCR correction on every affected record.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">ELASS before LIRMA, oldest date first <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Process all ELASS for a date before LIRMA claims for that date. When multiple dates present, process oldest first. Later-date subsequent advices cannot link to first advices that have not yet been processed.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t4c">
+          <div class="two">
+            <div>
+              <h2>UCR matching &mdash; fixing UTD0951</h2>
+              <p style="font-size:.84rem;color:#5a5a7a;margin-bottom:.75rem">The Unique Claim Reference links every ELASS message to a Genius claim. When the link breaks, UTD0951 fires and cascading errors follow.</p>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Where is the UCR stored? <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">In Genius: Claim Broker Reference 2 &mdash; two fields concatenated: Loss Broker Ref 2 + Claim ASC Currency. Genius searches ZKFADL13 (Claim Master) using the UCR from the ELASS message. No match = UTD0951.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Step-by-step: fixing UTD0951 <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">1. Note UCR and Policy Reference from UTD0951 message.<br/>2. Genius &rarr; Underwriting &rarr; Policy &rarr; Enquiry. Enter reference.<br/>3. KT enquiry: identify the correct claim.<br/>4. Claims Menu &rarr; Claims Maintenance &rarr; Amend claim (1/02).<br/>5. Enter UCR in Claim Broker Reference 2 (Loss Broker Ref 2 + Claim ASC Currency).<br/>6. Return to ELASS On-line Edit. Amend item, revalidate. Process normally.</div></div>
+            </div>
+            <div>
+              <h2>Creating a new claim via Bureau (F22)</h2>
+              <div class="screen-mock">
+                <div class="screen-hdr"><span>ELASS Claims On-line Edit &mdash; Record Type 01</span></div>
+                <div class="screen-body"><span class="lbl"> UCR: </span><span class="fld">B0576JH88339AAAE  </span><span class="lbl"> Type: 01-01-CAA    </span>
+<span class="err"> UTD0951 Matched claim not found              40</span>
+<span class="lbl">                                                    </span>
+<span class="lbl"> F22 = </span><span class="hl">New Claim</span><span class="lbl"> (auto-stores UCR on new claim)   </span>
+<span class="lbl"> F13 = Select Claim (link to existing claim)       </span>
+<span class="lbl"> F14 = Claim Section (after F22)                   </span></div>
+              </div>
+              <div class="tip">Use F22 for Record Types 01/03 where no claim exists. UCR is auto-stored. Always check via KT enquiry before F22 to avoid creating a duplicate claim.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="t4d">
+          <div class="two">
+            <div>
+              <h2>Download failure diagnosis</h2>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Download stuck in submitted state <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Blank GGNLIRDLJB and GGNLIRDLST: WRKDTAARA GGNLIRDLJB &rarr; change to blanks. Same for GGNLIRDLST. Confirm Job Stream Subsystem is *ACTIVE in WRKACTJOB before resubmitting.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Job Stream Subsystem not active <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Configured in GGNILUDLSS (ILU) or UTTPRCA7 (ELASS/LIRMA). Normally starts automatically. Start manually if needed. Downloads silently fail when subsystem is not active.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Intercept license expiry &mdash; documented cause at Endurance <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">Symptoms: all downloads fail silently. Diagnosis: add ST400OBJ54 to library list, start Intercept GE, check license expiry. Contact Intercept/AMOS vendor to renew.</div></div>
+              <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">FTP connectivity &mdash; GGNLIRFTP <span class="ac-arrow">&#9660;</span></button>
+              <div class="accordion-body">WRKDTAARA GGNLIRFTP. Format: mailbox-profile password IP-address path. Compare to current Insure mailbox details. Must be updated if any element changes at Insure.</div></div>
+            </div>
+            <div>
+              <h2>Download programs</h2>
+              <div class="card" style="margin-bottom:.6rem"><div class="tag tag-p">GBDI &mdash; ILU/ILUCSM (14 programs)</div>
+                <p>GBDI03: initiate &middot; GBDI04: set MULTINET library list &middot; GBDI06: start job stream &middot; GBDI09: monitor &middot; GBDI11: save to SAVF &middot; GBDI12: CLAMS claims monitor &middot; GBDI20: cleanup</p>
+                <p style="margin-top:.3rem;font-size:.78rem;color:#5a5a7a">Subsystem: GGNILUDLSS &middot; Signings/claims flags: GGNILUDLSC</p>
+              </div>
+              <div class="card" style="margin-bottom:.6rem"><div class="tag tag-t">GBDE &mdash; ELASS/MULTINET (9 programs)</div>
+                <p>GBDE03: initiate &middot; GBDE04: set library list &middot; GBDE06: start job stream &middot; GBDE08: monitor &middot; GBDE12: claims monitor &middot; GBDE13: save to SAVF</p>
+                <p style="margin-top:.3rem;font-size:.78rem;color:#5a5a7a">MULTINET libraries: UTTPRCA7 &middot; State: GGNLIRDLJB, GGNLIRDLST</p>
+              </div>
+              <div class="card"><div class="tag tag-p">GBDL &mdash; LIRMA (5 programs)</div>
+                <p>GBDL02: download control &middot; GBDL03: network data load &middot; GBDL04: RJE controller &middot; GBDL06: RPG data load &middot; GBDL09: write rejected data</p>
+                <p style="margin-top:.3rem;font-size:.78rem;color:#5a5a7a">FTP: GGNLIRFTP &middot; Auto flags: UTPSRSA3 (LIRMA), UTPSRSA9 (ELASS)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="3">&#8592; Previous</button>
+        <span class="slide-pos">5 / 7</span>
+        <button class="nav-btn nav-next" data-goto="5">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-5">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge warn">Genius Team - High SPOF</span>
+          <button class="tts-btn" onclick="tts(5)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>Configuration, Parameters and Setup</h1>
+        <p class="hero-sub">Key data areas, tolerance parameters, automatic processing flags and the GGNBURMSGF vs UTMGREP sync issue</p>
+      </div>
+      <div class="body">
+
+        <p class="intro">Genius Bureau has a substantial configuration layer. Many issues that appear to be software problems are actually configuration issues. Knowing what to check avoids unnecessary escalation.</p>
+
+        <div class="two">
+          <div>
+            <h2>Key parameters and data areas</h2>
+            <p style="font-size:.84rem;color:#5a5a7a;margin-bottom:.85rem">Maintained via Genius Housekeeping &rarr; Environment Control &rarr; Work with Parameters &rarr; Group *Bureau, or directly via WRKDTAARA.</p>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">UTTPRCA4 / UTTPRCA5 &mdash; Error Limits <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">UTTPRCA4=Bureau Closings Error Limit (typically 30). UTTPRCA5=Bureau Claims Error Limit. Messages at or above severity block processing. View/change: WRKDTAARA UTTPRCA4. Do not raise without understanding which messages are blocking and why.</div></div>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">GGNSLPCTOL / GGNPROZTOL / GGNSOFWTOL &mdash; Tolerances <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">Signed Line % Tolerance, Signed Slip Order % Tolerance, Share of Whole % Tolerance. All typically 10%. Affect UTD1102 (signed line differs from written). Adjust these tolerances after discussion rather than raising the error limit.</div></div>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">UTPSRSA3 / UTPSRSA9 &mdash; Automatic Processing <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">Three-char flags (Download/Create/Validate). N=manual, Y=auto. UTPSRSA3=LIRMA, UTPSRSA9=ELASS. NNN=fully manual. YYN=Download+Create auto. YYY=fully automatic. Only automate steps confirmed stable. Endurance started NNN and moved to YYN.</div></div>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">UTTPRCA7 &mdash; MULTINET Libraries <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">Library names for MULTINET/Intercept concatenated, e.g. ST400OBJ54ST400PTF54ST400V54GL. Set by GBDE04/GBDI04 before starting the download job stream. Must be updated when MULTINET is upgraded to a new version.</div></div>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">GGNLIRFTP &mdash; FTP Mailbox Details <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">Mailbox profile, password, IP address and path (e.g. YAXACsUk rCMyP3Bv 10.137.250.2 AXACSA47.AXACS001/To). Check WRKDTAARA GGNLIRFTP. Must be updated if Insure changes the mailbox IP, credentials or path.</div></div>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">GGNLIRDLJB / GGNLIRDLST &mdash; Download State <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">Track current download job name and status. Blank these to reset a stuck download: WRKDTAARA GGNLIRDLJB then change to blanks. Same for GGNLIRDLST. Confirm Job Stream Subsystem is active before resubmitting.</div></div>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">GGNBURMSGF vs UTMGREP &mdash; keeping them in sync <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">GGNBURMSGF holds default severities (what the on-line edit screen shows). UTMGREP holds user-adjusted severities (what validation actually uses). If someone directly edits GGNBURMSGF without updating UTMGREP, users see one severity but validation uses another. Always maintain message severities via bureau menu &rarr; Parameter Maintenance &rarr; Message Severity/Tolerance.</div></div>
+          </div>
+          <div>
+            <h2>Quick-reference: data areas</h2>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:.4rem .75rem;font-size:.8rem;margin-bottom:1.2rem;align-items:start">
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">UTTPRCA4</code><span>Bureau Closings Error Limit (typically 30)</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">UTTPRCA5</code><span>Bureau Claims Error Limit (typically 30)</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">GGNBURCDSO</code><span>Default override limit (capped at UTTPRCA4)</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">GGNSPLCLM</code><span>LIRMA claim ref mode: 1=ref column, 0=number</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">GGNLIRFTP</code><span>FTP mailbox: profile password IP path</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">GGNLIRDLJB</code><span>Download job name (blank to reset)</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">GGNLIRDLST</code><span>Download job status (blank to reset)</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">UTTPRCA7</code><span>MULTINET library list for download job</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">UTPSRSA3</code><span>LIRMA auto processing flags (NNN/YYN/YYY)</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">UTPSRSA9</code><span>ELASS auto processing flags (NNN/YYN/YYY)</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">GGNDFTCOMP</code><span>Bureau default company code</span>
+              <code style="background:#f0ebfa;padding:.15rem .35rem;border-radius:4px;color:var(--dp);font-size:.75rem;white-space:nowrap">Y2DTFMA</code><span>System date format used by GBCM01</span>
+            </div>
+            <h2>Implementation timescale</h2>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">What a new Bureau implementation requires <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">From Requirements for bureau set-up (Xchanging 2005): minimum 3 months elapsed. Approximately 30 days consultancy: Intercept configuration, parameter review, validation message severity review, cross-reference code setup, download automation, training, UAT, production cutover. Client responsibilities: housekeeping codes, cross-reference codes, test environment, Intercept access, firewall and FTP connectivity with Insure/LPC.</div></div>
+            <div class="accordion-item"><button class="accordion-hdr" onclick="toggleAcc(this)">Product definition and cross-reference requirements <span class="ac-arrow">&#9660;</span></button>
+            <div class="accordion-body">Processing Type in Policy Terms must be LIRMA or ILU. Participations must accept written and signed values. Claim Master Broker Reference 2 must store the UCR for ELASS matching. Cross-reference files must map Bureau area codes, settlement accounts, broker codes and currency codes to Genius values. Missing entries cause Create Closings failures.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="4">&#8592; Previous</button>
+        <span class="slide-pos">6 / 7</span>
+        <button class="nav-btn nav-next" data-goto="6">Take Quiz &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-6">
+      <div id="qIntro">
+        <div class="hero">
+          <div class="hero-eyebrow"><span class="hbadge blue">Assessment</span></div>
+          <h1>Knowledge Quiz</h1>
+          <p class="hero-sub">10 questions &middot; 70% to pass &middot; Instant feedback &middot; Retry wrong answers only</p>
+        </div>
+        <div class="body">
+          <div class="grid g3" style="margin-bottom:1.5rem">
+            <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#5F249F">10</div><div style="font-size:.72rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem">Questions</div></div>
+            <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#5F249F">70%</div><div style="font-size:.72rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem">Pass Mark</div></div>
+            <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#5F249F">~10</div><div style="font-size:.72rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem">Minutes</div></div>
+          </div>
+          <div class="callout" style="margin-bottom:1.5rem"><strong>How it works:</strong> Select your answer for instant feedback. At the end you get a score breakdown. If you do not pass, click Retry to attempt only the incorrect questions. Your score accumulates across retries.</div>
+          <button class="btn btn-p" onclick="startQuiz()">Start Quiz &#8594;</button>
+        </div>
+      </div>
+      <div id="qScreen" style="display:none">
+        <div class="hero" style="padding:1.5rem 2.5rem">
+          <div class="q-hdr"><span class="q-cnt" id="qCnt"></span><span class="q-topic-pill" id="qTop"></span></div>
+          <div class="q-text" id="qTxt"></div>
+        </div>
+        <div class="body">
+          <div class="opts" id="optsC"></div>
+          <div class="fb" id="fbBox"><span id="fbIcon" style="font-size:1rem;flex-shrink:0;margin-top:.1rem"></span><span id="fbTxt"></span></div>
+          <div class="q-foot"><div class="dots" id="dotRow"></div><button class="btn btn-p" id="btnNext" style="display:none">Next &#8594;</button></div>
+        </div>
+      </div>
+      <div id="qResults" style="display:none">
+        <div class="res-hero">
+          <div class="ring" id="ring"><div class="ring-pct" id="rPct">--</div><div class="ring-lbl">Score</div></div>
+          <div class="res-status" id="rStatus"></div><div class="res-msg" id="rMsg"></div>
+        </div>
+        <div class="res-body">
+          <div class="band-bar"><div class="bseg be" id="bE">Expert 90-100%</div><div class="bseg bp" id="bP">Proficient 80-89%</div><div class="bseg bd" id="bD">Developing 70-79%</div><div class="bseg bf" id="bF">Foundation below 70%</div></div>
+          <div class="sg"><div class="sb-stat"><div class="sv g" id="stC">-</div><div class="sl">Correct</div></div><div class="sb-stat"><div class="sv r" id="stW">-</div><div class="sl">Incorrect</div></div></div>
+          <div class="rev-lbl">Question review - click to expand</div>
+          <div id="revList"></div><div class="res-acts" id="resAct"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var cur = 0, TOTAL = 7;
+var flowIdx = {};
+var SLIDE_TTS = ["Welcome to Genius Bureau Processing. This is a comprehensive training module covering the full Bureau pipeline from London Market mailbox to Genius ledger. There are six content modules plus a quiz, covering how Bureau processing works, the closings on-line edit in depth, error diagnosis, ELASS rules, downloads and configuration.", "Module 1: The Full Pipeline. Click each step on the pipeline bar to explore it. Bureau messages travel through 8 steps: Download, Data Validation, Create Closings or Claims, Validation, On-line Edit, Transaction Requests, Statistics and Ledger posting, and Settlement. LIRMA and ILU supply Signings and use the GBCM Closings chain. ELASS and CLAMS supply Loss Advices and use the GBKM Claims chain.", "Module 2: Bureau Closings On-line Edit. GBCM00 is the CL entry point. It creates work files in QTEMP, starts commitment control, overrides ZBO1DL04 with shared update locking, then calls GBCM01. GBCM01 reads data areas on startup including UTTPRCA4 for the error limit. Use the five tabs to explore each aspect of the on-line edit process.", "Module 3: GBCM11 and Error Messages. GBCM11 builds the OPNQRYF query from 14 parameters. N flags exclude records, not include them. Use the Diagnostic Scenarios tab to practise diagnosing missing closings. Use the Error Explorer to look up any Bureau error message with its cause and resolution.", "Module 4: Bureau Claims, ELASS and Downloads. GBKM00 mirrors GBCM00 exactly with different file names. For ELASS: always process Record Types in order 01, 03, 02, 04 per Transmission Date, then blank Record Type to catch any remaining. UCR matching: if UTD0951 appears, add the UCR to the Genius claim Broker Reference 2 field. Download failures: blank GGNLIRDLJB and GGNLIRDLST to reset a stuck download.", "Module 5: Configuration and Parameters. The most important data areas to know are UTTPRCA4 for the error limit, GGNLIRFTP for FTP mailbox details, GGNLIRDLJB and GGNLIRDLST for download state, and UTTPRCA7 for MULTINET libraries. Remember that GGNBURMSGF shows the default severity on screen, but UTMGREP is what validation actually uses.", "Knowledge Quiz. Ten questions covering the full Bureau pipeline. You need 70 percent to pass."];
+var FLOW1_TTS = []; var FLOW2_TTS = [];
+var FLOW_CALLOUT = {};
+var statusData = {};
+var scAnswers = {};
+var scExplanations = {};
+var QS = [{"topic": "Architecture", "q": "Bureau processing handles four types of messages. Which two supply Signings (premiums and claim payments) and which two supply Loss Advices (claim reserves)?", "opts": ["LIRMA and ELASS supply Signings; ILU and CLAMS supply Loss Advices", "LIRMA and ILU supply Signings; ELASS and CLAMS supply Loss Advices", "All four supply both Signings and Loss Advices", "ELASS and CLAMS supply Signings; LIRMA and ILU supply Loss Advices"], "a": 1, "exp": "LIRMA and ILU are the Signing bureaux \u2014 they supply premium and claim payment data. ELASS (LIRMA's Loss Advice system) and CLAMS (ILU's equivalent) supply Loss Advices \u2014 claim reserves and claim payment details. This is why GBCM programs handle closings from both LIRMA and ILU, while GBKM programs handle claims from both ELASS and CLAMS."}, {"topic": "Architecture", "q": "A user says no closings are appearing after a weekend. Before checking GBCM01, what is the most important first step?", "opts": ["Blank the GGNLIRDLJB and GGNLIRDLST data areas and resubmit", "Check WRKACTJOB to confirm the download jobs ran successfully and completed", "Run CLRPFM on ZBO1WKP in QTEMP", "Call GBCM11 manually to rebuild the OPNQRYF query"], "a": 1, "exp": "The OSS and Bureau guide both confirm: downloads must run before On-line Edit has any data. If download jobs failed or did not run, work files ZBO1WKP and ZBO2WKP will be empty. Always check download job completion first. If a download is stuck in submitted state then blanking GGNLIRDLJB and GGNLIRDLST is needed, but check status first."}, {"topic": "Pipeline", "q": "In the Genius Bureau pipeline, what is created at the 'Create Closings' step and which file holds the Bureau Closing header records?", "opts": ["Transaction Requests are created in file UTMGREP", "Bureau Closing records are created in ZBO1DL01 (closings header); a member is created in UTNMCPP for each day's signings batch", "Statistics and ledger records are created in the main Genius files", "Claim Master records are created in ZKFADL13"], "a": 1, "exp": "Create Closings takes downloaded signings from the buffer files and creates Bureau Closing records in ZBO1DL01 (the closings header file). A member is also created in UTNMCPP (Bureau Signings Capture File) for each day's batch. For claims, the equivalent is UTELCPP. Bureau cross-reference files translate Bureau codes to Genius values at this stage."}, {"topic": "GBCM00", "q": "What does GBCM00 do if GBCM01 ends with message RPG9001?", "opts": ["It retries the call to GBCM01 with the same parameters", "It rolls back all uncommitted changes, sends BUR0001 and calls GBUT21 to receive and print program messages", "It ends silently and clears the work files", "It calls GBUT25 to perform a bureau file cleardown"], "a": 1, "exp": "MONMSG RPG9001 in GBCM00 triggers a DO block: ROLLBACK (undo all uncommitted changes), SNDPGMMSG BUR0001 to GGNBURMSGF, then CALL GBUT21 which receives and prints the program messages. This gives a printed record of what caused the failure. After this block GBCM00 continues to ENDCMTCTL and cleanup regardless."}, {"topic": "GBCM01", "q": "A LIRMA Bureau Closings session has the 'Deleted Closings' flag set to Y. A closing with O1SSCD = blank and O1CLOT = C is not appearing. What is the most likely cause?", "opts": ["O1SSCD blank means deleted \u2014 it would be excluded", "The Claims (CMFQ) flag on the selection screen is set to N, so O1CLOT=C records are excluded by GBCM11", "The closing is locked by another user", "The Member Reference is blank"], "a": 1, "exp": "O1SSCD blank means the closing is open (not deleted). GBCM11 excludes records by adding O1CLOT != C to the OPNQRYF if CMFQ=N. Since O1CLOT=C (Claim type), setting Claims flag to N removes it from the list. Check the selection screen \u2014 Claims should be Y to include claim-type closings."}, {"topic": "Errors", "q": "A closing is showing error UTD0386 with severity 50. The current error limit is 30. What does this mean for processing?", "opts": ["The closing can still be processed as the severity (50) is above the limit (30) which means it is low priority", "The closing cannot be processed \u2014 severity 50 exceeds the limit of 30, so it is treated as an error", "This is just a warning \u2014 it will automatically clear when the closing is processed", "UTD0386 severity can be lowered to below 30 using the Parameter Maintenance option on the LIRMA menu"], "a": 1, "exp": "UTD0386 means the Policy referenced in the Member Reference does not exist in Genius. Severity 50 exceeds the configured limit of 30, so this is treated as an Error and blocks processing. The user must correct the Member Reference to a valid Genius policy. Note that UTD0386 has Change Allowed=N in the message file, meaning its severity cannot be user-adjusted."}, {"topic": "Errors", "q": "Error UTD0951 appears on an ELASS claim: 'Matched Claim B0509HJ3145030001 for Policy 123456/001 not found on Claim Master'. What must the support team do?", "opts": ["Delete the ELASS record and ask the broker to resubmit", "Go into Claims Maintenance, find the claim, and enter the UCR (B0509HJ3145030001) in the Claim Broker Reference 2 field, then revalidate the ELASS record", "Blank data areas GGNLIRDLJB and GGNLIRDLST and re-download the ELASS message", "Change the severity of UTD0951 below 30 so it can be processed past"], "a": 1, "exp": "UTD0951 means the UCR from the ELASS message cannot be matched to a Genius Claim. The fix is to put the UCR onto the claim: Claims Maintenance \u2192 amend the claim \u2192 enter UCR in Claim Broker Reference 2 (Loss Broker Ref 2 + Claim ASC Currency fields concatenated). Then revalidate the ELASS item. The Endurance Bureau Issues guide documents this exact procedure."}, {"topic": "ELASS", "q": "In what sequence must ELASS Record Types be processed within a single Transmission Date?", "opts": ["02, 01, 04, 03 \u2014 subsequent before first, settlement last", "01, 02, 03, 04 \u2014 numerically in order", "01, 03, 02, 04 \u2014 First Advice types before Subsequent Advice types, settlements within each group", "No sequence matters \u2014 all can be processed simultaneously"], "a": 2, "exp": "The Bureau ELASS User Process document specifies: 01 (First Advice), then 03 (First Advice and Settlement), then 02 (Subsequent Advice), then 04 (Subsequent Advice and Settlement). This ensures first advice records are processed before subsequent updates. After all four types, select blank Record Type to catch any remaining records."}, {"topic": "Parameters", "q": "The Bureau Closings Error Limit is configured as 30. A user wants to be able to process a closing with message UTD1102 (severity 50, signed line % tolerance). What is the correct approach?", "opts": ["Change UTTPRCA4 from 30 to 60 so all messages below 60 are warnings", "Review the policy participation setup or adjust the tolerance parameters GGNSLPCTOL / GGNPROZTOL rather than changing the error limit", "Delete the closing and resubmit the download", "Change the severity of UTD1102 to 20 so it becomes a warning below the limit"], "a": 1, "exp": "Raising the global error limit would allow all messages below 60 to be processed, which could mask real problems. The correct approach is to investigate why the signed line % differs from the policy \u2014 review participations or adjust the specific tolerance parameters GGNSLPCTOL (signed line %) and GGNPROZTOL (slip order %). The Bureau guide notes the error limit should only be changed after consulting the support team."}, {"topic": "Architecture", "q": "A new client is being onboarded to Bureau processing. Which of these is the correct estimated minimum timescale for a Bureau implementation according to Xchanging documentation?", "opts": ["1 week \u2014 just Intercept configuration and parameter setup", "1 month \u2014 download automation and UAT", "3 months minimum \u2014 covering Intercept config, parameter review, cross-reference codes, download automation, training and production cutover", "6 months \u2014 the Bureau system requires full regression testing of all Genius modules"], "a": 2, "exp": "The Requirements for bureau set-up document (Brian Birch, Xchanging) states a minimum 3 months elapsed timescale. Activities include: Intercept configuration, review of Genius parameter settings, review of validation message severities, review of bureau cross-reference codes, download automation, Bureau training, UAT consultancy and production cutover consultancy. Approximately 30 days consultancy on T&M basis."}];
+
+// ── SLIDE NAVIGATION ────────────────────────────────────────────
+var cur = 0, TOTAL = 9;
+
+function goSlide(n) {
+  // Reset flows on the slide being left
+  if (cur === 1) flowReset('flow1');
+  if (cur === 4) flowReset('flow2');
+  stopTTS();
+
+  document.getElementById('slide-'+cur).classList.remove('active');
+  document.getElementById('slide-'+n).classList.add('active');
+  document.querySelectorAll('button.nav-item').forEach(function(b) {
+    var s = parseInt(b.getAttribute('data-slide'),10);
+    b.classList.remove('active');
+    if (s===n) b.classList.add('active');
+    if (s<n)  b.classList.add('done');
+  });
+  cur = n;
+  document.getElementById('pf').style.width = ((n/(TOTAL-1))*100)+'%';
+  document.getElementById('hdrMode').textContent = n===TOTAL-1 ? 'Quiz' : 'Training';
+  var ca = document.getElementById('contentArea');
+  if (ca) ca.scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('button.nav-item').forEach(function(b) {
+    b.addEventListener('click', function() { goSlide(parseInt(b.getAttribute('data-slide'),10)); });
+  });
+  document.querySelectorAll('button[data-goto]').forEach(function(b) {
+    b.addEventListener('click', function() { goSlide(parseInt(b.getAttribute('data-goto'),10)); });
+  });
+  document.getElementById('quizLaunchBtn').addEventListener('click', function() { goSlide(6); });
+  document.getElementById('btnNext').addEventListener('click', nextQ);
+});
+
+// ── TTS ─────────────────────────────────────────────────────────
+// ALL TTS text is pure ASCII stored here. Nothing is read from innerHTML.
+var SLIDE_TTS = ["Welcome to Genius Bureau Processing. This is a comprehensive training module covering the full Bureau pipeline from London Market mailbox to Genius ledger. There are six content modules plus a quiz, covering how Bureau processing works, the closings on-line edit in depth, error diagnosis, ELASS rules, downloads and configuration.", "Module 1: The Full Pipeline. Click each step on the pipeline bar to explore it. Bureau messages travel through 8 steps: Download, Data Validation, Create Closings or Claims, Validation, On-line Edit, Transaction Requests, Statistics and Ledger posting, and Settlement. LIRMA and ILU supply Signings and use the GBCM Closings chain. ELASS and CLAMS supply Loss Advices and use the GBKM Claims chain.", "Module 2: Bureau Closings On-line Edit. GBCM00 is the CL entry point. It creates work files in QTEMP, starts commitment control, overrides ZBO1DL04 with shared update locking, then calls GBCM01. GBCM01 reads data areas on startup including UTTPRCA4 for the error limit. Use the five tabs to explore each aspect of the on-line edit process.", "Module 3: GBCM11 and Error Messages. GBCM11 builds the OPNQRYF query from 14 parameters. N flags exclude records, not include them. Use the Diagnostic Scenarios tab to practise diagnosing missing closings. Use the Error Explorer to look up any Bureau error message with its cause and resolution.", "Module 4: Bureau Claims, ELASS and Downloads. GBKM00 mirrors GBCM00 exactly with different file names. For ELASS: always process Record Types in order 01, 03, 02, 04 per Transmission Date, then blank Record Type to catch any remaining. UCR matching: if UTD0951 appears, add the UCR to the Genius claim Broker Reference 2 field. Download failures: blank GGNLIRDLJB and GGNLIRDLST to reset a stuck download.", "Module 5: Configuration and Parameters. The most important data areas to know are UTTPRCA4 for the error limit, GGNLIRFTP for FTP mailbox details, GGNLIRDLJB and GGNLIRDLST for download state, and UTTPRCA7 for MULTINET libraries. Remember that GGNBURMSGF shows the default severity on screen, but UTMGREP is what validation actually uses.", "Knowledge Quiz. Ten questions covering the full Bureau pipeline. You need 70 percent to pass."];
+// Callout text read after the final step of each flow (plain ASCII)
+var FLOW_CALLOUT = {
+  'flow1': 'The two-service rule: ApiService contains raw HTTP calls only. No business logic, no caching, no transformation. FacadeService orchestrates multiple ApiService calls, transforms data, and is the only service that components inject. This separation means that if the API version changes from v2 to v3, only the ApiService needs updating. The Facade and every component stay untouched.',
+  'flow2': 'Important security note: the JWT access token is stored in memory only, never in localStorage. localStorage is readable by any JavaScript on the page and is vulnerable to cross-site scripting attacks. Storing in memory means the token is lost on page refresh. This is intentional. The refresh token in an httpOnly cookie handles silent re-authentication automatically.'
+};
+var FLOW1_TTS = ["User action in the browser. A click, form submit, or route change triggers an Angular Component method. The component calls a FacadeService. It never calls HttpClient directly.", "FacadeService orchestrates. The Facade contains business logic. It may call multiple ApiServices, combine results, or transform data. Components only inject the Facade, never raw ApiServices.", "ApiService calls HttpClient. The ApiService makes a typed HTTP call, such as http.get of PolicyListResponse. The generic type parameter is mandatory. Never use the any type.", "HTTP Interceptor adds JWT. Before the request leaves Angular, the AuthInterceptor clones it and adds the Authorization Bearer token header automatically. No service needs to handle auth manually.", "Xuber .NET API processes the request. The request hits the Xuber backend, which validates the JWT, checks authorisation, executes business logic against the iSeries and Genius layer, and returns a typed JSON response.", "Response flows back to the template. The Observable emits the typed response. The FacadeService may transform it. The component receives the data and Angular change detection updates the template. The user sees the result."];
+var FLOW2_TTS = ["Login and receive tokens. POST to /api/v2/auth/login returns an access token lasting 15 minutes and a refresh token lasting 8 hours.", "Store in memory, not localStorage. AuthService holds the access token in memory only. Storing in localStorage is vulnerable to cross-site scripting attacks. The refresh token is in an httpOnly cookie set by the server.", "Interceptor auto-attaches to every request. The AuthInterceptor clones every outgoing request and adds the Authorization Bearer token header. Services do not need to know about this.", "401 triggers auto-refresh. If a request returns 401, the interceptor calls /auth/refresh, then retries the original request transparently. The user never sees a login prompt unless the refresh also fails."];
+
+var ttsSpeaking = false;
+
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.92; utt.pitch = 1; utt.lang = 'en-GB';
+  utt.onend = function() { ttsSpeaking = false; refreshTTSBtns(); };
+  utt.onerror = function() { ttsSpeaking = false; refreshTTSBtns(); };
+  ttsSpeaking = true;
+  refreshTTSBtns();
+  window.speechSynthesis.speak(utt);
+}
+
+function stopTTS() {
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  ttsSpeaking = false;
+  refreshTTSBtns();
+}
+
+function refreshTTSBtns() {
+  document.querySelectorAll('.tts-btn').forEach(function(b) {
+    var lbl = b.querySelector('.tts-lbl');
+    if (ttsSpeaking) {
+      b.classList.add('speaking');
+      if (lbl) lbl.textContent = 'Stop';
+    } else {
+      b.classList.remove('speaking');
+      if (lbl) lbl.textContent = 'Listen';
+    }
+  });
+}
+
+function tts(slideIdx) {
+  if (ttsSpeaking) { stopTTS(); return; }
+  speak(SLIDE_TTS[slideIdx] || 'No narration for this slide.');
+}
+
+// ── STEP-BY-STEP FLOWS ──────────────────────────────────────────
+var flowIdx = {};  // current step index per flow
+
+function flowStep(fid, btn) {
+  var ttsArr = fid === 'flow1' ? FLOW1_TTS : FLOW2_TTS;
+  var steps      = document.querySelectorAll('#'+fid+' .flow-step');
+  var connectors = document.querySelectorAll('#'+fid+' .flow-connector');
+
+  var idx = flowIdx[fid] === undefined ? 0 : flowIdx[fid];
+  if (idx >= steps.length) return;
+
+  // Dim previous active
+  if (idx > 0) {
+    steps[idx-1].style.outline = 'none';
+    steps[idx-1].style.boxShadow = 'none';
+  }
+
+  // Show this step
+  steps[idx].classList.add('visible');
+  steps[idx].style.outline = '2px solid #00968F';
+  steps[idx].style.boxShadow = '0 0 0 4px rgba(0,150,143,.12)';
+
+  // Show connector above this step
+  if (idx > 0 && connectors[idx-1]) connectors[idx-1].style.display = 'block';
+
+  // Scroll into view
+  setTimeout(function() {
+    steps[idx].scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 80);
+
+  // Speak from the pre-written ASCII array — NO innerHTML reading
+  speak(ttsArr[idx]);
+
+  // Update counter
+  var statusEl = document.getElementById(fid+'-status');
+  if (statusEl) statusEl.textContent = 'Step '+(idx+1)+' of '+steps.length;
+
+  // Advance
+  flowIdx[fid] = idx + 1;
+  var nextIdx = flowIdx[fid];
+
+  // Update button
+  var resetBtn = document.getElementById(fid+'-reset');
+  if (nextIdx >= steps.length) {
+    btn.textContent = 'All steps shown';
+    btn.disabled = true;
+    if (resetBtn) resetBtn.style.display = 'inline-flex';
+    if (statusEl) statusEl.textContent = 'Complete - press Reset to start again';
+    // Remove highlight after a beat
+    setTimeout(function() {
+      steps[steps.length-1].style.outline = 'none';
+      steps[steps.length-1].style.boxShadow = 'none';
+    }, 1800);
+    // Queue the callout to speak after the last step finishes
+    // We do this by overriding the current utterance's onend
+    if (window.speechSynthesis) {
+      var calloutText = FLOW_CALLOUT[fid];
+      if (calloutText) {
+        // Get the utterance that is currently queued/speaking and chain onto it
+        var calloutUtt = new SpeechSynthesisUtterance(calloutText);
+        calloutUtt.rate = 0.92; calloutUtt.pitch = 1; calloutUtt.lang = 'en-GB';
+        calloutUtt.onend  = function() { ttsSpeaking = false; refreshTTSBtns(); };
+        calloutUtt.onerror = function() { ttsSpeaking = false; refreshTTSBtns(); };
+        // Queue it — it will play after the current step utterance ends
+        window.speechSynthesis.speak(calloutUtt);
+      }
+    }
+  } else {
+    var nextStep = steps[nextIdx];
+    var nextH4 = nextStep ? nextStep.querySelector('h4') : null;
+    btn.textContent = 'Next: ' + (nextH4 ? nextH4.textContent : ('Step '+(nextIdx+1)));
+    btn.disabled = false;
+  }
+}
+
+function flowReset(fid) {
+  stopTTS();
+  var steps      = document.querySelectorAll('#'+fid+' .flow-step');
+  var connectors = document.querySelectorAll('#'+fid+' .flow-connector');
+  steps.forEach(function(s) {
+    s.classList.remove('visible');
+    s.style.outline = 'none';
+    s.style.boxShadow = 'none';
+  });
+  connectors.forEach(function(c) { c.style.display = 'none'; });
+  flowIdx[fid] = 0;
+
+  var btn = document.getElementById(fid+'-btn');
+  if (btn) {
+    btn.disabled = false;
+    var firstH4 = document.querySelector('#'+fid+' .flow-step h4');
+    btn.textContent = 'Show step 1' + (firstH4 ? ': '+firstH4.textContent : '');
+  }
+  var resetBtn = document.getElementById(fid+'-reset');
+  if (resetBtn) resetBtn.style.display = 'none';
+  var statusEl = document.getElementById(fid+'-status');
+  if (statusEl) statusEl.textContent = 'Press Play to reveal and hear each step';
+}
+
+// ── STATUS CODE EXPLORER ─────────────────────────────────────────
+var statusData = {
+  '2xx': { color:'#1a7a4a', name:'Success', body:'200 OK, 201 Created, 204 No Content. Process the response data. Map it to your TypeScript interface and pass it to the component via the Observable.', action:'Handle the happy path' },
+  '400': { color:'#ED9B33', name:'Bad Request - Validation Failed', body:'The request body failed validation. Parse the details array and map each error to the correct FormControl using setErrors(). Show inline field messages, never a generic banner.', action:'Parse details array, show field errors' },
+  '401': { color:'#5F249F', name:'Unauthorised - Token Expired', body:'The JWT access token is missing or expired. The HTTP Interceptor handles this automatically by calling /auth/refresh and retrying the request. Only redirect to login if refresh also returns 401.', action:'Interceptor handles automatically' },
+  '403': { color:'#00A3E1', name:'Forbidden - Insufficient Role', body:'The user is authenticated but lacks the required Xuber role. Show a toast: You do not have permission for this action. Do not retry - retrying will not help.', action:'Show toast, do not retry' },
+  '404': { color:'#00968F', name:'Not Found', body:'The resource does not exist. Use catchError to return of(null) as a safe fallback. The template shows a not-found message rather than crashing.', action:'catchError, return of(null)' },
+  '500': { color:'#c0392b', name:'Internal Server Error', body:'Something went wrong on the server. Copy the X-Correlation-ID response header into your Jira ticket. Show a generic something went wrong message. Never expose raw error text.', action:'Log correlation ID, show generic message' },
+};
+
+function showStatus(code) {
+  document.querySelectorAll('.status-card').forEach(function(c) { c.classList.remove('sel'); });
+  var card = document.querySelector('.s'+code);
+  if (card) card.classList.add('sel');
+  var d = statusData[code];
+  var el = document.getElementById('statusDetail');
+  el.style.borderLeft = '3px solid '+d.color;
+  el.innerHTML = '<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem">'
+    + '<span style="font-size:1.3rem;font-weight:800;color:'+d.color+'">'+code+'</span>'
+    + '<span style="font-size:.9rem;font-weight:700;color:#330072">'+d.name+'</span></div>'
+    + '<div style="font-size:.84rem;color:#5a5a7a;line-height:1.6;margin-bottom:.5rem">'+d.body+'</div>'
+    + '<span style="font-size:.75rem;font-weight:700;background:#f0ebfa;color:#5F249F;padding:.2rem .6rem;border-radius:6px">'+d.action+'</span>';
+  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ── SCENARIO CHALLENGES ───────────────────────────────────────────
+var scAnswers = { 1:'B', 2:'C', 3:'C' };
+var scExplanations = {
+  '1B': 'Correct. A 401 means authentication failed. The most common cause is the interceptor not being registered with multi:true in AppModule providers.',
+  '1A': 'Incorrect. A wrong URL returns a 404, not 401. The 401 specifically means authentication failed.',
+  '1C': 'Incorrect. A TypeScript model mismatch causes compile errors or runtime data issues, not a 401.',
+  '1D': 'Incorrect. A database outage returns a 500 server error, not 401.',
+  '2C': 'Correct. Without the generic type parameter, the response is typed as Object. This violates the no-explicit-any rule and must be fixed before merge.',
+  '2A': 'Incorrect. TypeScript does not infer the HTTP response type automatically.',
+  '2B': 'Incorrect. Code standards should not depend on the linter catching everything.',
+  '2D': 'Incorrect. Type safety issues compound. Fix it now.',
+  '3C': 'Correct. The API returning 200 means the data exists in the database. The SOLR search index is stale. New policies are created in Genius but have not been indexed. This is an RM and Genius team issue.',
+  '3A': 'Incorrect. A wrong Observable operator would cause intermittent or no results, not consistently stale results.',
+  '3B': 'Incorrect. An expired JWT causes 401, not 200 with stale data.',
+  '3D': 'Incorrect. A missing TypeScript field causes a compile error, not stale search results.',
+};
+
+function sc(num, letter, isCorrect) {
+  var opts = document.querySelectorAll('#sc'+num+'opts button');
+  var correct = scAnswers[num];
+  opts.forEach(function(b,i) {
+    b.disabled = true;
+    var l = ['A','B','C','D'][i];
+    if (l===correct) b.classList.add('correct');
+    if (l===letter && !isCorrect) b.classList.add('wrong');
+  });
+  var fb = document.getElementById('sc'+num+'fb');
+  var key = num+''+letter;
+  fb.className = 'sc-feedback show '+(isCorrect?'good':'bad');
+  fb.textContent = scExplanations[key] || (isCorrect ? 'Correct!' : 'Incorrect.');
+  var reset = document.getElementById('sc'+num+'reset');
+  if (reset) reset.className = 'sc-reset show';
+}
+
+function scReset(num) {
+  document.querySelectorAll('#sc'+num+'opts button').forEach(function(b) {
+    b.disabled=false; b.classList.remove('correct','wrong');
+  });
+  document.getElementById('sc'+num+'fb').className = 'sc-feedback';
+  document.getElementById('sc'+num+'reset').className = 'sc-reset';
+}
+
+// ── QUIZ ENGINE ──────────────────────────────────────────────────
+var QS = [{"topic": "Architecture", "q": "Bureau processing handles four types of messages. Which two supply Signings (premiums and claim payments) and which two supply Loss Advices (claim reserves)?", "opts": ["LIRMA and ELASS supply Signings; ILU and CLAMS supply Loss Advices", "LIRMA and ILU supply Signings; ELASS and CLAMS supply Loss Advices", "All four supply both Signings and Loss Advices", "ELASS and CLAMS supply Signings; LIRMA and ILU supply Loss Advices"], "a": 1, "exp": "LIRMA and ILU are the Signing bureaux \u2014 they supply premium and claim payment data. ELASS (LIRMA's Loss Advice system) and CLAMS (ILU's equivalent) supply Loss Advices \u2014 claim reserves and claim payment details. This is why GBCM programs handle closings from both LIRMA and ILU, while GBKM programs handle claims from both ELASS and CLAMS."}, {"topic": "Architecture", "q": "A user says no closings are appearing after a weekend. Before checking GBCM01, what is the most important first step?", "opts": ["Blank the GGNLIRDLJB and GGNLIRDLST data areas and resubmit", "Check WRKACTJOB to confirm the download jobs ran successfully and completed", "Run CLRPFM on ZBO1WKP in QTEMP", "Call GBCM11 manually to rebuild the OPNQRYF query"], "a": 1, "exp": "The OSS and Bureau guide both confirm: downloads must run before On-line Edit has any data. If download jobs failed or did not run, work files ZBO1WKP and ZBO2WKP will be empty. Always check download job completion first. If a download is stuck in submitted state then blanking GGNLIRDLJB and GGNLIRDLST is needed, but check status first."}, {"topic": "Pipeline", "q": "In the Genius Bureau pipeline, what is created at the 'Create Closings' step and which file holds the Bureau Closing header records?", "opts": ["Transaction Requests are created in file UTMGREP", "Bureau Closing records are created in ZBO1DL01 (closings header); a member is created in UTNMCPP for each day's signings batch", "Statistics and ledger records are created in the main Genius files", "Claim Master records are created in ZKFADL13"], "a": 1, "exp": "Create Closings takes downloaded signings from the buffer files and creates Bureau Closing records in ZBO1DL01 (the closings header file). A member is also created in UTNMCPP (Bureau Signings Capture File) for each day's batch. For claims, the equivalent is UTELCPP. Bureau cross-reference files translate Bureau codes to Genius values at this stage."}, {"topic": "GBCM00", "q": "What does GBCM00 do if GBCM01 ends with message RPG9001?", "opts": ["It retries the call to GBCM01 with the same parameters", "It rolls back all uncommitted changes, sends BUR0001 and calls GBUT21 to receive and print program messages", "It ends silently and clears the work files", "It calls GBUT25 to perform a bureau file cleardown"], "a": 1, "exp": "MONMSG RPG9001 in GBCM00 triggers a DO block: ROLLBACK (undo all uncommitted changes), SNDPGMMSG BUR0001 to GGNBURMSGF, then CALL GBUT21 which receives and prints the program messages. This gives a printed record of what caused the failure. After this block GBCM00 continues to ENDCMTCTL and cleanup regardless."}, {"topic": "GBCM01", "q": "A LIRMA Bureau Closings session has the 'Deleted Closings' flag set to Y. A closing with O1SSCD = blank and O1CLOT = C is not appearing. What is the most likely cause?", "opts": ["O1SSCD blank means deleted \u2014 it would be excluded", "The Claims (CMFQ) flag on the selection screen is set to N, so O1CLOT=C records are excluded by GBCM11", "The closing is locked by another user", "The Member Reference is blank"], "a": 1, "exp": "O1SSCD blank means the closing is open (not deleted). GBCM11 excludes records by adding O1CLOT != C to the OPNQRYF if CMFQ=N. Since O1CLOT=C (Claim type), setting Claims flag to N removes it from the list. Check the selection screen \u2014 Claims should be Y to include claim-type closings."}, {"topic": "Errors", "q": "A closing is showing error UTD0386 with severity 50. The current error limit is 30. What does this mean for processing?", "opts": ["The closing can still be processed as the severity (50) is above the limit (30) which means it is low priority", "The closing cannot be processed \u2014 severity 50 exceeds the limit of 30, so it is treated as an error", "This is just a warning \u2014 it will automatically clear when the closing is processed", "UTD0386 severity can be lowered to below 30 using the Parameter Maintenance option on the LIRMA menu"], "a": 1, "exp": "UTD0386 means the Policy referenced in the Member Reference does not exist in Genius. Severity 50 exceeds the configured limit of 30, so this is treated as an Error and blocks processing. The user must correct the Member Reference to a valid Genius policy. Note that UTD0386 has Change Allowed=N in the message file, meaning its severity cannot be user-adjusted."}, {"topic": "Errors", "q": "Error UTD0951 appears on an ELASS claim: 'Matched Claim B0509HJ3145030001 for Policy 123456/001 not found on Claim Master'. What must the support team do?", "opts": ["Delete the ELASS record and ask the broker to resubmit", "Go into Claims Maintenance, find the claim, and enter the UCR (B0509HJ3145030001) in the Claim Broker Reference 2 field, then revalidate the ELASS record", "Blank data areas GGNLIRDLJB and GGNLIRDLST and re-download the ELASS message", "Change the severity of UTD0951 below 30 so it can be processed past"], "a": 1, "exp": "UTD0951 means the UCR from the ELASS message cannot be matched to a Genius Claim. The fix is to put the UCR onto the claim: Claims Maintenance \u2192 amend the claim \u2192 enter UCR in Claim Broker Reference 2 (Loss Broker Ref 2 + Claim ASC Currency fields concatenated). Then revalidate the ELASS item. The Endurance Bureau Issues guide documents this exact procedure."}, {"topic": "ELASS", "q": "In what sequence must ELASS Record Types be processed within a single Transmission Date?", "opts": ["02, 01, 04, 03 \u2014 subsequent before first, settlement last", "01, 02, 03, 04 \u2014 numerically in order", "01, 03, 02, 04 \u2014 First Advice types before Subsequent Advice types, settlements within each group", "No sequence matters \u2014 all can be processed simultaneously"], "a": 2, "exp": "The Bureau ELASS User Process document specifies: 01 (First Advice), then 03 (First Advice and Settlement), then 02 (Subsequent Advice), then 04 (Subsequent Advice and Settlement). This ensures first advice records are processed before subsequent updates. After all four types, select blank Record Type to catch any remaining records."}, {"topic": "Parameters", "q": "The Bureau Closings Error Limit is configured as 30. A user wants to be able to process a closing with message UTD1102 (severity 50, signed line % tolerance). What is the correct approach?", "opts": ["Change UTTPRCA4 from 30 to 60 so all messages below 60 are warnings", "Review the policy participation setup or adjust the tolerance parameters GGNSLPCTOL / GGNPROZTOL rather than changing the error limit", "Delete the closing and resubmit the download", "Change the severity of UTD1102 to 20 so it becomes a warning below the limit"], "a": 1, "exp": "Raising the global error limit would allow all messages below 60 to be processed, which could mask real problems. The correct approach is to investigate why the signed line % differs from the policy \u2014 review participations or adjust the specific tolerance parameters GGNSLPCTOL (signed line %) and GGNPROZTOL (slip order %). The Bureau guide notes the error limit should only be changed after consulting the support team."}, {"topic": "Architecture", "q": "A new client is being onboarded to Bureau processing. Which of these is the correct estimated minimum timescale for a Bureau implementation according to Xchanging documentation?", "opts": ["1 week \u2014 just Intercept configuration and parameter setup", "1 month \u2014 download automation and UAT", "3 months minimum \u2014 covering Intercept config, parameter review, cross-reference codes, download automation, training and production cutover", "6 months \u2014 the Bureau system requires full regression testing of all Genius modules"], "a": 2, "exp": "The Requirements for bureau set-up document (Brian Birch, Xchanging) states a minimum 3 months elapsed timescale. Activities include: Intercept configuration, review of Genius parameter settings, review of validation message severities, review of bureau cross-reference codes, download automation, Bureau training, UAT consultancy and production cutover consultancy. Approximately 30 days consultancy on T&M basis."}];
+var qSet=[],qI=0,ans={},done=false,retry=false;
+
+function startQuiz(ri) {
+  retry=!!ri; qSet=[]; done=false;
+  var src=ri||QS.map(function(_,i){return i;});
+  for(var i=0;i<src.length;i++){var q=Object.assign({},QS[src[i]]);q.orig=src[i];qSet.push(q);}
+  qI=0;
+  document.getElementById('qIntro').style.display='none';
+  document.getElementById('qScreen').style.display='block';
+  document.getElementById('qResults').style.display='none';
+  renderQ();
+}
+
+function renderQ() {
+  var q=qSet[qI],L=['A','B','C','D'];
+  document.getElementById('qCnt').textContent='Question '+(qI+1)+' of '+qSet.length+(retry?' (Retry)':'');
+  document.getElementById('qTop').textContent=q.topic;
+  document.getElementById('qTxt').textContent=q.q;
+  var c=document.getElementById('optsC'); c.innerHTML='';
+  for(var i=0;i<q.opts.length;i++){(function(idx){
+    var b=document.createElement('button'); b.className='opt';
+    b.innerHTML='<span class="opt-l">'+L[idx]+'</span><span>'+q.opts[idx]+'</span>';
+    b.addEventListener('click',function(){pick(idx);});c.appendChild(b);
+  })(i);}
+  document.getElementById('fbBox').className='fb';
+  document.getElementById('btnNext').style.display='none';
+  renderDots();
+}
+
+function pick(ch) {
+  if(done)return; done=true;
+  var q=qSet[qI],ok=ch===q.a,L=['A','B','C','D'];
+  ans[q.orig]={chosen:ch,correct:ok};
+  document.querySelectorAll('button.opt').forEach(function(b,i){
+    b.disabled=true;
+    if(i===q.a)b.classList.add('correct');
+    if(i===ch&&!ok)b.classList.add('wrong');
+  });
+  var fb=document.getElementById('fbBox'),ic=document.getElementById('fbIcon'),tx=document.getElementById('fbTxt');
+  if(ok){fb.className='fb cfb show';ic.textContent='checkmark';tx.textContent='Correct! '+q.exp;}
+  else{fb.className='fb wfb show';ic.textContent='cross';tx.innerHTML='<strong>Incorrect.</strong> Right answer: <strong>'+L[q.a]+': '+q.opts[q.a]+'</strong>. '+q.exp;}
+  renderDots();
+  var btn=document.getElementById('btnNext');
+  btn.style.display='inline-flex';
+  btn.textContent=qI<qSet.length-1?'Next':'See Results';
+}
+
+function nextQ(){qI++;if(qI>=qSet.length)showResults();else{done=false;renderQ();}}
+
+function renderDots() {
+  var row=document.getElementById('dotRow');row.innerHTML='';
+  for(var i=0;i<qSet.length;i++){
+    var d=document.createElement('div');d.className='dot';
+    var a=ans[qSet[i].orig];
+    if(i===qI)d.classList.add('cur');
+    else if(a&&a.correct)d.classList.add('c');
+    else if(a&&!a.correct)d.classList.add('w');
+    row.appendChild(d);
+  }
+}
+
+function cumCorrect(){var n=0,k=Object.keys(ans);for(var i=0;i<k.length;i++)if(ans[k[i]].correct)n++;return n;}
+
+function showResults() {
+  var tot=QS.length,cor=cumCorrect(),pct=Math.round((cor/tot)*100),pass=pct>=70;
+  document.getElementById('qScreen').style.display='none';
+  document.getElementById('qResults').style.display='block';
+  var ring=document.getElementById('ring');ring.className='ring '+(pass?'pass':'fail');
+  document.getElementById('rPct').textContent=pct+'%';
+  var st=document.getElementById('rStatus');
+  st.textContent=pass?'Pass':'Not yet';
+  st.className='res-status '+(pass?'pass':'fail');
+  document.getElementById('rMsg').textContent=pass
+    ?'You scored '+cor+' out of '+tot+'. Module complete. Log your score in the Skills Matrix.'
+    :'You scored '+cor+' out of '+tot+'. You need '+Math.ceil(tot*0.7)+' to pass. Review below and retry.';
+  ['bE','bP','bD','bF'].forEach(function(id){document.getElementById(id).classList.remove('on');});
+  if(pct>=90)document.getElementById('bE').classList.add('on');
+  else if(pct>=80)document.getElementById('bP').classList.add('on');
+  else if(pct>=70)document.getElementById('bD').classList.add('on');
+  else document.getElementById('bF').classList.add('on');
+  document.getElementById('stC').textContent=cor;
+  document.getElementById('stW').textContent=tot-cor;
+  buildReview();
+  var act=document.getElementById('resAct');act.innerHTML='';
+  if(!pass){
+    var wr=[],ak=Object.keys(ans);
+    for(var k=0;k<ak.length;k++)if(!ans[ak[k]].correct)wr.push(parseInt(ak[k],10));
+    var rb=document.createElement('button');rb.className='btn btn-p';
+    rb.textContent='Retry '+wr.length+' incorrect';
+    (function(w){rb.addEventListener('click',function(){startQuiz(w);})})(wr);
+    act.appendChild(rb);
+  }
+  var rs=document.createElement('button');rs.className=pass?'btn btn-p':'btn btn-s';
+  rs.textContent='Restart';
+  rs.addEventListener('click',function(){ans={};document.getElementById('qResults').style.display='none';document.getElementById('qIntro').style.display='block';});
+  act.appendChild(rs);
+  if(pass){
+    var bk=document.createElement('button');bk.className='btn btn-s';
+    bk.textContent='Back to training';
+    bk.addEventListener('click',function(){goSlide(0);});
+    act.appendChild(bk);
+  }
+}
+
+function buildReview() {
+  var list=document.getElementById('revList');list.innerHTML='';
+  for(var i=0;i<QS.length;i++){
+    var a=ans[i];if(!a)continue;
+    var sc2=a.correct?'c':'w',L=['A','B','C','D'];
+    var item=document.createElement('div');item.className='ri';
+    var wh=!a.correct?'<div>Your answer: <span class="ya">'+L[a.chosen]+': '+QS[i].opts[a.chosen]+'</span></div>':'';
+    item.innerHTML='<div class="rq"><div class="rdot '+sc2+'"></div><div class="rqt">Q'+(i+1)+': '+QS[i].q+'</div><span class="rbadge '+sc2+'">'+(a.correct?'Correct':'Wrong')+'</span><span class="rchev">v</span></div>'
+      +'<div class="rdetail">'+wh+'<div>Correct: <span class="ra">'+L[QS[i].a]+': '+QS[i].opts[QS[i].a]+'</span></div><div class="expl">'+QS[i].exp+'</div></div>';
+    item.querySelector('.rq').addEventListener('click',function(){this.closest('.ri').classList.toggle('open');});
+    list.appendChild(item);
+  }
+}
+
+
+// Pipeline visualiser
+var pvData = [
+  {t:"Step 1 — Download",b:"Intercept (library ST400OBJ54) connects to the Insure FTP mailbox (credentials in GGNLIRFTP), retrieves raw EDI data and maps it to iSeries buffer files. LIRMA messages are compressed flat files (DSIGNS). ELASS messages use EDIFACT. Programs: GBDI03 (ILU) · GBDE03 (ELASS) · GBDL02/GBDL03 (LIRMA). If stuck: blank GGNLIRDLJB and GGNLIRDLST to reset."},
+  {t:"Step 2 — Data Validation",b:"Checks raw data is structurally valid — numeric fields contain numbers, transmissions are addressed to the correct user, control totals match. Produces control reports. Does not validate against Genius policies — that comes later."},
+  {t:"Step 3 — Create Closings/Claims",b:"Takes validated buffer data and creates Bureau Closing records in ZBO1DL01 (closings) or Bureau Claims records in UTKBREL4 (claims). A file member is created in UTNMCPP (signings) or UTELCPP (claims) per day's batch. Bureau cross-reference files translate Bureau codes to Genius values."},
+  {t:"Step 4 — Closings/Claims Validation",b:"Validates closing/claim details against the Genius policy and claims database. Checks: policy exists (UTD0386), endorsement exists (UTD0387), signed line % reasonable (UTD1102), accounting terms found (UTD1130). Produces a batch error report. Also runs automatically during On-line Edit."},
+  {t:"Step 5 — On-line Edit",b:"The main user touchpoint — GBCM01 (closings) or GBKM01 (claims). User selects criteria on the selection screen, views the filtered list, and processes/amends/deletes/views individual records. Member Reference links the closing to a Genius policy. Accounting From Date determines the endorsement."},
+  {t:"Step 6 — Transaction Requests",b:"Once a closing or claim is error-free and processed, Transaction Request records are created. These are the instructions for the Transaction Processor about what to post and where."},
+  {t:"Step 7 — Statistics and Ledger",b:"The Transaction Processor processes the Transaction Requests. For premiums and claim payments: creates Statistics records and Ledger postings to revenue and daily accounts. For loss advices: creates Claim Master records and Claim Statistics."},
+  {t:"Step 8 — Settlement",b:"Cash settlement and allocation remain manual in Genius — they are not handled automatically by the Bureau pipeline. LIRMA Settlement Messages (WSETT) and ILU Settlement Messages (ILUCSB) are supported in the message formats but not processed automatically."}
+];
+function pvSelect(n) {
+  document.querySelectorAll('.pv-step').forEach(function(s,i){s.classList.toggle('active',i===n);});
+  var d = pvData[n];
+  document.getElementById('pvTitle').textContent = d.t;
+  document.getElementById('pvBody').innerHTML = d.b;
+}
+
+// Error data
+var errData = {
+  'UTD0386':{h:'UTD0386 — Policy does not exist',sev:'Severity 50 · Change Allowed: N · Area: POLICY',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'The Member Reference on the closing cannot be matched to any policy in the Genius database.',fix:'Correct the Member Reference on the edit screen to a valid Genius policy reference. Verify via Genius Underwriting → Policy → Enquiry. Ensure the Accounting From Date falls within a valid endorsement period. Common causes: policy set up under wrong reference; bureau sending an outdated reference; endorsement not yet created.'},
+  'UTD0387':{h:'UTD0387 — Policy/endorsement does not exist',sev:'Severity 50 · Change Allowed: N · Area: POLICY',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'The policy exists but the endorsement number derived from the Accounting From Date does not. This means the policy has been found but the date falls outside all existing endorsement periods.',fix:'Check the Accounting From Date on the closing. It must fall within an active endorsement period on the Genius policy. Either correct the date, or ensure the correct endorsement has been created in Genius for that date range.'},
+  'UTD0951':{h:'UTD0951 — Matched Claim not found on Claim Master',sev:'Severity 40 · Change Allowed: Y · Area: CLAIMS',sev_color:'#f39c12',sev_bg:'#fef9e7',body:'The UCR (Unique Claim Reference) from the ELASS message cannot be matched to a Genius claim. This is the most common ELASS error and typically generates cascading secondary errors.',fix:'1. Note the UCR from the error message. 2. Find the correct Genius claim (via KT enquiry on the policy). 3. In Claims Maintenance, amend the claim and enter the UCR in Claim Broker Reference 2 (Loss Broker Ref 2 + Claim ASC Currency). 4. Revalidate the ELASS record. Alternatively for a new claim, use F22=New Claim from the ELASS edit screen — this auto-stores the UCR.'},
+  'UTD1010':{h:'UTD1010 — Policy Number could not be identified',sev:'Severity 50 · Change Allowed: N',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'Genius could not derive a policy number from the Member Reference using any of the configured member reference conversion rules.',fix:'Check the Member Reference field. It must match one of the configured translation formats in the Bureau cross-reference files. This may be a cross-reference code configuration issue rather than a wrong reference. Check with GBUT42 (member reference conversion utility).'},
+  'UTD1102':{h:'UTD1102 — Signed line differs from written line by more than tolerance',sev:'Severity 50 · Change Allowed: Y · Area: POLICY',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'The Signed Order % from the Bureau differs from the Policy written line by more than the configured tolerance. Tolerance set by parameters GGNSLPCTOL and GGNPROZTOL.',fix:'Review the participation setup on the policy — the written % must be set correctly. If the signed line % from the Bureau is legitimately different, adjust the tolerance parameters GGNSLPCTOL/GGNPROZTOL after discussion. Do not routinely raise the error limit to suppress this message.'},
+  'UTD1130':{h:'UTD1130 — Accounting terms not found for policy',sev:'Severity 40 · Change Allowed: N · Area: POLICY',sev_color:'#f39c12',sev_bg:'#fef9e7',body:'The accounting terms (statistics posting rules, ledger routing) cannot be found for the policy. This is usually a product definition issue.',fix:'Check the Processing Type in Policy Terms — it must be set to LIRMA or ILU as appropriate. Check that the Section structure has the required coverage and statistics configuration. This may require product definition review with the client.'},
+  'UTD1310':{h:'UTD1310 — Error in signing details. Closing cannot be processed',sev:'Severity 99 · Change Allowed: N',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'A critical error in the Bureau Closings signing details. Cannot be overridden. This covers a range of fundamental issues with the signing data.',fix:'Display the Bureau Signings Details option from the edit screen to see the original Bureau data. Compare with the Genius policy participations and terms. Likely causes: participation not set up to accept signed values; signing % data missing or zero; policy structure incompatible with the closing type.'},
+  'UTD1410':{h:'UTD1410 — Closing Signed Line % is zero. Cannot be processed',sev:'Severity 99 · Change Allowed: N · Area: POLICY',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'The signed line percentage is zero, meaning there is nothing to post. This is always a policy or participation setup issue.',fix:'Check the policy participations — they must be configured to accept both written and signed values, and the signed value must be non-zero. If the Bureau is genuinely sending a zero signed line, contact the bureau or client to confirm the message is correct.'},
+  'UTD0339':{h:'UTD0339 — Bureau claim is matched to a deleted claim',sev:'Severity 50 · Change Allowed: Y',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'The UCR on this ELASS record has been linked to a Genius claim that has since been deleted or marked inactive.',fix:'Check the claim status in Claim Master. If the claim was incorrectly deleted, reinstate it. If genuinely deleted, a new claim may need to be created and the UCR updated to point to it.'},
+  'BUR0001':{h:'BUR0001 — Errors occurred during Bureau Closings On-line Edit',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'This is the message sent by GBCM00 when GBCM01 ends abnormally (MONMSG RPG9001 handler). It appears in the joblog, not on the user screen.',fix:'BUR0001 in the joblog means GBCM01 itself failed, not a data validation error. Check the GBUT21 spooled output — it will contain the program messages that were received at the time of the failure. The rollback will have undone any uncommitted changes.'},
+  'BUR1001':{h:'BUR1001 — Errors occurred during Bureau Claims On-line Edit',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'The Claims chain equivalent of BUR0001. Sent by GBKM00 when GBKM01 ends abnormally.',fix:'Same approach as BUR0001: check GBUT21 spooled output for the program messages. The rollback will have undone any uncommitted changes.'},
+  'UTD0641':{h:'UTD0641 — No Closings found that match selection criteria',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'The OPNQRYF built by GBCM11 returned zero rows. No records in ZBO1DL04 match the current selection criteria.',fix:'Check the selection criteria on Screen 1. Most likely causes: Transaction type flag set to N excludes all records; Deleted=N excludes a closing with O1SSCD=D; bureau code mismatch (wrong bureau type selected for the closing). Run SELECT O1CLOT, O1SSCD, O1SYC2 FROM ZBO1DL04 to check field values.'},
+  'UTD0643':{h:'UTD0643 — Review and Non-review flags cannot both be N',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'Both the Review Closings and Non-review Closings flags have been set to N on the selection screen. At least one must be Y.',fix:'Set at least one of Review Closings or Non-review Closings to Y. If you want to see all closings regardless of review status, set both to Y.'},
+  'UTD0646':{h:'UTD0646 — Mixed options found',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'The user entered different option numbers against multiple closings on the list screen before pressing Enter. All selected closings must have the same option.',fix:'Clear all options on the list screen and re-enter using only one option number. For example, do not mix 1=Process and 4=Delete in the same submission.'},
+  'UTD0650':{h:'UTD0650 — Member already locked',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'The file member (GBUT05 locking) for this closing could not be obtained — it is already locked by another user or a previous session that ended abnormally.',fix:'Check WRKACTJOB to see if another user has the same Bureau session active. If a previous session crashed without cleanup, run RCLRSC from a command line to reclaim the lock.'},
+  'UTD0651':{h:'UTD0651 — Closing already locked',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'The individual closing header record lock (GBCU09) could not be obtained. Another user or session has this specific closing locked.',fix:'Wait for the other user to finish, or check WRKACTJOB and WRKOBJLCK to see who holds the lock. If it is a stale lock from a crashed session, RCLRSC may help.'},
+  'UTD0734':{h:'UTD0734 — Closing already processed',sev:'Severity 0 · Change Allowed: Y',sev_color:'#3498db',sev_bg:'#eaf4fb',body:'The closing has already been processed (O1SSCD=U). This appears during DAVAL2 validation when a user tries to process or amend a closing that was processed by another session since the list was built.',fix:'Refresh the list (F5 or re-enter criteria). The closing will now show as * PROCESSED * and only option 5=View will be available.'},
+  'UTD0402':{h:'UTD0402 — Errors occurred during bureau on-line edit',sev:'Severity 50 · Change Allowed: N',sev_color:'#c0392b',sev_bg:'#fdf0ee',body:'A general error occurred during the On-line Edit process. This covers errors within GBCM02 itself rather than data validation errors.',fix:'Check the joblog for the specific program that generated the error. Look for messages sent to the program message queue (via GBUT03) immediately before this message appears.'}
+};
+
+function showErr(id) {
+  document.querySelectorAll('.err-chip').forEach(function(chip){ chip.classList.remove('active'); });
+  var chips = document.querySelectorAll('.err-chip');
+  chips.forEach(function(chip) {
+    var oc = chip.getAttribute('onclick') || '';
+    if (oc.indexOf(id) >= 0) chip.classList.add('active');
+  });
+  var d = errData[id];
+  if (!d) return;
+  document.getElementById('errDetail').innerHTML =
+    '<h3>' + d.h + '</h3>' +
+    '<span class="ed-sev" style="background:' + d.sev_bg + ';color:' + d.sev_color + '">' + d.sev + '</span>' +
+    '<p>' + d.body + '</p>' +
+    '<div class="ed-fix"><strong>&#9989; Fix:</strong> ' + d.fix + '</div>';
+}
+
+// Accordion toggle
+function toggleAcc(btn) {
+  var body = btn.nextElementSibling;
+  var open = btn.classList.contains('open');
+  btn.classList.toggle('open', !open);
+  body.style.display = open ? 'none' : 'block';
+}
+
+// Proc step toggle
+function toggleProc(step) {
+  var wasOpen = step.classList.contains('open');
+  document.querySelectorAll('.proc-step').forEach(function(s){s.classList.remove('open');});
+  if (!wasOpen) step.classList.add('open');
+}
+
+// Tab switching
+function showTab(id, btn) {
+  var parent = btn.closest('.tab-panel, .body, .slide');
+  if (!parent) parent = document.body;
+  parent.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  parent.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Scenario data
+var scAnswers = {1:'C',2:'B',3:'C'};
+var scExplanations = {
+  '1A':'Incorrect. A running download job does not lock ZBO1DL04 in a way that prevents GBCM11 from querying it. The download and On-line Edit can run in parallel.',
+  '1B':'Incorrect. GBCM11 syntax errors would cause a program failure (RPG9001/BUR0001 in the joblog), not simply an empty list.',
+  '1C':'Correct. GBCM11 filters on O1SYC2 (bureau code), O1CLOT (transaction type), O1SSCD (deleted flag) and O1VUFQ (review flag). If any of these do not match the selection screen settings, the closing is excluded. Run SELECT O1BORF, O1CLOT, O1SSCD, O1VUFQ, O1SYC2 FROM ZBO1DL04 WHERE O1BORF=\'AB123457\' to check.',
+  '1D':'Incorrect. CLRPFM on ZBO1DL04 would destroy all closing data, which is far worse. Never run CLRPFM on production data files.',
+  '2A':'Incorrect. The CSD array is compiled into GBCM01 source code and cannot be modified at runtime. It would take a program change and recompile to affect this.',
+  '2B':'Correct. The most common cause is F9=Process List being run by another user or an automated job, or another user selecting option 1=Process on the same closing. The GBCM1A printer file (audit report) records exactly what was processed, when and by which program. Check the spooled output files.',
+  '2C':'Incorrect. ZBO1DL04 and ZBO1DL01 are separate logical and physical views of the same underlying data. GBCM01 updates ZBO1DL01 which is reflected via ZBO1DL04.',
+  '2D':'Incorrect. Option 7=Reinstate sets O1SSCD back to blank (open), not to U (processed).',
+  '3A':'Incorrect. Product code validation is case-insensitive and the input is uppercase-forced on the selection screen.',
+  '3B':'Incorrect. Product code filtering works identically whether accessed via F4=Closings List or F9=Process List. Both call GBCM11 via DDOPNQ subroutine.',
+  '3C':'Correct. When a product code is entered, GBCM11 builds a JOIN between ZBO1DL04 and ZUMADL10 on field MAPORF, filtering where MAMAPC equals the entered code. If the closing\'s O1MBRF value does not have a corresponding ZUMADL10 record with that product code, the closing is excluded from the JOIN result.',
+  '3D':'Incorrect. O1CLOT determines transaction type (P/C/T/F). Product code filtering applies across all closing types regardless of O1CLOT value.'
+};
+
+</script>
+</body>
+</html>

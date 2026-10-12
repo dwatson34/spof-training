@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC | DR Testing and Certificate Changes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root{
+  /* Official DXC Brand Colours - Brand Guidelines June 2021 */
+  --dxc-purple:    #5F249F;  /* DXC Bright Purple - Pantone 267C - PRIMARY */
+  --dxc-dark-pur:  #330072;  /* DXC Dark Purple - Pantone 2685C */
+  --dxc-teal:      #00968F;  /* DXC Bright Teal - Pantone 7716C */
+  --dxc-blue:      #00A3E1;  /* DXC Blue - Pantone 2191C */
+  --dxc-dark-teal: #006975;  /* DXC Dark Teal - Pantone 2238C */
+  --dxc-green:     #6CC24A;  /* DXC Green - Pantone 360C */
+  --dxc-orange:    #ED9B33;  /* DXC Orange - Pantone 2011C */
+  --dxc-gold:      #FFCD00;  /* DXC Gold - Pantone 116C */
+  --dxc-lt-gray:   #D9D9D6;  /* DXC Light Gray - Pantone Cool Gray 1C */
+  --dxc-mid-gray:  #969696;  /* DXC Medium Gray - Pantone Cool Gray 6C */
+  --dxc-dk-gray:   #63666A;  /* DXC Dark Gray - Pantone Cool Gray 10C */
+  --black:         #000000;
+  --white:         #FFFFFF;
+
+  /* Semantic aliases */
+  --dp:   var(--dxc-dark-pur);
+  --dm:   var(--dxc-purple);
+  --db:   #7B3BBC;            /* Lighter purple for hover states */
+  --dd:   #1a0a2e;            /* Very dark purple for gradients */
+  --teal: var(--dxc-teal);
+  --green: #1a7a4a;           /* Accessible dark green for pass states */
+  --red:  #c0392b;            /* Accessible red for fail/error states */
+  --white: #FFFFFF;
+  --off:  #F7F5FB;            /* Near-white with purple tint */
+  --text: #1A1A1A;
+  --muted: var(--dxc-dk-gray);
+  --border: #E0D9EE;
+  --code-bg: #1E1E2E;
+  --r: 10px;
+
+  /* Syntax highlighting */
+  --skw:  #569CD6;
+  --sstr: #CE9178;
+  --sfn:  #DCDCAA;
+  --styp: #4EC9B0;
+  --svar: #9CDCFE;
+  --scmt: #6A9955;
+  --snum: #B5CEA8;
+  --sbase:#D4D4D4;
+}
+
+/* ── RESET ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Open Sans',Arial,sans-serif;
+  background:var(--off);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+.hdr{
+  background:var(--dp);
+  padding:0 1.5rem;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:200;
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--white);
+  font-family:'Open Sans',Arial,sans-serif;
+  letter-spacing:-.02em;
+}
+.logo-tech{
+  font-size:.62rem;
+  color:#c5b8e8;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-weight:400;
+}
+.hdr-r{display:flex;align-items:center;gap:1rem}
+.hdr-title{font-size:.75rem;color:#c5b8e8;font-weight:600}
+.hdr-mode{
+  font-size:.7rem;
+  background:var(--teal);
+  color:var(--white);
+  padding:.2rem .6rem;
+  border-radius:12px;
+  font-weight:700;
+}
+
+/* ── PROGRESS ────────────────────────────────────────────── */
+.prog-track{height:4px;background:var(--border)}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--teal),var(--dm));
+  transition:width .4s ease;
+  width:0%;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.app{display:flex;flex:1;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{
+  width:240px;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  padding:1rem 0;
+  flex-shrink:0;
+  overflow-y:auto;
+  position:sticky;
+  top:52px;
+  height:calc(100vh - 52px);
+}
+.nav-section{
+  padding:.4rem 1rem .2rem;
+  font-size:.62rem;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+button.nav-item{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  color:var(--muted);
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  width:100%;
+  background:none;
+  border-top:none;
+  border-right:none;
+  border-bottom:none;
+  text-align:left;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{
+  background:#f0ebfa;
+  color:var(--dm);
+  border-left-color:var(--dm);
+  font-weight:700;
+}
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+.nav-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--border);
+  flex-shrink:0;
+  transition:background .3s;
+}
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border)}
+.quiz-launch-btn{
+  width:100%;
+  background:var(--dm);
+  color:var(--white);
+  border:none;
+  padding:.7rem 1rem;
+  border-radius:7px;
+  font-size:.82rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.quiz-launch-btn:hover{background:var(--db)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto}
+.slide{display:none}
+.slide.active{display:block;animation:fs .3s ease}
+@keyframes fs{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ────────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(135deg,var(--dd) 0%,var(--dp) 55%,var(--dm) 100%);
+  padding:3rem 2.5rem 2.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  bottom:-60px;right:-60px;
+  width:280px;height:280px;
+  border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+/* DXC tab box - brand element */
+.badge{
+  display:inline-block;
+  background:var(--teal);
+  color:var(--white);
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:.28rem .75rem;
+  border-radius:0 6px 0 0; /* DXC tab box: rounded top-right only */
+  margin-bottom:1rem;
+}
+.badge.red{background:var(--red)}
+.badge.quiz{background:var(--dm)}
+.badge.gold{background:var(--dxc-gold);color:var(--text)}
+.hero h1{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--white);
+  line-height:1.2;
+  margin-bottom:.75rem;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+
+/* ── BODY ────────────────────────────────────────────────── */
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.2rem 1.2rem 1.2rem 1.4rem;
+  border-left:4px solid var(--dm);
+  box-shadow:0 2px 8px rgba(51,0,114,.06);
+}
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card.b{border-left-color:var(--dxc-blue)}
+.card.o{border-left-color:var(--dxc-orange)}
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+.tag{
+  display:inline-block;
+  background:#f0ebfa;
+  color:var(--dm);
+  font-size:.68rem;
+  font-weight:700;
+  padding:.15rem .5rem;
+  border-radius:10px;
+  margin-bottom:.5rem;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.tag.t{background:#e0f5f4;color:var(--teal)}
+.tag.b{background:#e0f2fb;color:var(--dxc-blue)}
+.tag.g{background:#e8f5ee;color:var(--green)}
+
+/* ── TWO-COL ─────────────────────────────────────────────── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.two.hl{grid-template-columns:3fr 2fr}
+.two.hr{grid-template-columns:2fr 3fr}
+
+/* ── STACK ───────────────────────────────────────────────── */
+.stack{display:flex;flex-direction:column;gap:.5rem}
+.stk{padding:.7rem 1rem;border-radius:7px;text-align:center;font-size:.88rem;font-weight:600;color:var(--white)}
+
+/* ── STATS ───────────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--white);border-radius:var(--r);padding:1.2rem;text-align:center;border:1px solid var(--border)}
+.stat .n{font-size:2.4rem;font-weight:800;line-height:1}
+.stat .n.red{color:var(--red)}.stat .n.pur{color:var(--dm)}.stat .n.teal{color:var(--teal)}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem}
+
+/* ── ALERT ───────────────────────────────────────────────── */
+.alert{display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:var(--r);margin-bottom:1.5rem;align-items:flex-start}
+.alert.warn{background:#fff8e6;border-left:4px solid var(--dxc-gold)}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert.blue{background:#e0f2fb;border-left:4px solid var(--dxc-blue)}
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+/* ── CODE ────────────────────────────────────────────────── */
+.code{background:var(--code-bg);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.code-fn{font-size:.75rem;color:#888;font-family:'Open Sans',monospace}
+.code-lg{font-size:.65rem;background:var(--dm);color:var(--white);padding:.15rem .5rem;border-radius:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.code-body{padding:1.2rem;overflow-x:auto}
+.code-body pre{font-family:Consolas,'Courier New',monospace;font-size:.85rem;line-height:1.7;color:var(--sbase);margin:0;white-space:pre}
+.kw{color:var(--skw)}.str{color:var(--sstr)}.fn{color:var(--sfn)}.typ{color:var(--styp)}.var{color:var(--svar)}.cmt{color:var(--scmt)}.num{color:var(--snum)}
+
+/* ── CALLOUT ─────────────────────────────────────────────── */
+.callout{background:#f0ebfa;border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.6;border-left:3px solid var(--dm)}
+.callout strong{color:var(--dp)}
+.callout.teal{background:#e0f5f4;border-left-color:var(--teal)}
+.callout.blue{background:#e0f2fb;border-left-color:var(--dxc-blue)}
+
+/* ── STEP LIST ───────────────────────────────────────────── */
+.step-list{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.step{display:flex;gap:.85rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.step-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.25rem}
+.step-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+/* ── LAB ─────────────────────────────────────────────────── */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1.5rem}
+.lab-step{display:flex;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.lab-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.lab-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.3rem}
+.lab-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.lab-time{font-size:.7rem;font-weight:700;margin-top:.3rem}
+
+/* ── OPS LIST ────────────────────────────────────────────── */
+.ops{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.op{display:flex;align-items:flex-start;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem}
+.op-name{font-family:Consolas,monospace;font-size:.85rem;font-weight:700;min-width:160px;color:var(--teal);flex-shrink:0}
+.op-desc{font-size:.85rem;color:var(--text);line-height:1.5}
+
+/* ── COMPARE ─────────────────────────────────────────────── */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.comp-box{border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.comp-head{padding:.6rem 1rem;font-size:.88rem;font-weight:700;color:var(--white)}
+.comp-body{padding:.85rem 1rem;font-size:.85rem;line-height:1.6}
+
+/* ── SLIDE NAV ───────────────────────────────────────────── */
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2.5rem;border-top:1px solid var(--border);margin-top:.5rem}
+.nb{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:'Open Sans',Arial,sans-serif}
+.nb.prev{background:var(--off);color:var(--text);border:1px solid var(--border)}
+.nb.prev:hover{background:var(--border)}
+.nb.next{background:var(--dm);color:var(--white)}
+.nb.next:hover{background:var(--db)}
+.nb:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.8rem;color:var(--muted);font-weight:600}
+
+/* ── QUIZ ────────────────────────────────────────────────── */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.q-cnt{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.q-topic{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:20px}
+.q-text{font-size:1.1rem;font-weight:700;color:var(--dp);line-height:1.5;margin-bottom:1.2rem}
+.opts{display:flex;flex-direction:column;gap:.6rem}
+button.opt{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 1rem;border:2px solid var(--border);border-radius:9px;cursor:pointer;background:var(--white);text-align:left;width:100%;font-size:.9rem;line-height:1.5;color:var(--text);transition:border-color .15s,background .15s,transform .1s;font-family:'Open Sans',Arial,sans-serif}
+button.opt:hover:not(:disabled){border-color:var(--dm);background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--off);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;color:var(--muted);transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:var(--dm);border-color:var(--dm);color:var(--white)}
+button.opt.correct{border-color:var(--green);background:#edf7f1}
+button.opt.correct .opt-l{background:var(--green);border-color:var(--green);color:var(--white)}
+button.opt.wrong{border-color:var(--red);background:#fdf0ee}
+button.opt.wrong .opt-l{background:var(--red);border-color:var(--red);color:var(--white)}
+.fb{display:none;margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid var(--green);color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid var(--red);color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background .3s}
+.dot.c{background:var(--green)}.dot.w{background:var(--red)}.dot.cur{background:var(--dm)}
+
+/* ── RESULTS ─────────────────────────────────────────────── */
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:7px solid;margin:0 auto 1rem}
+.ring.pass{border-color:var(--green);background:#f0faf5}
+.ring.fail{border-color:var(--red);background:#fdf4f3}
+.ring-pct{font-size:2.2rem;font-weight:800;line-height:1}
+.ring.pass .ring-pct{color:var(--green)}.ring.fail .ring-pct{color:var(--red)}
+.ring-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.res-status{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.res-status.pass{color:var(--green)}.res-status.fail{color:var(--red)}
+.res-msg{color:var(--muted);font-size:.88rem;max-width:460px;margin:0 auto 1rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.2rem;height:28px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--white);opacity:.35;transition:opacity .3s;text-align:center;line-height:1.2}
+.bseg.on{opacity:1}
+.be{background:var(--green);flex:2}.bp{background:var(--teal);flex:2}.bd{background:var(--dm);flex:3}.bf{background:var(--red);flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.2rem}
+.sb{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center}
+.sb .sv{font-size:1.5rem;font-weight:800}.sv.g{color:var(--green)}.sv.r{color:var(--red)}
+.sb .sl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.ri{border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer;user-select:none;background:var(--white);transition:background .15s}
+.rq:hover{background:var(--off)}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:var(--green)}.rdot.w{background:var(--red)}
+.rqt{font-size:.82rem;font-weight:600;flex:1;color:var(--text)}
+.rbadge{font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:var(--green)}.rbadge.w{background:#fdf0ee;color:var(--red)}
+.rchev{font-size:.65rem;color:var(--muted);transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.65rem .9rem .85rem;background:var(--off);border-top:1px solid var(--border);font-size:.82rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:var(--red);font-weight:600}.ra{color:var(--green);font-weight:600}
+.expl{color:var(--muted);margin-top:.35rem}
+.res-acts{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* ── BUTTONS ─────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.5rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:'Open Sans',Arial,sans-serif}
+.btn.p{background:var(--dm);color:var(--white)}.btn.p:hover{background:var(--db);transform:translateY(-1px)}
+.btn.s{background:transparent;color:var(--dm);border:2px solid var(--dm)}.btn.s:hover{background:#f0ebfa}
+.btn.teal{background:var(--teal);color:var(--white)}.btn.teal:hover{background:var(--dxc-dark-teal)}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .two,.two.hl,.two.hr,.grid.g2,.grid.g3,.lab,.compare{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .body,.res-body{padding:1.2rem}
+  .hero{padding:1.8rem 1.2rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.2rem}
+}
+
+/* Extra v2 styles */
+.hdr{background:linear-gradient(135deg,#330072 0%,#5F249F 100%);height:54px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(51,0,114,.4)}
+.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 .5rem;align-self:center}
+.logo-mod{font-size:.75rem;color:#d4c8f0;font-weight:600}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.hdr-badge{font-size:.65rem;font-weight:700;padding:.25rem .65rem;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.badge-spof{background:#c0392b;color:#fff}
+.badge-mode{background:rgba(255,255,255,.15);color:#fff}
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,#00968F,#00A3E1);transition:width .5s ease;width:0%}
+.app{display:flex;flex:1;min-height:calc(100vh - 57px)}
+.content{flex:1;overflow-y:auto}
+.slide{display:none;animation:fadeIn .3s ease}.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(135deg,#150535 0%,#330072 50%,#5F249F 100%);padding:2.5rem 2.5rem 2rem;position:relative;overflow:hidden}
+.hero-eyebrow{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap}
+.hbadge{display:inline-block;background:#00968F;color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border-radius:0 6px 0 0}
+.hbadge.red{background:#c0392b}.hbadge.blue{background:#00A3E1}.hbadge.gold{background:#FFCD00;color:#1a1a2e}
+.tts-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .7rem;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.tts-btn:hover{background:rgba(255,255,255,.2)}
+.tts-btn.speaking{background:#00968F;border-color:#00968F;color:#fff}
+.tts-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tts-btn.speaking .tts-dot{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+/* Code */
+.code{background:#0d1117;border-radius:10px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.07)}
+.code-dots{display:flex;gap:5px}.code-dot{width:10px;height:10px;border-radius:50%}
+.code-fn{font-size:.72rem;color:#6e7681;font-family:'JetBrains Mono',monospace;flex:1;text-align:center}
+.code-lang{font-size:.62rem;background:#5F249F;color:#fff;padding:.18rem .55rem;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.code-body{padding:1.2rem 1.3rem;overflow-x:auto}
+.code-body pre{font-family:'JetBrains Mono','Courier New',monospace;font-size:.82rem;line-height:1.75;color:#e6edf3;margin:0;white-space:pre}
+.kw{color:#ff7b72}.str{color:#a5d6ff}.fn{color:#d2a8ff}.typ{color:#79c0ff}.var{color:#ffa657}.cmt{color:#8b949e}
+/* Flow */
+.flow-wrap{margin-bottom:1.5rem}
+.flow-controls{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;flex-wrap:wrap}
+.flow-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem 1.1rem;border-radius:7px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.flow-btn.start{background:#5F249F;color:#fff}.flow-btn.start:hover{background:#330072}
+.flow-btn.reset{background:#fff;color:#63666A;border:1px solid #e0d9ee}.flow-btn.reset:hover{background:#f0eef8}
+.flow-status{font-size:.78rem;color:#63666A;font-style:italic}
+.flow-steps{display:flex;flex-direction:column}
+.flow-step{display:none;align-items:flex-start;gap:1rem;padding:.85rem 1rem;background:#fff;border:1px solid #e0d9ee;border-radius:10px;margin-bottom:.5rem}
+.flow-step.visible{display:flex;animation:stepIn .35s ease forwards}
+@keyframes stepIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.flow-connector{display:none;width:2px;height:12px;background:#e0d9ee;margin:0 0 .5rem 23px}
+.flow-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;flex-shrink:0}
+.flow-body h4{font-size:.88rem;font-weight:700;color:#330072;margin-bottom:.2rem}
+.flow-body p{font-size:.82rem;color:#5a5a7a;line-height:1.5}
+/* Scenario */
+.scenario{background:#fff;border:1px solid #e0d9ee;border-radius:14px;overflow:hidden;margin-bottom:1.5rem}
+.scenario-hdr{background:linear-gradient(135deg,#330072,#5F249F);padding:1rem 1.25rem}
+.scenario-eyebrow{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.scenario-q{font-size:1rem;font-weight:700;color:#fff;line-height:1.4}
+.scenario-body{padding:1.25rem}
+.scenario-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+button.sc-opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem 1rem;border:1.5px solid #e0d9ee;border-radius:9px;background:#f7f5fb;font-family:inherit;font-size:.87rem;color:#1a1a2e;cursor:pointer;text-align:left;transition:all .18s}
+button.sc-opt:hover:not(:disabled){border-color:#5F249F;background:#f8f5ff;transform:translateX(4px)}
+button.sc-opt:disabled{cursor:default}
+button.sc-opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.sc-opt.wrong{border-color:#c0392b;background:#fdf0ee}
+.sc-letter{width:24px;height:24px;border-radius:50%;background:#e0d9ee;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#5a5a7a;flex-shrink:0;transition:all .18s}
+button.sc-opt.correct .sc-letter{background:#1a7a4a;color:#fff}
+button.sc-opt.wrong .sc-letter{background:#c0392b;color:#fff}
+.sc-feedback{display:none;padding:.85rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6}
+.sc-feedback.show{display:block}
+.sc-feedback.good{background:#edf7f1;border-left:3px solid #1a7a4a;color:#0f4d2a}
+.sc-feedback.bad{background:#fdf0ee;border-left:3px solid #c0392b;color:#7a1e14}
+.sc-reset{margin-top:.75rem;padding:.5rem 1rem;border-radius:7px;background:#f7f5fb;border:1px solid #e0d9ee;font-family:inherit;font-size:.8rem;font-weight:600;color:#5a5a7a;cursor:pointer;display:none}
+.sc-reset.show{display:inline-block}
+/* Status codes */
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin-bottom:1.25rem}
+.status-card{padding:.8rem;border-radius:10px;border:1.5px solid #e0d9ee;cursor:pointer;transition:all .2s;text-align:center;background:#fff}
+.status-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.status-num{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
+.status-name{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#5a5a7a}
+.s2xx .status-num{color:#1a7a4a}.s2xx.sel{border-color:#1a7a4a;background:#edf7f1}
+.s400 .status-num{color:#ED9B33}.s400.sel{border-color:#ED9B33;background:#fff8e6}
+.s401 .status-num{color:#5F249F}.s401.sel{border-color:#5F249F;background:#f0ebfa}
+.s403 .status-num{color:#00A3E1}.s403.sel{border-color:#00A3E1;background:#e0f2fb}
+.s404 .status-num{color:#00968F}.s404.sel{border-color:#00968F;background:#e0f5f4}
+.s500 .status-num{color:#c0392b}.s500.sel{border-color:#c0392b;background:#fdf0ee}
+.status-detail{background:#fff;border:1px solid #e0d9ee;border-radius:10px;padding:1.1rem 1.25rem;min-height:80px;margin-bottom:1.25rem;transition:border-color .2s}
+/* Quiz */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.q-cnt{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.1em}
+.q-topic-pill{background:rgba(255,255,255,.15);color:#fff;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
+.q-text{font-size:1.05rem;font-weight:700;color:#fff;line-height:1.5;margin-bottom:1.1rem}
+.opts{display:flex;flex-direction:column;gap:.55rem}
+button.opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem .95rem;border:2px solid #e0d9ee;border-radius:9px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:.88rem;line-height:1.5;color:#1a1a2e;transition:all .15s;font-family:inherit}
+button.opt:hover:not(:disabled){border-color:#5F249F;background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#f7f5fb;border:2px solid #e0d9ee;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.72rem;color:#5a5a7a;transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:#5F249F;border-color:#5F249F;color:#fff}
+button.opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.opt.correct .opt-l{background:#1a7a4a;border-color:#1a7a4a;color:#fff}
+button.opt.wrong{border-color:#c0392b;background:#fdf0ee}
+button.opt.wrong .opt-l{background:#c0392b;border-color:#c0392b;color:#fff}
+.fb{display:none;margin-top:.85rem;padding:.8rem 1rem;border-radius:8px;font-size:.84rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid #1a7a4a;color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid #c0392b;color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid #e0d9ee}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:#e0d9ee;transition:background .3s}
+.dot.c{background:#1a7a4a}.dot.w{background:#c0392b}.dot.cur{background:#5F249F}
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:6px solid;margin:0 auto 1rem}
+.ring.pass{border-color:#1a7a4a;background:#f0faf5}.ring.fail{border-color:#c0392b;background:#fdf4f3}
+.ring-pct{font-size:2rem;font-weight:800;line-height:1}
+.ring.pass .ring-pct{color:#1a7a4a}.ring.fail .ring-pct{color:#c0392b}
+.ring-lbl{font-size:.58rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+.res-status{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
+.res-status.pass{color:#1a7a4a}.res-status.fail{color:#c0392b}
+.res-msg{color:#5a5a7a;font-size:.86rem;max-width:440px;margin:0 auto .85rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.1rem;height:26px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#fff;opacity:.3;transition:opacity .3s}
+.bseg.on{opacity:1}
+.be{background:#1a7a4a;flex:2}.bp{background:#00968F;flex:2}.bd{background:#5F249F;flex:3}.bf{background:#c0392b;flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.1rem}
+.sb-stat{background:#f7f5fb;border:1px solid #e0d9ee;border-radius:8px;padding:.75rem;text-align:center}
+.sb-stat .sv{font-size:1.4rem;font-weight:800}.sv.g{color:#1a7a4a}.sv.r{color:#c0392b}
+.sb-stat .sl{font-size:.62rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.72rem;font-weight:700;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.55rem}
+.ri{border:1px solid #e0d9ee;border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;cursor:pointer;user-select:none;background:#fff;transition:background .15s}
+.rq:hover{background:#f7f5fb}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:#1a7a4a}.rdot.w{background:#c0392b}
+.rqt{font-size:.8rem;font-weight:600;flex:1;color:#1a1a2e}
+.rbadge{font-size:.62rem;font-weight:700;padding:.13rem .4rem;border-radius:8px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:#1a7a4a}.rbadge.w{background:#fdf0ee;color:#c0392b}
+.rchev{font-size:.62rem;color:#5a5a7a;transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.6rem .85rem .8rem;background:#f7f5fb;border-top:1px solid #e0d9ee;font-size:.8rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:#c0392b;font-weight:600}.ra{color:#1a7a4a;font-weight:600}
+.expl{color:#5a5a7a;margin-top:.3rem}
+.res-acts{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.9rem}
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2.5rem;border-top:1px solid #e0d9ee}
+.nav-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border-radius:7px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none}
+.nav-prev{background:#f7f5fb;color:#1a1a2e;border:1px solid #e0d9ee}.nav-prev:hover{background:#e0d9ee}
+.nav-next{background:#5F249F;color:#fff}.nav-next:hover{background:#330072}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.78rem;color:#5a5a7a;font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn-p{background:#5F249F;color:#fff}.btn-p:hover{background:#330072}
+.btn-s{background:transparent;color:#5F249F;border:2px solid #5F249F}.btn-s:hover{background:#f0ebfa}
+@media(max-width:768px){
+  .sidebar{display:none}
+  .body,.res-body{padding:1.25rem}
+  .hero{padding:1.75rem 1.25rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.25rem}
+}
+
+/* Module extra */
+.hdr{background:linear-gradient(135deg,#330072 0%,#5F249F 100%);height:54px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(51,0,114,.4)}
+.logo-sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 .5rem;align-self:center}
+.logo-mod{font-size:.75rem;color:#d4c8f0;font-weight:600}
+.hdr-right{display:flex;align-items:center;gap:.75rem}
+.hdr-badge{font-size:.65rem;font-weight:700;padding:.25rem .65rem;border-radius:20px;letter-spacing:.08em;text-transform:uppercase}
+.badge-spof{background:#ED9B33;color:#fff}
+.badge-mode{background:rgba(255,255,255,.15);color:#fff}
+.prog-wrap{height:3px;background:rgba(255,255,255,.1)}
+.prog-fill{height:100%;background:linear-gradient(90deg,#00968F,#00A3E1);transition:width .5s ease;width:0%}
+.app{display:flex;flex:1;min-height:calc(100vh - 57px)}
+.content{flex:1;overflow-y:auto}
+.slide{display:none;animation:fadeIn .3s ease}.slide.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero{background:linear-gradient(135deg,#150535 0%,#330072 50%,#5F249F 100%);padding:2.5rem 2.5rem 2rem;position:relative;overflow:hidden}
+.hero-eyebrow{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap}
+.hbadge{display:inline-block;background:#00968F;color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;border-radius:0 6px 0 0}
+.hbadge.red{background:#c0392b}.hbadge.blue{background:#00A3E1}.hbadge.gold{background:#FFCD00;color:#1a1a2e}.hbadge.warn{background:#ED9B33}
+.tts-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .7rem;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.tts-btn:hover{background:rgba(255,255,255,.2)}
+.tts-btn.speaking{background:#00968F;border-color:#00968F;color:#fff}
+.tts-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tts-btn.speaking .tts-dot{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.code{background:#0d1117;border-radius:10px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.07)}
+.code-dots{display:flex;gap:5px}.code-dot{width:10px;height:10px;border-radius:50%}
+.code-fn{font-size:.72rem;color:#6e7681;font-family:'JetBrains Mono',monospace;flex:1;text-align:center}
+.code-lang{font-size:.62rem;background:#5F249F;color:#fff;padding:.18rem .55rem;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.code-body{padding:1.2rem 1.3rem;overflow-x:auto}
+.code-body pre{font-family:'JetBrains Mono','Courier New',monospace;font-size:.82rem;line-height:1.75;color:#e6edf3;margin:0;white-space:pre}
+.kw{color:#ff7b72}.str{color:#a5d6ff}.fn{color:#d2a8ff}.typ{color:#79c0ff}.var{color:#ffa657}.cmt{color:#8b949e}
+.flow-wrap{margin-bottom:1.5rem}
+.flow-controls{display:flex;align-items:center;gap:.75rem;margin-bottom:.85rem;flex-wrap:wrap}
+.flow-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem 1.1rem;border-radius:7px;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.flow-btn.start{background:#5F249F;color:#fff}.flow-btn.start:hover{background:#330072}
+.flow-btn.reset{background:#fff;color:#63666A;border:1px solid #e0d9ee}.flow-btn.reset:hover{background:#f0eef8}
+.flow-status{font-size:.78rem;color:#63666A;font-style:italic}
+.flow-steps{display:flex;flex-direction:column}
+.flow-step{display:none;align-items:flex-start;gap:1rem;padding:.85rem 1rem;background:#fff;border:1px solid #e0d9ee;border-radius:10px;margin-bottom:.5rem}
+.flow-step.visible{display:flex;animation:stepIn .35s ease forwards}
+@keyframes stepIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.flow-connector{display:none;width:2px;height:12px;background:#e0d9ee;margin:0 0 .5rem 23px}
+.flow-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;flex-shrink:0}
+.flow-body h4{font-size:.88rem;font-weight:700;color:#330072;margin-bottom:.2rem}
+.flow-body p{font-size:.82rem;color:#5a5a7a;line-height:1.5}
+.scenario{background:#fff;border:1px solid #e0d9ee;border-radius:14px;overflow:hidden;margin-bottom:1.5rem}
+.scenario-hdr{background:linear-gradient(135deg,#330072,#5F249F);padding:1rem 1.25rem}
+.scenario-eyebrow{font-size:.65rem;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem}
+.scenario-q{font-size:1rem;font-weight:700;color:#fff;line-height:1.4}
+.scenario-body{padding:1.25rem}
+.scenario-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+button.sc-opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem 1rem;border:1.5px solid #e0d9ee;border-radius:9px;background:#f7f5fb;font-family:inherit;font-size:.87rem;color:#1a1a2e;cursor:pointer;text-align:left;transition:all .18s}
+button.sc-opt:hover:not(:disabled){border-color:#5F249F;background:#f8f5ff;transform:translateX(4px)}
+button.sc-opt:disabled{cursor:default}
+button.sc-opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.sc-opt.wrong{border-color:#c0392b;background:#fdf0ee}
+.sc-letter{width:24px;height:24px;border-radius:50%;background:#e0d9ee;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:#5a5a7a;flex-shrink:0;transition:all .18s}
+button.sc-opt.correct .sc-letter{background:#1a7a4a;color:#fff}
+button.sc-opt.wrong .sc-letter{background:#c0392b;color:#fff}
+.sc-feedback{display:none;padding:.85rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6}
+.sc-feedback.show{display:block}
+.sc-feedback.good{background:#edf7f1;border-left:3px solid #1a7a4a;color:#0f4d2a}
+.sc-feedback.bad{background:#fdf0ee;border-left:3px solid #c0392b;color:#7a1e14}
+.sc-reset{margin-top:.75rem;padding:.5rem 1rem;border-radius:7px;background:#f7f5fb;border:1px solid #e0d9ee;font-family:inherit;font-size:.8rem;font-weight:600;color:#5a5a7a;cursor:pointer;display:none}
+.sc-reset.show{display:inline-block}
+.status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin-bottom:1.25rem}
+.status-card{padding:.8rem;border-radius:10px;border:1.5px solid #e0d9ee;cursor:pointer;transition:all .2s;text-align:center;background:#fff}
+.status-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.status-num{font-size:1.5rem;font-weight:800;margin-bottom:.2rem}
+.status-name{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#5a5a7a}
+.s2xx .status-num{color:#1a7a4a}.s2xx.sel{border-color:#1a7a4a;background:#edf7f1}
+.s400 .status-num{color:#ED9B33}.s400.sel{border-color:#ED9B33;background:#fff8e6}
+.s401 .status-num{color:#5F249F}.s401.sel{border-color:#5F249F;background:#f0ebfa}
+.s403 .status-num{color:#00A3E1}.s403.sel{border-color:#00A3E1;background:#e0f2fb}
+.s404 .status-num{color:#00968F}.s404.sel{border-color:#00968F;background:#e0f5f4}
+.s500 .status-num{color:#c0392b}.s500.sel{border-color:#c0392b;background:#fdf0ee}
+.status-detail{background:#fff;border:1px solid #e0d9ee;border-radius:10px;padding:1.1rem 1.25rem;min-height:80px;margin-bottom:1.25rem;transition:border-color .2s}
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.q-cnt{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.1em}
+.q-topic-pill{background:rgba(255,255,255,.15);color:#fff;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;border:1px solid rgba(255,255,255,.2)}
+.q-text{font-size:1.05rem;font-weight:700;color:#fff;line-height:1.5;margin-bottom:1.1rem}
+.opts{display:flex;flex-direction:column;gap:.55rem}
+button.opt{display:flex;align-items:flex-start;gap:.85rem;padding:.8rem .95rem;border:2px solid #e0d9ee;border-radius:9px;cursor:pointer;background:#fff;text-align:left;width:100%;font-size:.88rem;line-height:1.5;color:#1a1a2e;transition:all .15s;font-family:inherit}
+button.opt:hover:not(:disabled){border-color:#5F249F;background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#f7f5fb;border:2px solid #e0d9ee;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.72rem;color:#5a5a7a;transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:#5F249F;border-color:#5F249F;color:#fff}
+button.opt.correct{border-color:#1a7a4a;background:#edf7f1}
+button.opt.correct .opt-l{background:#1a7a4a;border-color:#1a7a4a;color:#fff}
+button.opt.wrong{border-color:#c0392b;background:#fdf0ee}
+button.opt.wrong .opt-l{background:#c0392b;border-color:#c0392b;color:#fff}
+.fb{display:none;margin-top:.85rem;padding:.8rem 1rem;border-radius:8px;font-size:.84rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid #1a7a4a;color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid #c0392b;color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.1rem;padding-top:.9rem;border-top:1px solid #e0d9ee}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:#e0d9ee;transition:background .3s}
+.dot.c{background:#1a7a4a}.dot.w{background:#c0392b}.dot.cur{background:#5F249F}
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:6px solid;margin:0 auto 1rem}
+.ring.pass{border-color:#1a7a4a;background:#f0faf5}.ring.fail{border-color:#c0392b;background:#fdf4f3}
+.ring-pct{font-size:2rem;font-weight:800;line-height:1}
+.ring.pass .ring-pct{color:#1a7a4a}.ring.fail .ring-pct{color:#c0392b}
+.ring-lbl{font-size:.58rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem}
+.res-status{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
+.res-status.pass{color:#1a7a4a}.res-status.fail{color:#c0392b}
+.res-msg{color:#5a5a7a;font-size:.86rem;max-width:440px;margin:0 auto .85rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.1rem;height:26px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;color:#fff;opacity:.3;transition:opacity .3s}
+.bseg.on{opacity:1}
+.be{background:#1a7a4a;flex:2}.bp{background:#00968F;flex:2}.bd{background:#5F249F;flex:3}.bf{background:#c0392b;flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1.1rem}
+.sb-stat{background:#f7f5fb;border:1px solid #e0d9ee;border-radius:8px;padding:.75rem;text-align:center}
+.sb-stat .sv{font-size:1.4rem;font-weight:800}.sv.g{color:#1a7a4a}.sv.r{color:#c0392b}
+.sb-stat .sl{font-size:.62rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.72rem;font-weight:700;color:#5a5a7a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.55rem}
+.ri{border:1px solid #e0d9ee;border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;cursor:pointer;user-select:none;background:#fff;transition:background .15s}
+.rq:hover{background:#f7f5fb}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:#1a7a4a}.rdot.w{background:#c0392b}
+.rqt{font-size:.8rem;font-weight:600;flex:1;color:#1a1a2e}
+.rbadge{font-size:.62rem;font-weight:700;padding:.13rem .4rem;border-radius:8px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:#1a7a4a}.rbadge.w{background:#fdf0ee;color:#c0392b}
+.rchev{font-size:.62rem;color:#5a5a7a;transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.6rem .85rem .8rem;background:#f7f5fb;border-top:1px solid #e0d9ee;font-size:.8rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:#c0392b;font-weight:600}.ra{color:#1a7a4a;font-weight:600}
+.expl{color:#5a5a7a;margin-top:.3rem}
+.res-acts{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.9rem}
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 2.5rem;border-top:1px solid #e0d9ee}
+.nav-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.6rem 1.3rem;border-radius:7px;font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none}
+.nav-prev{background:#f7f5fb;color:#1a1a2e;border:1px solid #e0d9ee}.nav-prev:hover{background:#e0d9ee}
+.nav-next{background:#5F249F;color:#fff}.nav-next:hover{background:#330072}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.78rem;color:#5a5a7a;font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn-p{background:#5F249F;color:#fff}.btn-p:hover{background:#330072}
+.btn-s{background:transparent;color:#5F249F;border:2px solid #5F249F}.btn-s:hover{background:#f0ebfa}
+@media(max-width:768px){
+  .sidebar{display:none}
+  .body,.res-body{padding:1.25rem}
+  .hero{padding:1.75rem 1.25rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.25rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">
+    <span class="logo-dxc">DXC</span>
+    <div class="logo-sep"></div>
+    <span class="logo-mod">DR Testing and Certificate Changes</span>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-badge badge-spof">High SPOF</span>
+    <span class="hdr-badge badge-mode" id="hdrMode">Training</span>
+  </div>
+</header>
+<div class="prog-wrap"><div class="prog-fill" id="pf"></div></div>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-section">RM Team Module</div>
+    <button class="nav-item active" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Introduction</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">DR Concepts</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">DR Testing</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">SSL Certificates</span><span class="nav-chk">&#10003;</span></button>
+    <div class="nav-section" style="margin-top:.5rem">Assessment</div>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">Knowledge Quiz</span><span class="nav-chk">&#10003;</span></button>
+    <div class="sidebar-footer"><button class="quiz-launch-btn" id="quizLaunchBtn">Take the Quiz &#8594;</button></div>
+  </nav>
+  <div class="content" id="contentArea">
+
+    <div class="slide active" id="slide-0">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class=" hbadge warn">RM Team - High SPOF</span>
+          <button class="tts-btn" onclick="tts(0)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>DR Testing and Certificate Changes</h1>
+        <p class="hero-sub">Disaster recovery testing procedures and SSL certificate management - 0 SMEs</p>
+      </div>
+      <div class="body">
+
+       <div class="alert" style="background:#fff8e6;border-left:4px solid #ED9B33;display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:10px;margin-bottom:1.5rem;align-items:flex-start"><span style="font-size:1.2rem">&#9888;&#65039;</span><div><strong>High SPOF - 0 SMEs</strong><p style="font-size:.85rem;color:#5a5a7a;margin-top:.2rem">DR testing and certificate changes have zero coverage. An expired certificate blocks all users instantly.</p></div></div>
+       <div class="grid g3">
+         <div class="card"><div class="tag tag-p">DR Concepts</div><h3>RTO and RPO</h3><p>Recovery Time Objective, Recovery Point Objective and the Xuber DR strategy tiers.</p></div>
+         <div class="card t"><div class="tag tag-t">DR Plan</div><h3>Xuber DR Plan</h3><p>Trigger conditions, escalation chain and the RM team's role during a DR event.</p></div>
+         <div class="card"><div class="tag tag-p">DR Testing</div><h3>Annual DR Test</h3><p>Planning, executing and documenting the mandatory annual DR exercise.</p></div>
+         <div class="card t"><div class="tag tag-t">Certificates</div><h3>SSL Certificates</h3><p>What certificates Xuber uses, where they live and how to check expiry dates.</p></div>
+         <div class="card"><div class="tag tag-p">Renewal</div><h3>Renewal Process</h3><p>Renewing and deploying certificates without causing a production outage.</p></div>
+         <div class="card t"><div class="tag tag-t">Monitoring</div><h3>Expiry Monitoring</h3><p>Tracking certificate expiry and setting up alerts before they become critical.</p></div>
+       </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" disabled>&#8592; Previous</button>
+        <span class="slide-pos">1 / 5</span>
+        <button class="nav-btn nav-next" data-goto="1">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-1">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Concept 1</span>
+          <button class="tts-btn" onclick="tts(1)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>Disaster Recovery Concepts</h1>
+        <p class="hero-sub">RTO, RPO and the Xuber DR strategy</p>
+      </div>
+      <div class="body">
+
+       <p class="intro">Disaster Recovery is the plan for restoring Xuber service after a catastrophic failure. The RM team must know the plan, their role in it, and be able to execute key steps without waiting for others.</p>
+       <div class="two">
+         <div>
+           <div class="grid g2" style="margin-top:1rem">
+             <div class="card"><div class="tag tag-p">RTO</div><h3>Recovery Time Objective</h3><p>Maximum acceptable time Xuber can be offline. Xuber contractual RTO: 4 hours.</p></div>
+             <div class="card t"><div class="tag tag-t">RPO</div><h3>Recovery Point Objective</h3><p>Maximum acceptable data loss. Xuber RPO: 15 minutes (aligned to SQL transaction log backups).</p></div>
+             <div class="card"><div class="tag tag-p">MTTR</div><h3>Mean Time to Recover</h3><p>Average time it actually takes to restore service. RM team target: under 2 hours for most incidents.</p></div>
+             <div class="card t"><div class="tag tag-t">MTBF</div><h3>Mean Time Between Failures</h3><p>How often major incidents occur. Used to demonstrate improving reliability over time.</p></div>
+           </div>
+         </div>
+         <div>
+           <h2>Xuber DR strategy tiers</h2>
+           <div class="stack" style="margin-top:1rem">
+             <div class="stk" style="background:#1a7a4a">Tier 1: EC2 Auto-recovery - single instance failure - seconds</div>
+             <div class="stk" style="background:#00968F">Tier 2: ALB failover to standby instance - minutes</div>
+             <div class="stk" style="background:#5F249F">Tier 3: Restore from S3 backup to new EC2 - 1 to 2 hours</div>
+             <div class="stk" style="background:#c0392b">Tier 4: Cross-region failover to eu-west-1 - 3 to 4 hours</div>
+           </div>
+           <div class="callout" style="margin-top:1rem"><strong>RM role:</strong> The RM team executes Tier 3 restores and supports Tier 4 failover. Tiers 1 and 2 are automated by AWS. Knowing which tier applies determines the correct response procedure.</div>
+         </div>
+       </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="0">&#8592; Previous</button>
+        <span class="slide-pos">2 / 5</span>
+        <button class="nav-btn nav-next" data-goto="2">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-2">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Concept 2</span>
+          <button class="tts-btn" onclick="tts(2)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>Annual DR Test</h1>
+        <p class="hero-sub">Planning, executing and documenting the mandatory annual DR exercise</p>
+      </div>
+      <div class="body">
+
+       <p class="intro">DXC and client contracts require an annual DR test. This is a planned exercise that proves the DR plan works and the team can execute it. Results are reported to the client and DXC governance.</p>
+       <div class="step-list">
+         <div class="step"><div class="step-num" style="background:#00968F">1</div><div class="step-body"><h4>Schedule and agree scope - 4 weeks before</h4><p>Agree the test date, scenario (for example database corruption requiring Tier 3 restore), scope and success criteria with the client and DXC account team.</p></div></div>
+         <div class="step"><div class="step-num" style="background:#5F249F">2</div><div class="step-body"><h4>Prepare the DR environment - 1 week before</h4><p>Verify DR region EC2 instances are available. Confirm S3 backups are accessible from the DR region. Run a trial restore to the DR environment to spot issues early.</p></div></div>
+         <div class="step"><div class="step-num" style="background:#330072">3</div><div class="step-body"><h4>Execute the test</h4><p>Follow the DR runbook step by step. Every action is logged with a timestamp and the name of who performed it. A client or DXC governance observer is present.</p></div></div>
+         <div class="step"><div class="step-num" style="background:#006975">4</div><div class="step-body"><h4>Measure against RTO and RPO</h4><p>Record: time to declare DR, time to start recovery, time to restore service. Compare against contractual RTO of 4 hours and RPO of 15 minutes.</p></div></div>
+         <div class="step"><div class="step-num" style="background:#1a7a4a">5</div><div class="step-body"><h4>Document and report - within 5 days</h4><p>Produce the DR Test Report: scenarios tested, timestamped actions, metrics versus targets, issues found and remediation actions. Submit to DXC governance and the client.</p></div></div>
+       </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="1">&#8592; Previous</button>
+        <span class="slide-pos">3 / 5</span>
+        <button class="nav-btn nav-next" data-goto="3">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-3">
+      <div class="hero">
+        <div class="hero-eyebrow">
+          <span class="hbadge">Concept 3</span>
+          <button class="tts-btn" onclick="tts(3)"><span class="tts-dot"></span><span class="tts-lbl">Listen</span></button>
+        </div>
+        <h1>SSL Certificate Management</h1>
+        <p class="hero-sub">What certificates Xuber uses, where they live and how to check expiry</p>
+      </div>
+      <div class="body">
+
+       <p class="intro">SSL certificates encrypt all Xuber traffic. An expired certificate causes browser security warnings and blocks all users instantly. The RM team must track expiry dates and renew before they expire.</p>
+       <div class="two">
+         <div>
+           <h2>Xuber certificate inventory</h2>
+           <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:1rem">
+             <div class="card"><div class="tag tag-p">*.xuber.dxc.com</div><h3>Production wildcard cert</h3><p>Covers all production subdomains. Stored in AWS Certificate Manager. Attached to the ALB. Auto-renews if DNS validation is active.</p></div>
+             <div class="card t"><div class="tag tag-t">QA and UAT certs</div><h3>Internal certificates</h3><p>Self-signed or internal CA certs for non-production environments. Stored in IIS certificate store. Renewed manually.</p></div>
+             <div class="card"><div class="tag tag-p">JWT signing cert</div><h3>API signing certificate</h3><p>Used to sign JWT tokens. Stored in AWS Secrets Manager. Expires annually. Renewal requires a coordinated deploy.</p></div>
+             <div class="card t"><div class="tag tag-t">iSeries SSL cert</div><h3>iSeries HTTPS cert</h3><p>Certificate on iSeries for encrypted API calls from the integration layer. Managed via IBM Digital Certificate Manager.</p></div>
+           </div>
+         </div>
+         <div>
+           <h2>Checking expiry dates</h2>
+           <div class="ops" style="margin-top:1rem">
+             <div class="op"><span class="op-name">ACM - AWS Console</span><span class="op-desc">AWS Console, Certificate Manager, Certificates. Shows expiry date and renewal status. ACM auto-renews if domain validation is active.</span></div>
+             <div class="op"><span class="op-name">IIS - Windows</span><span class="op-desc">IIS Manager, Server Certificates, click cert, View expiry date. Or PowerShell: Get-ChildItem Cert:\LocalMachine\My</span></div>
+             <div class="op"><span class="op-name">Browser check</span><span class="op-desc">Click the padlock in Chrome, Certificate, Valid until date. Quick check for any HTTPS site.</span></div>
+           </div>
+           <div class="callout warn" style="margin-top:.75rem"><strong>Alert at 60 days remaining.</strong> The renewal and deployment process requires a change window. Never wait until 30 days - that is too tight for the process.</div>
+         </div>
+       </div>
+      </div>
+      <div class="slide-nav">
+        <button class="nav-btn nav-prev" data-goto="2">&#8592; Previous</button>
+        <span class="slide-pos">4 / 5</span>
+        <button class="nav-btn nav-next" data-goto="4">Take Quiz &#8594;</button>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-4">
+      <div id="qIntro">
+        <div class="hero">
+          <div class="hero-eyebrow"><span class="hbadge blue">Assessment</span></div>
+          <h1>Knowledge Quiz</h1>
+          <p class="hero-sub">10 questions &middot; 70% to pass &middot; Instant feedback &middot; Retry wrong answers only</p>
+        </div>
+        <div class="body">
+          <div class="grid g3" style="margin-bottom:1.5rem">
+            <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#5F249F">10</div><div style="font-size:.72rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem">Questions</div></div>
+            <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#5F249F">70%</div><div style="font-size:.72rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem">Pass Mark</div></div>
+            <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:#5F249F">~10</div><div style="font-size:.72rem;color:#5a5a7a;text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem">Minutes</div></div>
+          </div>
+          <div class="callout" style="margin-bottom:1.5rem"><strong>How it works:</strong> Select your answer for instant feedback. At the end you get a score breakdown. If you do not pass, click Retry to attempt only the incorrect questions. Your score accumulates across retries.</div>
+          <button class="btn btn-p" onclick="startQuiz()">Start Quiz &#8594;</button>
+        </div>
+      </div>
+      <div id="qScreen" style="display:none">
+        <div class="hero" style="padding:1.5rem 2.5rem">
+          <div class="q-hdr"><span class="q-cnt" id="qCnt"></span><span class="q-topic-pill" id="qTop"></span></div>
+          <div class="q-text" id="qTxt"></div>
+        </div>
+        <div class="body">
+          <div class="opts" id="optsC"></div>
+          <div class="fb" id="fbBox"><span id="fbIcon" style="font-size:1rem;flex-shrink:0;margin-top:.1rem"></span><span id="fbTxt"></span></div>
+          <div class="q-foot"><div class="dots" id="dotRow"></div><button class="btn btn-p" id="btnNext" style="display:none">Next &#8594;</button></div>
+        </div>
+      </div>
+      <div id="qResults" style="display:none">
+        <div class="res-hero">
+          <div class="ring" id="ring"><div class="ring-pct" id="rPct">--</div><div class="ring-lbl">Score</div></div>
+          <div class="res-status" id="rStatus"></div><div class="res-msg" id="rMsg"></div>
+        </div>
+        <div class="res-body">
+          <div class="band-bar"><div class="bseg be" id="bE">Expert 90-100%</div><div class="bseg bp" id="bP">Proficient 80-89%</div><div class="bseg bd" id="bD">Developing 70-79%</div><div class="bseg bf" id="bF">Foundation below 70%</div></div>
+          <div class="sg"><div class="sb-stat"><div class="sv g" id="stC">-</div><div class="sl">Correct</div></div><div class="sb-stat"><div class="sv r" id="stW">-</div><div class="sl">Incorrect</div></div></div>
+          <div class="rev-lbl">Question review - click to expand</div>
+          <div id="revList"></div><div class="res-acts" id="resAct"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var cur = 0, TOTAL = 5;
+var flowIdx = {};
+var SLIDE_TTS = ["Welcome to DR Testing and Certificate Changes training. This is a High SPOF with zero RM team coverage. You will learn disaster recovery concepts, the Xuber DR plan, annual DR testing, SSL certificate management, renewal procedures and expiry monitoring.", "Concept 1: DR Concepts. The key metrics are RTO - Recovery Time Objective - which is 4 hours for Xuber, and RPO - Recovery Point Objective - which is 15 minutes. Xuber has four DR tiers. Tier 1 is EC2 auto-recovery in seconds, handled by AWS. Tier 2 is ALB failover in minutes. Tier 3 is a Tier-3 restore from S3 taking 1 to 2 hours - this is the RM team's primary responsibility. Tier 4 is cross-region failover taking 3 to 4 hours.", "Concept 2: Annual DR Test. The DR test is mandatory each year and required by both DXC and client contracts. Four weeks before: agree scope with the client. One week before: prepare and trial the DR environment. On test day: follow the runbook step by step, logging every action with timestamps. Measure actual RTO and RPO against contractual targets. Within 5 days: produce and submit the DR Test Report.", "Concept 3: SSL Certificate Management. Xuber uses four certificate types. The production wildcard in ACM auto-renews with DNS validation. QA and UAT internal certificates are in IIS and renewed manually. The JWT signing certificate in Secrets Manager expires annually. The iSeries cert is managed via IBM DCM. Check ACM in the AWS Console, IIS in the certificate store, and browser padlock for quick checks. Alert at 60 days remaining.", "Knowledge Quiz. Ten questions covering all module concepts. You need 70 percent or above to pass. Select your answer for instant feedback. At the end you can retry any incorrect questions."];
+var FLOW1_TTS = []; var FLOW2_TTS = [];
+var FLOW_CALLOUT = {};
+var statusData = {};
+var scAnswers = {};
+var scExplanations = {};
+var QS = [{"topic": "DR", "q": "What is Xuber's contractual Recovery Time Objective?", "opts": ["1 hour", "2 hours", "4 hours", "24 hours"], "a": 2, "exp": "Xuber's contractual RTO is 4 hours - the maximum acceptable time the service can be offline after a disaster declaration."}, {"topic": "DR", "q": "Xuber's RPO is 15 minutes. What does this mean in practice?", "opts": ["Xuber can be restored in 15 minutes", "The maximum acceptable data loss is 15 minutes of transactions", "Backups run every 15 hours", "DR test must complete within 15 minutes"], "a": 1, "exp": "RPO equals maximum acceptable data loss. Xuber's 15-minute RPO is aligned to the transaction log backup frequency."}, {"topic": "DR", "q": "Which DR tier handles a single EC2 instance failure automatically in seconds?", "opts": ["Tier 1 - EC2 Auto-recovery", "Tier 2 - ALB failover", "Tier 3 - S3 restore", "Tier 4 - Cross-region failover"], "a": 0, "exp": "Tier 1 is EC2 Auto-recovery handled automatically by AWS in seconds. No RM team action is required."}, {"topic": "DR Testing", "q": "How far in advance should the DR test scenario be agreed with the client?", "opts": ["1 week", "2 weeks", "4 weeks", "The day before"], "a": 2, "exp": "4 weeks before the test to allow time for environment preparation, client confirmation and governance approval."}, {"topic": "DR Testing", "q": "What must the DR Test Report contain?", "opts": ["Only a pass/fail result", "Scenarios tested, timestamped actions, metrics versus RTO/RPO, issues found and remediation actions", "Just the RTO and RPO metrics", "A list of team members who participated"], "a": 1, "exp": "The DR Test Report is evidence for compliance and governance. It must include scenarios, timestamped actions, metrics, issues and remediation plans."}, {"topic": "Certificates", "q": "The *.xuber.dxc.com production certificate is in ACM with DNS validation active. What is the renewal process?", "opts": ["Submit a CSR to the DXC CA 60 days before expiry", "ACM renews automatically - just verify renewal status is Success in the ACM console", "Update the certificate manually in IIS", "Recreate the ALB listener with the new certificate ARN"], "a": 1, "exp": "ACM certificates with active DNS validation renew automatically. The RM team just needs to verify the renewal succeeded."}, {"topic": "Certificates", "q": "At how many days remaining should the RM team raise a change request to renew a certificate?", "opts": ["30 days", "60 days", "90 days", "7 days"], "a": 1, "exp": "Raise the change request at 60 days. The renewal and deployment process requires a change window - 30 days is too tight."}, {"topic": "Certificates", "q": "When swapping an IIS certificate to a newly renewed one, does Xuber need to be restarted?", "opts": ["Yes - IIS must be fully restarted", "Yes - but only the application pool", "No - updating the HTTPS binding in IIS is instant with no restart required", "Yes - the EC2 instance must be rebooted"], "a": 2, "exp": "Updating the IIS HTTPS binding to use a new certificate is instant. No restart is needed."}, {"topic": "DR", "q": "Xuber has been hit by ransomware. All production EC2 instances are compromised. What is the correct first action?", "opts": ["Attempt to decrypt and restore in place", "Isolate immediately. Invoke DR to a clean environment from verified clean backups. Never restore to compromised servers", "Restore from yesterday's differential backup to the same servers", "Call AWS Support to request a rollback"], "a": 1, "exp": "Ransomware-compromised environments must be isolated and abandoned. Recovery must be to a clean environment from backups taken before the infection."}, {"topic": "Certificates", "q": "IIS and iSeries certificates are not monitored by CloudWatch. How should the RM team track their expiry?", "opts": ["Check only when a user reports a certificate error", "Add to the certificate inventory spreadsheet and set a recurring monthly calendar reminder", "AWS Config automatically monitors all certificates", "They auto-renew so no monitoring is needed"], "a": 1, "exp": "Non-ACM certificates must be tracked manually. Add to the inventory spreadsheet on SharePoint and set a monthly calendar reminder on the first Monday of each month."}];
+
+// ── SLIDE NAVIGATION ────────────────────────────────────────────
+var cur = 0, TOTAL = 9;
+
+function goSlide(n) {
+  // Reset flows on the slide being left
+  if (cur === 1) flowReset('flow1');
+  if (cur === 4) flowReset('flow2');
+  stopTTS();
+
+  document.getElementById('slide-'+cur).classList.remove('active');
+  document.getElementById('slide-'+n).classList.add('active');
+  document.querySelectorAll('button.nav-item').forEach(function(b) {
+    var s = parseInt(b.getAttribute('data-slide'),10);
+    b.classList.remove('active');
+    if (s===n) b.classList.add('active');
+    if (s<n)  b.classList.add('done');
+  });
+  cur = n;
+  document.getElementById('pf').style.width = ((n/(TOTAL-1))*100)+'%';
+  document.getElementById('hdrMode').textContent = n===TOTAL-1 ? 'Quiz' : 'Training';
+  var ca = document.getElementById('contentArea');
+  if (ca) ca.scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('button.nav-item').forEach(function(b) {
+    b.addEventListener('click', function() { goSlide(parseInt(b.getAttribute('data-slide'),10)); });
+  });
+  document.querySelectorAll('button[data-goto]').forEach(function(b) {
+    b.addEventListener('click', function() { goSlide(parseInt(b.getAttribute('data-goto'),10)); });
+  });
+  document.getElementById('quizLaunchBtn').addEventListener('click', function() { goSlide(8); });
+  document.getElementById('btnNext').addEventListener('click', nextQ);
+});
+
+// ── TTS ─────────────────────────────────────────────────────────
+// ALL TTS text is pure ASCII stored here. Nothing is read from innerHTML.
+var SLIDE_TTS = ["Welcome to the Xuber HTMLUI API Part training. This module covers the most critical unmitigated SPOF in the XE team skills matrix. Zero of 28 team members have knowledge of this layer. You will learn the REST API architecture, OpenAPI contracts, TypeScript models, JWT authentication, error handling, and debugging.", "API Architecture. Every piece of data in the Xuber HTMLUI travels through a defined architecture. When something breaks, you need to know which layer to investigate first. Use the step-by-step button to walk through the complete request lifecycle.", "OpenAPI Contracts. The OpenAPI specification is the contract between Angular and the backend. Before writing any service method, read the spec. It defines every endpoint, request shape, response schema, and error code.", "Building Typed API Services. An ApiService does exactly one thing: make typed HTTP calls. Always provide the generic type parameter. The linter enforces no-explicit-any and PRs are rejected without it.", "JWT Authentication. The Xuber API uses JWT Bearer authentication. The Angular app handles the entire token lifecycle invisibly. Use the step-by-step button to walk through the four stages.", "HTTP Status Codes. Click any status code card to see how to handle it in Xuber Angular code.", "Scenario Challenge. Three real situations you will face as an XE team member. Choose the correct response before reading the explanation.", "Debugging API Calls. Open the Network tab and filter by slash api. Read the Response tab. Check the Authorization header. For 400 errors, compare the Payload against the OpenAPI schema. CORS errors mean the proxy is not running.", "Knowledge Quiz. Ten questions. You need 70 percent or above to pass."];
+// Callout text read after the final step of each flow (plain ASCII)
+var FLOW_CALLOUT = {
+  'flow1': 'The two-service rule: ApiService contains raw HTTP calls only. No business logic, no caching, no transformation. FacadeService orchestrates multiple ApiService calls, transforms data, and is the only service that components inject. This separation means that if the API version changes from v2 to v3, only the ApiService needs updating. The Facade and every component stay untouched.',
+  'flow2': 'Important security note: the JWT access token is stored in memory only, never in localStorage. localStorage is readable by any JavaScript on the page and is vulnerable to cross-site scripting attacks. Storing in memory means the token is lost on page refresh. This is intentional. The refresh token in an httpOnly cookie handles silent re-authentication automatically.'
+};
+var FLOW1_TTS = ["User action in the browser. A click, form submit, or route change triggers an Angular Component method. The component calls a FacadeService. It never calls HttpClient directly.", "FacadeService orchestrates. The Facade contains business logic. It may call multiple ApiServices, combine results, or transform data. Components only inject the Facade, never raw ApiServices.", "ApiService calls HttpClient. The ApiService makes a typed HTTP call, such as http.get of PolicyListResponse. The generic type parameter is mandatory. Never use the any type.", "HTTP Interceptor adds JWT. Before the request leaves Angular, the AuthInterceptor clones it and adds the Authorization Bearer token header automatically. No service needs to handle auth manually.", "Xuber .NET API processes the request. The request hits the Xuber backend, which validates the JWT, checks authorisation, executes business logic against the iSeries and Genius layer, and returns a typed JSON response.", "Response flows back to the template. The Observable emits the typed response. The FacadeService may transform it. The component receives the data and Angular change detection updates the template. The user sees the result."];
+var FLOW2_TTS = ["Login and receive tokens. POST to /api/v2/auth/login returns an access token lasting 15 minutes and a refresh token lasting 8 hours.", "Store in memory, not localStorage. AuthService holds the access token in memory only. Storing in localStorage is vulnerable to cross-site scripting attacks. The refresh token is in an httpOnly cookie set by the server.", "Interceptor auto-attaches to every request. The AuthInterceptor clones every outgoing request and adds the Authorization Bearer token header. Services do not need to know about this.", "401 triggers auto-refresh. If a request returns 401, the interceptor calls /auth/refresh, then retries the original request transparently. The user never sees a login prompt unless the refresh also fails."];
+
+var ttsSpeaking = false;
+
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.rate = 0.92; utt.pitch = 1; utt.lang = 'en-GB';
+  utt.onend = function() { ttsSpeaking = false; refreshTTSBtns(); };
+  utt.onerror = function() { ttsSpeaking = false; refreshTTSBtns(); };
+  ttsSpeaking = true;
+  refreshTTSBtns();
+  window.speechSynthesis.speak(utt);
+}
+
+function stopTTS() {
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  ttsSpeaking = false;
+  refreshTTSBtns();
+}
+
+function refreshTTSBtns() {
+  document.querySelectorAll('.tts-btn').forEach(function(b) {
+    var lbl = b.querySelector('.tts-lbl');
+    if (ttsSpeaking) {
+      b.classList.add('speaking');
+      if (lbl) lbl.textContent = 'Stop';
+    } else {
+      b.classList.remove('speaking');
+      if (lbl) lbl.textContent = 'Listen';
+    }
+  });
+}
+
+function tts(slideIdx) {
+  if (ttsSpeaking) { stopTTS(); return; }
+  speak(SLIDE_TTS[slideIdx] || 'No narration for this slide.');
+}
+
+// ── STEP-BY-STEP FLOWS ──────────────────────────────────────────
+var flowIdx = {};  // current step index per flow
+
+function flowStep(fid, btn) {
+  var ttsArr = fid === 'flow1' ? FLOW1_TTS : FLOW2_TTS;
+  var steps      = document.querySelectorAll('#'+fid+' .flow-step');
+  var connectors = document.querySelectorAll('#'+fid+' .flow-connector');
+
+  var idx = flowIdx[fid] === undefined ? 0 : flowIdx[fid];
+  if (idx >= steps.length) return;
+
+  // Dim previous active
+  if (idx > 0) {
+    steps[idx-1].style.outline = 'none';
+    steps[idx-1].style.boxShadow = 'none';
+  }
+
+  // Show this step
+  steps[idx].classList.add('visible');
+  steps[idx].style.outline = '2px solid #00968F';
+  steps[idx].style.boxShadow = '0 0 0 4px rgba(0,150,143,.12)';
+
+  // Show connector above this step
+  if (idx > 0 && connectors[idx-1]) connectors[idx-1].style.display = 'block';
+
+  // Scroll into view
+  setTimeout(function() {
+    steps[idx].scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 80);
+
+  // Speak from the pre-written ASCII array — NO innerHTML reading
+  speak(ttsArr[idx]);
+
+  // Update counter
+  var statusEl = document.getElementById(fid+'-status');
+  if (statusEl) statusEl.textContent = 'Step '+(idx+1)+' of '+steps.length;
+
+  // Advance
+  flowIdx[fid] = idx + 1;
+  var nextIdx = flowIdx[fid];
+
+  // Update button
+  var resetBtn = document.getElementById(fid+'-reset');
+  if (nextIdx >= steps.length) {
+    btn.textContent = 'All steps shown';
+    btn.disabled = true;
+    if (resetBtn) resetBtn.style.display = 'inline-flex';
+    if (statusEl) statusEl.textContent = 'Complete - press Reset to start again';
+    // Remove highlight after a beat
+    setTimeout(function() {
+      steps[steps.length-1].style.outline = 'none';
+      steps[steps.length-1].style.boxShadow = 'none';
+    }, 1800);
+    // Queue the callout to speak after the last step finishes
+    // We do this by overriding the current utterance's onend
+    if (window.speechSynthesis) {
+      var calloutText = FLOW_CALLOUT[fid];
+      if (calloutText) {
+        // Get the utterance that is currently queued/speaking and chain onto it
+        var calloutUtt = new SpeechSynthesisUtterance(calloutText);
+        calloutUtt.rate = 0.92; calloutUtt.pitch = 1; calloutUtt.lang = 'en-GB';
+        calloutUtt.onend  = function() { ttsSpeaking = false; refreshTTSBtns(); };
+        calloutUtt.onerror = function() { ttsSpeaking = false; refreshTTSBtns(); };
+        // Queue it — it will play after the current step utterance ends
+        window.speechSynthesis.speak(calloutUtt);
+      }
+    }
+  } else {
+    var nextStep = steps[nextIdx];
+    var nextH4 = nextStep ? nextStep.querySelector('h4') : null;
+    btn.textContent = 'Next: ' + (nextH4 ? nextH4.textContent : ('Step '+(nextIdx+1)));
+    btn.disabled = false;
+  }
+}
+
+function flowReset(fid) {
+  stopTTS();
+  var steps      = document.querySelectorAll('#'+fid+' .flow-step');
+  var connectors = document.querySelectorAll('#'+fid+' .flow-connector');
+  steps.forEach(function(s) {
+    s.classList.remove('visible');
+    s.style.outline = 'none';
+    s.style.boxShadow = 'none';
+  });
+  connectors.forEach(function(c) { c.style.display = 'none'; });
+  flowIdx[fid] = 0;
+
+  var btn = document.getElementById(fid+'-btn');
+  if (btn) {
+    btn.disabled = false;
+    var firstH4 = document.querySelector('#'+fid+' .flow-step h4');
+    btn.textContent = 'Show step 1' + (firstH4 ? ': '+firstH4.textContent : '');
+  }
+  var resetBtn = document.getElementById(fid+'-reset');
+  if (resetBtn) resetBtn.style.display = 'none';
+  var statusEl = document.getElementById(fid+'-status');
+  if (statusEl) statusEl.textContent = 'Press Play to reveal and hear each step';
+}
+
+// ── STATUS CODE EXPLORER ─────────────────────────────────────────
+var statusData = {
+  '2xx': { color:'#1a7a4a', name:'Success', body:'200 OK, 201 Created, 204 No Content. Process the response data. Map it to your TypeScript interface and pass it to the component via the Observable.', action:'Handle the happy path' },
+  '400': { color:'#ED9B33', name:'Bad Request - Validation Failed', body:'The request body failed validation. Parse the details array and map each error to the correct FormControl using setErrors(). Show inline field messages, never a generic banner.', action:'Parse details array, show field errors' },
+  '401': { color:'#5F249F', name:'Unauthorised - Token Expired', body:'The JWT access token is missing or expired. The HTTP Interceptor handles this automatically by calling /auth/refresh and retrying the request. Only redirect to login if refresh also returns 401.', action:'Interceptor handles automatically' },
+  '403': { color:'#00A3E1', name:'Forbidden - Insufficient Role', body:'The user is authenticated but lacks the required Xuber role. Show a toast: You do not have permission for this action. Do not retry - retrying will not help.', action:'Show toast, do not retry' },
+  '404': { color:'#00968F', name:'Not Found', body:'The resource does not exist. Use catchError to return of(null) as a safe fallback. The template shows a not-found message rather than crashing.', action:'catchError, return of(null)' },
+  '500': { color:'#c0392b', name:'Internal Server Error', body:'Something went wrong on the server. Copy the X-Correlation-ID response header into your Jira ticket. Show a generic something went wrong message. Never expose raw error text.', action:'Log correlation ID, show generic message' },
+};
+
+function showStatus(code) {
+  document.querySelectorAll('.status-card').forEach(function(c) { c.classList.remove('sel'); });
+  var card = document.querySelector('.s'+code);
+  if (card) card.classList.add('sel');
+  var d = statusData[code];
+  var el = document.getElementById('statusDetail');
+  el.style.borderLeft = '3px solid '+d.color;
+  el.innerHTML = '<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem">'
+    + '<span style="font-size:1.3rem;font-weight:800;color:'+d.color+'">'+code+'</span>'
+    + '<span style="font-size:.9rem;font-weight:700;color:#330072">'+d.name+'</span></div>'
+    + '<div style="font-size:.84rem;color:#5a5a7a;line-height:1.6;margin-bottom:.5rem">'+d.body+'</div>'
+    + '<span style="font-size:.75rem;font-weight:700;background:#f0ebfa;color:#5F249F;padding:.2rem .6rem;border-radius:6px">'+d.action+'</span>';
+  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ── SCENARIO CHALLENGES ───────────────────────────────────────────
+var scAnswers = { 1:'B', 2:'C', 3:'C' };
+var scExplanations = {
+  '1B': 'Correct. A 401 means authentication failed. The most common cause is the interceptor not being registered with multi:true in AppModule providers.',
+  '1A': 'Incorrect. A wrong URL returns a 404, not 401. The 401 specifically means authentication failed.',
+  '1C': 'Incorrect. A TypeScript model mismatch causes compile errors or runtime data issues, not a 401.',
+  '1D': 'Incorrect. A database outage returns a 500 server error, not 401.',
+  '2C': 'Correct. Without the generic type parameter, the response is typed as Object. This violates the no-explicit-any rule and must be fixed before merge.',
+  '2A': 'Incorrect. TypeScript does not infer the HTTP response type automatically.',
+  '2B': 'Incorrect. Code standards should not depend on the linter catching everything.',
+  '2D': 'Incorrect. Type safety issues compound. Fix it now.',
+  '3C': 'Correct. The API returning 200 means the data exists in the database. The SOLR search index is stale. New policies are created in Genius but have not been indexed. This is an RM and Genius team issue.',
+  '3A': 'Incorrect. A wrong Observable operator would cause intermittent or no results, not consistently stale results.',
+  '3B': 'Incorrect. An expired JWT causes 401, not 200 with stale data.',
+  '3D': 'Incorrect. A missing TypeScript field causes a compile error, not stale search results.',
+};
+
+function sc(num, letter, isCorrect) {
+  var opts = document.querySelectorAll('#sc'+num+'opts button');
+  var correct = scAnswers[num];
+  opts.forEach(function(b,i) {
+    b.disabled = true;
+    var l = ['A','B','C','D'][i];
+    if (l===correct) b.classList.add('correct');
+    if (l===letter && !isCorrect) b.classList.add('wrong');
+  });
+  var fb = document.getElementById('sc'+num+'fb');
+  var key = num+''+letter;
+  fb.className = 'sc-feedback show '+(isCorrect?'good':'bad');
+  fb.textContent = scExplanations[key] || (isCorrect ? 'Correct!' : 'Incorrect.');
+  var reset = document.getElementById('sc'+num+'reset');
+  if (reset) reset.className = 'sc-reset show';
+}
+
+function scReset(num) {
+  document.querySelectorAll('#sc'+num+'opts button').forEach(function(b) {
+    b.disabled=false; b.classList.remove('correct','wrong');
+  });
+  document.getElementById('sc'+num+'fb').className = 'sc-feedback';
+  document.getElementById('sc'+num+'reset').className = 'sc-reset';
+}
+
+// ── QUIZ ENGINE ──────────────────────────────────────────────────
+var QS = [{"topic": "Architecture", "q": "Which service should an Angular component inject to fetch Xuber policy data?", "opts": ["PolicyApiService directly", "HttpClient directly", "PolicyFacadeService, which orchestrates ApiService calls and business logic", "AuthService"], "a": 2, "exp": "Components only inject the FacadeService. ApiService handles raw HTTP; FacadeService orchestrates and transforms."}, {"topic": "JWT Auth", "q": "A Xuber API call returns 401. What happens automatically in a correctly configured app?", "opts": ["The user is redirected to the login page", "The HTTP Interceptor calls /auth/refresh and retries the original request transparently", "Angular retries the request 3 times", "The component catches the error and shows a login modal"], "a": 1, "exp": "The AuthInterceptor catches 401, calls /auth/refresh, then replays the original request. The component never knows this happened."}, {"topic": "TypeScript", "q": "Why is http.get<Policy[]>() required instead of http.get() in Xuber services?", "opts": ["It makes the request faster", "It is required by the Angular compiler", "Without the type parameter the response is typed as Object, removing compile-time safety", "It validates the response against the schema at runtime"], "a": 2, "exp": "The generic type parameter gives TypeScript the information it needs. Without it you lose autocomplete and type safety."}, {"topic": "Error Handling", "q": "The Xuber API returns 400 with a details array listing field errors. What should the Angular code do?", "opts": ["Show a generic toast message", "Redirect the user to login", "Parse the details array and call setErrors() on each FormControl to show inline messages", "Retry the request after 1 second"], "a": 2, "exp": "400 means validation failure. Map each error to its FormControl for inline messages rather than a generic toast."}, {"topic": "Architecture", "q": "Why are PolicyApiService and PolicyFacadeService kept separate?", "opts": ["One is deprecated", "ApiService has raw HTTP only; FacadeService has business logic. Changing the API version only requires changes to ApiService", "The separation is a legacy pattern to remove", "ApiService is for GET; FacadeService is for POST and PATCH"], "a": 1, "exp": "The two-service pattern means each layer has one responsibility. Refactoring, testing and versioning become significantly easier."}, {"topic": "Pagination", "q": "Why should GET /api/v2/policies?pageSize=9999 never be used?", "opts": ["It requires a special admin token", "pageSize has a maximum of 100", "It is blocked by the API gateway and overloads the database", "It causes a TypeScript compilation error"], "a": 2, "exp": "Loading all records in one request is blocked at the gateway and causes serious database load. Always use pageSize 25 with server-side pagination."}, {"topic": "JWT Auth", "q": "Where does the Xuber HTMLUI store the JWT access token?", "opts": ["localStorage for persistence", "sessionStorage cleared on tab close", "In-memory in AuthService only, not in browser storage", "In a cookie readable by JavaScript"], "a": 2, "exp": "localStorage is vulnerable to XSS attacks. The access token is held in memory and lost on page refresh, which triggers the refresh token flow."}, {"topic": "Debugging", "q": "You see a CORS error in the DevTools Console for a Xuber API call. What is the most likely cause?", "opts": ["The JWT token has expired", "The API server is offline", "The request URL uses http:// instead of /api, bypassing the Angular dev proxy", "The TypeScript interface is missing a required field"], "a": 2, "exp": "CORS errors in local dev almost always mean the URL bypassed the Angular proxy. All Xuber API calls must use relative /api paths."}, {"topic": "Error Handling", "q": "A Xuber API call for a policy returns 404. What is the correct catchError pattern?", "opts": ["Re-throw the error and let the component handle it", "Return of(null) as a safe fallback so the template can show a not-found message", "Redirect to the home page automatically", "Show an alert dialog"], "a": 1, "exp": "catchError with return of(null) keeps the Observable alive and lets the template show a user-friendly not-found message."}, {"topic": "Debugging", "q": "A 500 error appears. Which response header should you copy into the Jira ticket?", "opts": ["Content-Type", "X-Correlation-ID, which links the browser request to the exact server log entry", "Authorization", "Cache-Control"], "a": 1, "exp": "X-Correlation-ID is the bridge between the frontend error and the backend log. Without it, finding the relevant log entry is very difficult."}];
+var qSet=[],qI=0,ans={},done=false,retry=false;
+
+function startQuiz(ri) {
+  retry=!!ri; qSet=[]; done=false;
+  var src=ri||QS.map(function(_,i){return i;});
+  for(var i=0;i<src.length;i++){var q=Object.assign({},QS[src[i]]);q.orig=src[i];qSet.push(q);}
+  qI=0;
+  document.getElementById('qIntro').style.display='none';
+  document.getElementById('qScreen').style.display='block';
+  document.getElementById('qResults').style.display='none';
+  renderQ();
+}
+
+function renderQ() {
+  var q=qSet[qI],L=['A','B','C','D'];
+  document.getElementById('qCnt').textContent='Question '+(qI+1)+' of '+qSet.length+(retry?' (Retry)':'');
+  document.getElementById('qTop').textContent=q.topic;
+  document.getElementById('qTxt').textContent=q.q;
+  var c=document.getElementById('optsC'); c.innerHTML='';
+  for(var i=0;i<q.opts.length;i++){(function(idx){
+    var b=document.createElement('button'); b.className='opt';
+    b.innerHTML='<span class="opt-l">'+L[idx]+'</span><span>'+q.opts[idx]+'</span>';
+    b.addEventListener('click',function(){pick(idx);});c.appendChild(b);
+  })(i);}
+  document.getElementById('fbBox').className='fb';
+  document.getElementById('btnNext').style.display='none';
+  renderDots();
+}
+
+function pick(ch) {
+  if(done)return; done=true;
+  var q=qSet[qI],ok=ch===q.a,L=['A','B','C','D'];
+  ans[q.orig]={chosen:ch,correct:ok};
+  document.querySelectorAll('button.opt').forEach(function(b,i){
+    b.disabled=true;
+    if(i===q.a)b.classList.add('correct');
+    if(i===ch&&!ok)b.classList.add('wrong');
+  });
+  var fb=document.getElementById('fbBox'),ic=document.getElementById('fbIcon'),tx=document.getElementById('fbTxt');
+  if(ok){fb.className='fb cfb show';ic.textContent='checkmark';tx.textContent='Correct! '+q.exp;}
+  else{fb.className='fb wfb show';ic.textContent='cross';tx.innerHTML='<strong>Incorrect.</strong> Right answer: <strong>'+L[q.a]+': '+q.opts[q.a]+'</strong>. '+q.exp;}
+  renderDots();
+  var btn=document.getElementById('btnNext');
+  btn.style.display='inline-flex';
+  btn.textContent=qI<qSet.length-1?'Next':'See Results';
+}
+
+function nextQ(){qI++;if(qI>=qSet.length)showResults();else{done=false;renderQ();}}
+
+function renderDots() {
+  var row=document.getElementById('dotRow');row.innerHTML='';
+  for(var i=0;i<qSet.length;i++){
+    var d=document.createElement('div');d.className='dot';
+    var a=ans[qSet[i].orig];
+    if(i===qI)d.classList.add('cur');
+    else if(a&&a.correct)d.classList.add('c');
+    else if(a&&!a.correct)d.classList.add('w');
+    row.appendChild(d);
+  }
+}
+
+function cumCorrect(){var n=0,k=Object.keys(ans);for(var i=0;i<k.length;i++)if(ans[k[i]].correct)n++;return n;}
+
+function showResults() {
+  var tot=QS.length,cor=cumCorrect(),pct=Math.round((cor/tot)*100),pass=pct>=70;
+  document.getElementById('qScreen').style.display='none';
+  document.getElementById('qResults').style.display='block';
+  var ring=document.getElementById('ring');ring.className='ring '+(pass?'pass':'fail');
+  document.getElementById('rPct').textContent=pct+'%';
+  var st=document.getElementById('rStatus');
+  st.textContent=pass?'Pass':'Not yet';
+  st.className='res-status '+(pass?'pass':'fail');
+  document.getElementById('rMsg').textContent=pass
+    ?'You scored '+cor+' out of '+tot+'. Module complete. Log your score in the Skills Matrix.'
+    :'You scored '+cor+' out of '+tot+'. You need '+Math.ceil(tot*0.7)+' to pass. Review below and retry.';
+  ['bE','bP','bD','bF'].forEach(function(id){document.getElementById(id).classList.remove('on');});
+  if(pct>=90)document.getElementById('bE').classList.add('on');
+  else if(pct>=80)document.getElementById('bP').classList.add('on');
+  else if(pct>=70)document.getElementById('bD').classList.add('on');
+  else document.getElementById('bF').classList.add('on');
+  document.getElementById('stC').textContent=cor;
+  document.getElementById('stW').textContent=tot-cor;
+  buildReview();
+  var act=document.getElementById('resAct');act.innerHTML='';
+  if(!pass){
+    var wr=[],ak=Object.keys(ans);
+    for(var k=0;k<ak.length;k++)if(!ans[ak[k]].correct)wr.push(parseInt(ak[k],10));
+    var rb=document.createElement('button');rb.className='btn btn-p';
+    rb.textContent='Retry '+wr.length+' incorrect';
+    (function(w){rb.addEventListener('click',function(){startQuiz(w);})})(wr);
+    act.appendChild(rb);
+  }
+  var rs=document.createElement('button');rs.className=pass?'btn btn-p':'btn btn-s';
+  rs.textContent='Restart';
+  rs.addEventListener('click',function(){ans={};document.getElementById('qResults').style.display='none';document.getElementById('qIntro').style.display='block';});
+  act.appendChild(rs);
+  if(pass){
+    var bk=document.createElement('button');bk.className='btn btn-s';
+    bk.textContent='Back to training';
+    bk.addEventListener('click',function(){goSlide(0);});
+    act.appendChild(bk);
+  }
+}
+
+function buildReview() {
+  var list=document.getElementById('revList');list.innerHTML='';
+  for(var i=0;i<QS.length;i++){
+    var a=ans[i];if(!a)continue;
+    var sc2=a.correct?'c':'w',L=['A','B','C','D'];
+    var item=document.createElement('div');item.className='ri';
+    var wh=!a.correct?'<div>Your answer: <span class="ya">'+L[a.chosen]+': '+QS[i].opts[a.chosen]+'</span></div>':'';
+    item.innerHTML='<div class="rq"><div class="rdot '+sc2+'"></div><div class="rqt">Q'+(i+1)+': '+QS[i].q+'</div><span class="rbadge '+sc2+'">'+(a.correct?'Correct':'Wrong')+'</span><span class="rchev">v</span></div>'
+      +'<div class="rdetail">'+wh+'<div>Correct: <span class="ra">'+L[QS[i].a]+': '+QS[i].opts[QS[i].a]+'</span></div><div class="expl">'+QS[i].exp+'</div></div>';
+    item.querySelector('.rq').addEventListener('click',function(){this.closest('.ri').classList.toggle('open');});
+    list.appendChild(item);
+  }
+}
+
+</script>
+</body>
+</html>
