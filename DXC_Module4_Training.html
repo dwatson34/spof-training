@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC Technology | Testing & CI — Module 4</title>
+<style>
+:root{--dp:#330072;--dm:#5F249F;--db:#8B3FD4;--dd:#1a0a2e;--teal:#006975;--green:#1a7a4a;--red:#c0392b;--white:#fff;--off:#f7f5fb;--text:#1a1a1a;--muted:#6b6b7b;--border:#e0d9ee;--code-bg:#1e1e2e;--r:10px;--skw:#569CD6;--sstr:#CE9178;--sfn:#DCDCAA;--styp:#4EC9B0;--svar:#9CDCFE;--scmt:#6A9955;--snum:#B5CEA8;--sbase:#D4D4D4}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--off);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{background:var(--dp);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.35)}
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{font-size:1.4rem;font-weight:900;color:var(--white);font-family:'Arial Black',Arial,sans-serif;letter-spacing:-.02em}
+.logo-tech{font-size:.62rem;color:#c5b8e8;text-transform:uppercase;letter-spacing:.14em}
+.hdr-r{display:flex;align-items:center;gap:1rem}
+.hdr-title{font-size:.75rem;color:#c5b8e8;font-weight:600}
+.hdr-mode{font-size:.7rem;background:var(--teal);color:var(--white);padding:.2rem .6rem;border-radius:12px;font-weight:700}
+
+/* PROGRESS */
+.prog-track{height:4px;background:var(--border)}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--dm));transition:width .4s ease;width:0%}
+
+/* LAYOUT */
+.app{display:flex;flex:1;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--white);border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px)}
+.nav-section{padding:.4rem 1rem .2rem;font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+/* Nav buttons — reset button styles, make them look like nav items */
+button.nav-item{display:flex;align-items:center;gap:.6rem;padding:.5rem 1rem;font-size:.82rem;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .15s;user-select:none;width:100%;background:none;border-top:none;border-right:none;border-bottom:none;text-align:left;font-family:inherit}
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{background:#f0ebfa;color:var(--dm);border-left-color:var(--dm);font-weight:600}
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .3s}
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border)}
+.quiz-launch-btn{width:100%;background:var(--dm);color:var(--white);border:none;padding:.7rem 1rem;border-radius:7px;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+.quiz-launch-btn:hover{background:var(--db)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto}
+.slide{display:none}
+.slide.active{display:block;animation:fs .3s ease}
+@keyframes fs{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--dd) 0%,var(--dp) 55%,var(--dm) 100%);padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:-60px;right:-60px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.04)}
+.badge{display:inline-block;background:var(--teal);color:var(--white);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.28rem .75rem;border-radius:20px;margin-bottom:1rem}
+.badge.red{background:var(--red)}
+.badge.quiz{background:var(--dm)}
+.hero h1{font-size:2rem;font-weight:800;color:var(--white);line-height:1.2;margin-bottom:.75rem}
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+.hero-meta{display:flex;gap:1.5rem;margin-top:1.5rem;flex-wrap:wrap}
+.hero-meta span{font-size:.78rem;color:#c5b8e8}
+
+/* BODY */
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+/* CARDS */
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.2rem 1.2rem 1.4rem;border-left:4px solid var(--dm);box-shadow:0 2px 8px rgba(51,0,114,.06)}
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+.tag{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.68rem;font-weight:700;padding:.15rem .5rem;border-radius:10px;margin-bottom:.5rem;font-family:Consolas,monospace}
+.tag.t{background:#e6f4f5;color:var(--teal)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--white);border-radius:var(--r);padding:1.2rem;text-align:center;border:1px solid var(--border)}
+.stat .n{font-size:2.4rem;font-weight:900;line-height:1}
+.stat .n.red{color:var(--red)}.stat .n.pur{color:var(--dm)}.stat .n.drk{color:var(--dp)}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem}
+
+/* ALERT */
+.alert{display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:var(--r);margin-bottom:1.5rem;align-items:flex-start}
+.alert.warn{background:#fff8e6;border-left:4px solid #e8a000}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+/* CODE */
+.code{background:var(--code-bg);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.code-fn{font-size:.75rem;color:#888;font-family:Consolas,monospace}
+.code-lg{font-size:.65rem;background:var(--dm);color:var(--white);padding:.15rem .5rem;border-radius:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.code-body{padding:1.2rem;overflow-x:auto}
+.code-body pre{font-family:Consolas,'Courier New',monospace;font-size:.85rem;line-height:1.7;color:var(--sbase);margin:0;white-space:pre}
+.kw{color:var(--skw)}.str{color:var(--sstr)}.fn{color:var(--sfn)}.typ{color:var(--styp)}.var{color:var(--svar)}.cmt{color:var(--scmt)}.num{color:var(--snum)}
+
+/* TWO COL */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.two.hl{grid-template-columns:3fr 2fr}
+.two.hr{grid-template-columns:2fr 3fr}
+
+/* STACK */
+.stack{display:flex;flex-direction:column;gap:.5rem}
+.stk{padding:.7rem 1rem;border-radius:7px;text-align:center;font-size:.88rem;font-weight:600;color:var(--white)}
+
+/* BINDING */
+.bindings{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem}
+.binding{background:var(--white);border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.binding-hd{display:flex;align-items:center;padding:.6rem 1rem;gap:.75rem}
+.binding-type{font-size:.9rem;font-weight:700;color:var(--white);flex:1}
+.binding-dir{font-size:.75rem;color:rgba(255,255,255,.8);font-family:Consolas,monospace}
+.binding-bd{padding:.75rem 1rem}
+.binding-syn{font-family:Consolas,monospace;font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.binding-desc{font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:.5rem}
+.binding-ex{background:var(--code-bg);padding:.4rem .7rem;border-radius:6px;font-family:Consolas,monospace;font-size:.8rem;color:var(--sstr)}
+
+/* DI */
+.di{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin-bottom:1.5rem}
+.di-col{display:flex;flex-direction:column;gap:.6rem}
+.di-box{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-size:.85rem;font-weight:600}
+.di-box.s{border-left:4px solid var(--teal)}
+.di-box.c{border-left:4px solid var(--dm)}
+.di-mid{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.4rem;color:var(--muted);font-size:.8rem}
+
+/* ROUTES */
+.rtable{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.88rem}
+.rtable th{background:var(--dp);color:var(--white);padding:.6rem 1rem;text-align:left;font-weight:700}
+.rtable td{padding:.55rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.rtable tr:last-child td{border-bottom:none}
+.rtable tr:nth-child(even) td{background:var(--off)}
+.rpill{display:inline-block;background:var(--code-bg);color:var(--sstr);font-family:Consolas,monospace;font-size:.8rem;padding:.2rem .55rem;border-radius:5px}
+.cpill{display:inline-block;padding:.2rem .55rem;border-radius:5px;font-size:.8rem;font-weight:600;color:var(--white)}
+
+/* GUARDS */
+.guards{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem}
+.guard{background:var(--white);border-radius:var(--r);padding:1rem;border:1px solid var(--border)}
+.guard-name{font-family:Consolas,monospace;font-size:.9rem;font-weight:700;color:var(--dm);margin-bottom:.4rem}
+.guard-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+/* RxJS ops */
+.ops{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.op{display:flex;align-items:flex-start;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem}
+.op-name{font-family:Consolas,monospace;font-size:.85rem;font-weight:700;min-width:130px;color:var(--teal);flex-shrink:0}
+.op-desc{font-size:.85rem;color:var(--text);line-height:1.5}
+
+/* LAB */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1.5rem}
+.lab-step{display:flex;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.lab-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.lab-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.3rem}
+.lab-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.lab-time{font-size:.7rem;font-weight:700;margin-top:.3rem}
+
+/* CALLOUT */
+.callout{background:#f0ebfa;border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.6}
+.callout strong{color:var(--dp)}
+
+/* BOTTOM NAV */
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2.5rem;border-top:1px solid var(--border);margin-top:.5rem}
+.nb{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.nb.prev{background:var(--off);color:var(--text);border:1px solid var(--border)}
+.nb.prev:hover{background:var(--border)}
+.nb.next{background:var(--dm);color:var(--white)}
+.nb.next:hover{background:var(--db)}
+.nb:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.8rem;color:var(--muted);font-weight:600}
+
+/* ═══ QUIZ ═══════════════════════════════════════════ */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.q-cnt{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.q-topic{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:20px}
+.q-text{font-size:1.1rem;font-weight:700;color:var(--dp);line-height:1.5;margin-bottom:1.2rem}
+.opts{display:flex;flex-direction:column;gap:.6rem}
+button.opt{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 1rem;border:2px solid var(--border);border-radius:9px;cursor:pointer;background:var(--white);text-align:left;width:100%;font-size:.9rem;line-height:1.5;color:var(--text);transition:border-color .15s,background .15s,transform .1s;font-family:inherit}
+button.opt:hover:not(:disabled){border-color:var(--dm);background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--off);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;color:var(--muted);transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:var(--dm);border-color:var(--dm);color:var(--white)}
+button.opt.correct{border-color:var(--green);background:#edf7f1}
+button.opt.correct .opt-l{background:var(--green);border-color:var(--green);color:var(--white)}
+button.opt.wrong{border-color:var(--red);background:#fdf0ee}
+button.opt.wrong .opt-l{background:var(--red);border-color:var(--red);color:var(--white)}
+.fb{display:none;margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid var(--green);color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid var(--red);color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background .3s}
+.dot.c{background:var(--green)}.dot.w{background:var(--red)}.dot.cur{background:var(--dm)}
+
+/* RESULTS */
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring-wrap{display:inline-flex;flex-direction:column;align-items:center;margin-bottom:1.2rem}
+.ring{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:7px solid}
+.ring.pass{border-color:var(--green);background:#f0faf5}
+.ring.fail{border-color:var(--red);background:#fdf4f3}
+.ring-pct{font-size:2.2rem;font-weight:900;line-height:1}
+.ring.pass .ring-pct{color:var(--green)}.ring.fail .ring-pct{color:var(--red)}
+.ring-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.res-status{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.res-status.pass{color:var(--green)}.res-status.fail{color:var(--red)}
+.res-msg{color:var(--muted);font-size:.88rem;max-width:460px;margin:0 auto 1rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.2rem;height:28px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--white);opacity:.35;transition:opacity .3s;text-align:center;line-height:1.2}
+.bseg.on{opacity:1}
+.be{background:var(--green);flex:2}.bp{background:var(--teal);flex:2}.bd{background:var(--dm);flex:3}.bf{background:var(--red);flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.2rem}
+.sb{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center}
+.sb .sv{font-size:1.5rem;font-weight:800}.sv.g{color:var(--green)}.sv.r{color:var(--red)}
+.sb .sl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.ri{border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer;user-select:none;background:var(--white);transition:background .15s}
+.rq:hover{background:var(--off)}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:var(--green)}.rdot.w{background:var(--red)}
+.rqt{font-size:.82rem;font-weight:600;flex:1;color:var(--text)}
+.rbadge{font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:var(--green)}.rbadge.w{background:#fdf0ee;color:var(--red)}
+.rchev{font-size:.65rem;color:var(--muted);transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.65rem .9rem .85rem;background:var(--off);border-top:1px solid var(--border);font-size:.82rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:var(--red);font-weight:600}.ra{color:var(--green);font-weight:600}
+.expl{color:var(--muted);margin-top:.35rem}
+.res-acts{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* SHARED BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.5rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:inherit}
+.btn.p{background:var(--dm);color:var(--white)}.btn.p:hover{background:var(--db);transform:translateY(-1px)}
+.btn.s{background:transparent;color:var(--dm);border:2px solid var(--dm)}.btn.s:hover{background:#f0ebfa}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .two,.two.hl,.two.hr,.grid.g2,.grid.g3{grid-template-columns:1fr}
+  .stats,.guards{grid-template-columns:1fr 1fr}
+  .lab{grid-template-columns:1fr}
+  .body,.res-body{padding:1.2rem}
+  .hero{padding:1.8rem 1.2rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.2rem}
+  .di{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="logo"><span class="logo-dxc">DXC</span><span class="logo-tech">Technology</span></div>
+  <div class="hdr-r"><span class="hdr-title">Testing & CI — Module 4</span><span class="hdr-mode" id="hdrMode">Training</span></div>
+</header>
+<div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-section">Module 4 &#8212; Testing & CI</div>
+        <button class="nav-item" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Testing &amp; CI</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">Unit Testing with Jasmine</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">TestBed &amp; Component Testing</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">Testing HTTP Services</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">Angular Testing Library</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="5"><div class="nav-dot"></div><span class="nav-lbl">Code Coverage</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="6"><div class="nav-dot"></div><span class="nav-lbl">Azure Pipelines &amp; CI</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="7"><div class="nav-dot"></div><span class="nav-lbl">Lab Exercise</span><span class="nav-chk">&#10003;</span></button>
+
+    <div class="nav-section" style="margin-top:.5rem">Assessment</div>
+    <button class="nav-item" data-slide="8"><div class="nav-dot"></div><span class="nav-lbl">Knowledge Quiz</span><span class="nav-chk">&#10003;</span></button>
+    <div class="sidebar-footer"><button class="quiz-launch-btn" id="quizLaunchBtn">Take the Quiz &#8594;</button></div>
+  </nav>
+  <div class="content" id="contentArea">
+
+<div class="slide active" id="slide-0">
+  <div class="hero"><div class="badge">Module 4 of 4</div><h1>Testing &amp; CI</h1><div class="hero-sub">Unit Testing &middot; TestBed &middot; HTTP Testing &middot; Angular Testing Library &middot; Coverage &middot; Pipelines</div></div>
+  <div class="body">
+<div class="callout"><strong>Final module.</strong> Testing is what allows the team to change Xuber with confidence. After this module you can write tests, measure coverage, and read the CI pipeline.</div>
+<h2>What you'll cover</h2>
+<div class="grid g3">
+  <div class="card"><div class="tag">Jasmine</div><h3>Unit testing basics</h3><p>describe, it, expect, beforeEach &mdash; the building blocks of every Angular test.</p></div>
+  <div class="card t"><div class="tag t">TestBed</div><h3>Component testing</h3><p>Shallow-render Angular components and assert on DOM output.</p></div>
+  <div class="card"><div class="tag">HTTP</div><h3>HTTP service tests</h3><p>Mock API calls without a real server using HttpClientTestingModule.</p></div>
+  <div class="card t"><div class="tag t">ATL</div><h3>Angular Testing Library</h3><p>User-centric tests that find elements by role and label.</p></div>
+  <div class="card"><div class="tag">Istanbul</div><h3>Code coverage</h3><p>Measure and reach the Xuber 80% threshold across all four metrics.</p></div>
+  <div class="card t"><div class="tag t">Azure</div><h3>CI pipeline</h3><p>Read Azure Pipelines YAML and fix common build failures.</p></div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" disabled>&#8592; Previous</button><span class="slide-pos">1 / 9</span><button class="nb next" data-goto="1">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-1">
+  <div class="hero"><div class="badge">Concept 1</div><h1>Unit Testing with Jasmine</h1><div class="hero-sub">describe, it, expect, beforeEach — the structure of every Angular test file</div></div>
+  <div class="body">
+<p class="intro">Jasmine is the test framework; Karma runs tests in a real browser. Every .spec.ts file uses this stack.</p>
+<div class="two hl">
+  <div><div class="code"><div class="code-hdr"><span class="code-fn">policy.service.spec.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="fn">describe</span>(<span class="str">'PolicyService'</span>, () =&gt; {
+  <span class="kw">let</span> <span class="var">service</span>: <span class="typ">PolicyService</span>;
+
+  <span class="fn">beforeEach</span>(() =&gt; {
+    <span class="typ">TestBed</span>.configureTestingModule({
+      imports: [<span class="typ">HttpClientTestingModule</span>]
+    });
+    <span class="var">service</span> = <span class="typ">TestBed</span>.inject(
+      <span class="typ">PolicyService</span>
+    );
+  });
+
+  <span class="fn">it</span>(<span class="str">'should be created'</span>, () =&gt; {
+    <span class="fn">expect</span>(<span class="var">service</span>).toBeTruthy();
+  });
+});</pre></div></div></div>
+  <div><h2>Key concepts</h2>
+    <div style="display:flex;flex-direction:column;gap:.75rem;margin-top:1rem">
+      <div class="card"><div class="tag">describe()</div><h3>Test suite</h3><p>Groups related tests. Nest for sub-features.</p></div>
+      <div class="card t"><div class="tag t">beforeEach()</div><h3>Setup hook</h3><p>Runs before every it(). Configure TestBed and create spies here.</p></div>
+      <div class="card"><div class="tag">it()</div><h3>Single test</h3><p>Assert exactly one behaviour. Name it clearly.</p></div>
+      <div class="card t"><div class="tag t">expect()</div><h3>Assertion</h3><p>Matchers: toBe, toEqual, toHaveBeenCalledWith, toThrow.</p></div>
+    </div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="0">&#8592; Previous</button><span class="slide-pos">2 / 9</span><button class="nb next" data-goto="2">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-2">
+  <div class="hero"><div class="badge">Concept 2</div><h1>TestBed &amp; Component Testing</h1><div class="hero-sub">Shallow-render components and assert on their DOM output</div></div>
+  <div class="body">
+<p class="intro">TestBed compiles a component with a minimal NgModule so you can render, interact, and assert without a full app.</p>
+<div class="two hl">
+  <div><div class="code"><div class="code-hdr"><span class="code-fn">policy-list.component.spec.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="typ">TestBed</span>.configureTestingModule({
+  declarations: [<span class="typ">PolicyListComponent</span>],
+  providers: [{
+    provide: <span class="typ">PolicyService</span>,
+    useValue: {
+      getPolicies: () =&gt; of([mockPolicy])
+    }
+  }]
+});
+<span class="kw">const</span> <span class="var">fixture</span> = <span class="typ">TestBed</span>
+  .createComponent(<span class="typ">PolicyListComponent</span>);
+fixture.detectChanges();
+<span class="kw">const</span> <span class="var">rows</span> = fixture.nativeElement
+  .querySelectorAll(<span class="str">'tr.policy-row'</span>);
+<span class="fn">expect</span>(<span class="var">rows</span>.length).toBe(<span class="num">1</span>);</pre></div></div></div>
+  <div><h2>Key TestBed APIs</h2>
+    <div style="display:flex;flex-direction:column;gap:.75rem;margin-top:1rem">
+      <div class="card"><div class="tag">detectChanges()</div><h3>Trigger rendering</h3><p>Call after setting inputs or async operations. Angular won't update the DOM until you call it.</p></div>
+      <div class="card t"><div class="tag t">useValue stub</div><h3>Replace services</h3><p>Provide lightweight objects: <code>{ getPolicies: () => of([]) }</code>. Keeps tests fast and isolated.</p></div>
+      <div class="card"><div class="tag">nativeElement</div><h3>DOM access</h3><p>Use querySelector to assert on rendered HTML output.</p></div>
+      <div class="card t"><div class="tag t">debugElement</div><h3>Angular-aware queries</h3><p>Use <code>.query(By.css())</code> for Angular-aware element selection.</p></div>
+    </div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="1">&#8592; Previous</button><span class="slide-pos">3 / 9</span><button class="nb next" data-goto="3">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-3">
+  <div class="hero"><div class="badge">Concept 3</div><h1>Testing HTTP Services</h1><div class="hero-sub">HttpClientTestingModule and HttpTestingController</div></div>
+  <div class="body">
+<p class="intro">Never make real HTTP calls in tests. HttpClientTestingModule replaces HttpClient with a mock for controlled, verifiable responses.</p>
+<div class="code"><div class="code-hdr"><span class="code-fn">policy-api.service.spec.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="fn">beforeEach</span>(() =&gt; {
+  <span class="typ">TestBed</span>.configureTestingModule({
+    imports: [<span class="typ">HttpClientTestingModule</span>]
+  });
+  <span class="var">httpMock</span> = <span class="typ">TestBed</span>
+    .inject(<span class="typ">HttpTestingController</span>);
+});
+<span class="fn">it</span>(<span class="str">'should fetch policies'</span>, () =&gt; {
+  service.getPolicies().subscribe(p =&gt; {
+    <span class="fn">expect</span>(p.length).toBe(<span class="num">2</span>);
+  });
+  <span class="kw">const</span> <span class="var">req</span> = <span class="var">httpMock</span>
+    .expectOne(<span class="str">'/api/v2/policies'</span>);
+  <span class="fn">expect</span>(<span class="var">req</span>.request.method).toBe(<span class="str">'GET'</span>);
+  <span class="var">req</span>.flush([mockPolicy1, mockPolicy2]);
+  <span class="var">httpMock</span>.verify(); <span class="cmt">// no extra requests</span>
+});</pre></div></div>
+<div class="grid g2">
+  <div class="card"><div class="tag">expectOne(url)</div><h3>Assert the call</h3><p>Fails if 0 or 2+ requests were made to that URL.</p></div>
+  <div class="card t"><div class="tag t">req.flush()</div><h3>Deliver response</h3><p>Triggers the Observable. Pass <code>{status:500}</code> to simulate errors.</p></div>
+  <div class="card"><div class="tag">httpMock.verify()</div><h3>No unexpected calls</h3><p>Fails if any requests were made but not expected. Always call in afterEach().</p></div>
+  <div class="card t"><div class="tag t">afterEach()</div><h3>Clean up</h3><p>Call verify() in afterEach() so every test in the suite is protected.</p></div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="2">&#8592; Previous</button><span class="slide-pos">4 / 9</span><button class="nb next" data-goto="4">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-4">
+  <div class="hero"><div class="badge">Concept 4</div><h1>Angular Testing Library</h1><div class="hero-sub">User-centric tests — find elements by role and label, not CSS selectors</div></div>
+  <div class="body">
+<p class="intro">@testing-library/angular encourages testing behaviour from the user's perspective. Tests are resilient to refactoring and surface accessibility gaps.</p>
+<div class="two hl">
+  <div><div class="code"><div class="code-hdr"><span class="code-fn">claim-form.component.spec.ts</span><span class="code-lg">TypeScript</span></div><div class="code-body"><pre><span class="kw">import</span> { render, screen,
+  fireEvent } <span class="kw">from</span>
+  <span class="str">'@testing-library/angular'</span>;
+<span class="fn">it</span>(<span class="str">'submits valid claim'</span>,
+    <span class="kw">async</span> () =&gt; {
+  <span class="kw">await</span> <span class="fn">render</span>(<span class="typ">ClaimFormComponent</span>);
+  fireEvent.input(
+    screen.getByLabelText(
+      <span class="str">'Claim Reference'</span>),
+    { target: { value: <span class="str">'CLM-001'</span> }}
+  );
+  fireEvent.click(
+    screen.getByRole(<span class="str">'button'</span>,
+      { name: <span class="str">'Submit Claim'</span> })
+  );
+  <span class="kw">await</span> screen.findByText(
+    <span class="str">'Claim submitted'</span>
+  );
+});</pre></div></div></div>
+  <div><h2>Key queries</h2>
+    <div style="display:flex;flex-direction:column;gap:.75rem;margin-top:1rem">
+      <div class="card"><div class="tag">getByLabelText()</div><h3>Find by label</h3><p>Finds an input by its label. Also verifies form accessibility.</p></div>
+      <div class="card t"><div class="tag t">getByRole()</div><h3>Find by ARIA role</h3><p>button, heading, textbox. Robust to CSS class renames.</p></div>
+      <div class="card"><div class="tag">fireEvent</div><h3>Simulate interaction</h3><p>fireEvent.click(), fireEvent.input() for user actions.</p></div>
+      <div class="card t"><div class="tag t">findByText()</div><h3>Async assertion</h3><p>Returns a Promise &mdash; waits for text to appear after async operations.</p></div>
+    </div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="3">&#8592; Previous</button><span class="slide-pos">5 / 9</span><button class="nb next" data-goto="5">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-5">
+  <div class="hero"><div class="badge">Concept 5</div><h1>Code Coverage</h1><div class="hero-sub">Measuring and reaching the Xuber 80% threshold</div></div>
+  <div class="body">
+<p class="intro">Istanbul tracks which lines, branches, functions, and statements are exercised. Xuber requires 80% across all four before a PR can merge.</p>
+<div class="code"><div class="code-hdr"><span class="code-fn">Run locally</span><span class="code-lg">CLI</span></div><div class="code-body"><pre>ng test --no-watch --code-coverage
+<span class="cmt"># Report: coverage/lcov-report/index.html</span></pre></div></div>
+<div class="grid g2">
+  <div class="card"><div class="tag">Statements</div><h3>Was this line executed?</h3><p>Every executable statement must run. Raised by adding basic happy-path tests.</p></div>
+  <div class="card t"><div class="tag t">Branches</div><h3>Was every if/else tested?</h3><p>The hardest metric. Requires tests for both true and false paths of every conditional.</p></div>
+  <div class="card"><div class="tag">Functions</div><h3>Was this function called?</h3><p>Every method must be called at least once across all tests.</p></div>
+  <div class="card t"><div class="tag t">Lines</div><h3>Physical lines hit</h3><p>Similar to statements but counts physical lines rather than AST nodes.</p></div>
+</div>
+<div class="code"><div class="code-hdr"><span class="code-fn">angular.json — enforce threshold</span><span class="code-lg">JSON</span></div><div class="code-body"><pre><span class="str">"coverageThreshold"</span>: { <span class="str">"global"</span>: {
+  <span class="str">"statements"</span>: <span class="num">80</span>, <span class="str">"branches"</span>: <span class="num">80</span>,
+  <span class="str">"functions"</span>:  <span class="num">80</span>, <span class="str">"lines"</span>:    <span class="num">80</span>
+}}</pre></div></div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="4">&#8592; Previous</button><span class="slide-pos">6 / 9</span><button class="nb next" data-goto="6">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-6">
+  <div class="hero"><div class="badge">Concept 6</div><h1>Azure Pipelines &amp; CI</h1><div class="hero-sub">Reading pipeline YAML and fixing common build failures</div></div>
+  <div class="body">
+<p class="intro">The Xuber CI pipeline runs on every push. Knowing the YAML structure lets you add steps, fix jobs, and read logs independently.</p>
+<div class="two hl">
+  <div><div class="code"><div class="code-hdr"><span class="code-fn">azure-pipelines.yml</span><span class="code-lg">YAML</span></div><div class="code-body"><pre><span class="var">trigger</span>: [main, develop]
+<span class="var">stages</span>:
+  - stage: <span class="fn">Build</span>
+    jobs:
+      - job: BuildApp
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: <span class="str">'20.x'</span>
+          - script: npm ci
+          - script: <span class="str">ng build --prod</span>
+  - stage: <span class="fn">Test</span>
+    dependsOn: Build
+    jobs:
+      - job: UnitTests
+        steps:
+          - script: |
+              ng test --no-watch
+                --code-coverage
+                --browsers=ChromeHeadless
+          - task: PublishTestResults@2
+          - task: PublishCodeCoverageResults@1</pre></div></div></div>
+  <div><h2>Common failures</h2>
+    <div style="display:flex;flex-direction:column;gap:.75rem;margin-top:1rem">
+      <div class="card r"><h3>Module not found</h3><p>Run <code>npm ci</code> locally. Check imports for typos.</p></div>
+      <div class="card r"><h3>NullInjectorError</h3><p>Add the missing provider to TestBed.configureTestingModule providers.</p></div>
+      <div class="card r"><h3>Coverage gate fails</h3><p>Find uncovered branches in the HTML report and add targeted tests.</p></div>
+      <div class="card r"><h3>ng lint fails</h3><p>Run <code>ng lint --fix</code>. Check for unused imports, missing types, explicit <code>any</code>.</p></div>
+    </div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="5">&#8592; Previous</button><span class="slide-pos">7 / 9</span><button class="nb next" data-goto="7">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-7">
+  <div class="hero"><div class="badge">Hands-On Lab</div><h1>Lab Exercise</h1><div class="hero-sub">Writing tests for the Policy Filter — 60-minute exercise</div></div>
+  <div class="body">
+<div class="lab">
+  <div class="lab-step"><div class="lab-num" style="background:var(--dm)">1</div><div class="lab-body"><h4>Unit test the service</h4><p>Write 3 tests for PolicyApiService: successful GET, 404 error, empty response. Use HttpClientTestingModule.</p><div class="lab-time" style="color:var(--dm)">12 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--teal)">2</div><div class="lab-body"><h4>Unit test the component</h4><p>Test PolicyListComponent: rows render, filter calls service, loading spinner appears.</p><div class="lab-time" style="color:var(--teal)">12 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--dp)">3</div><div class="lab-body"><h4>Rewrite with ATL</h4><p>Rewrite the filter test using Angular Testing Library. Compare readability.</p><div class="lab-time" style="color:var(--dp)">10 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:#006060">4</div><div class="lab-body"><h4>Test error state</h4><p>Flush a 500 error. Assert the error banner appears in the template.</p><div class="lab-time" style="color:#006060">10 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--red)">5</div><div class="lab-body"><h4>Run coverage</h4><p>Run <code>ng test --code-coverage</code>. Find uncovered branches and add tests.</p><div class="lab-time" style="color:var(--red)">10 min</div></div></div>
+  <div class="lab-step"><div class="lab-num" style="background:var(--green)">6</div><div class="lab-body"><h4>Simulate CI</h4><p>Run <code>ng lint &amp;&amp; ng build --prod &amp;&amp; ng test --no-watch</code>. Fix all failures.</p><div class="lab-time" style="color:var(--green)">6 min</div></div></div>
+</div>
+<div class="alert info"><span class="alert-icon">&#127881;</span><div class="alert-body"><strong>Series complete!</strong><p>Log your completion in the DXC Skills Matrix. You should now reach Intermediate (2) on the Xuber HTMLUI Angular row.</p></div></div>
+<button class="btn p" data-goto="8">Take the Final Quiz &#8594;</button></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="6">&#8592; Previous</button><span class="slide-pos">8 / 9</span><button class="nb next" data-goto="8">Take Quiz &#8594;</button></div>
+</div>
+<div class="slide" id="slide-8">
+  <div id="qIntro"><div class="hero"><div class="badge quiz">Module 4 Assessment</div><h1>Knowledge Quiz</h1><div class="hero-sub">10 questions. 70% to pass. Instant feedback. Retry wrong answers only.</div></div>
+  <div class="body"><div class="grid g3" style="margin-bottom:1.5rem"><div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Questions</div></div><div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">70%</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Pass Mark</div></div><div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:900;color:var(--dm)">~10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Minutes</div></div></div>
+  <div class="callout" style="margin-bottom:1.5rem"><strong>How it works:</strong> Select your answer for instant feedback. At the end you see a full breakdown. If you don't pass, retry only the incorrect questions.</div>
+  <button class="btn p" id="startQuizBtn">Start Quiz &#8594;</button></div></div>
+  <div id="qScreen" style="display:none"><div class="hero" style="padding:1.5rem 2.5rem"><div class="q-hdr"><span class="q-cnt" id="qCnt"></span><span class="q-topic" id="qTop"></span></div><div class="q-text" id="qTxt"></div></div>
+  <div class="body"><div class="opts" id="optsC"></div><div class="fb" id="fbBox"><span id="fbIcon" style="font-size:1rem;flex-shrink:0;margin-top:.1rem"></span><span id="fbTxt"></span></div>
+  <div class="q-foot"><div class="dots" id="dotRow"></div><button class="btn p" id="btnNext" style="display:none">Next &#8594;</button></div></div></div>
+  <div id="qResults" style="display:none"><div class="res-hero"><div class="ring" id="ring"><div class="ring-pct" id="rPct">--</div><div class="ring-lbl">Score</div></div><div class="res-status" id="rStatus"></div><div class="res-msg" id="rMsg"></div></div>
+  <div class="res-body"><div class="band-bar"><div class="bseg be" id="bE">Expert 90-100%</div><div class="bseg bp" id="bP">Proficient 80-89%</div><div class="bseg bd" id="bD">Developing 70-79%</div><div class="bseg bf" id="bF">Foundation &lt;70%</div></div>
+  <div class="sg"><div class="sb"><div class="sv g" id="stC">-</div><div class="sl">Correct</div></div><div class="sb"><div class="sv r" id="stW">-</div><div class="sl">Incorrect</div></div></div>
+  <div class="rev-lbl">Question Review - click to expand</div><div id="revList"></div><div class="res-acts" id="resAct"></div></div></div>
+</div>
+  </div>
+</div>
+<script>document.addEventListener('DOMContentLoaded',function(){
+  var cur=0,TOT=9;
+  function go(n){
+    document.getElementById('slide-'+cur).classList.remove('active');
+    document.getElementById('slide-'+n).classList.add('active');
+    document.querySelectorAll('button.nav-item').forEach(function(b){
+      var s=parseInt(b.getAttribute('data-slide'),10);
+      b.classList.remove('active');
+      if(s===n)b.classList.add('active');
+      if(s<n)b.classList.add('done');
+    });
+    cur=n;
+    document.getElementById('pf').style.width=((n/(TOT-1))*100)+'%';
+    document.getElementById('hdrMode').textContent=n===TOT-1?'Quiz':'Training';
+    var ca=document.getElementById('contentArea');if(ca)ca.scrollTop=0;
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('button.nav-item').forEach(function(b){b.addEventListener('click',function(){go(parseInt(b.getAttribute('data-slide'),10));});});
+  document.querySelectorAll('button[data-goto]').forEach(function(b){b.addEventListener('click',function(){go(parseInt(b.getAttribute('data-goto'),10));});});
+  var ql=document.getElementById('quizLaunchBtn');if(ql)ql.addEventListener('click',function(){go(TOT-1);});
+  var sq=document.getElementById('startQuizBtn');if(sq)sq.addEventListener('click',function(){startQ();});
+  var bn=document.getElementById('btnNext');if(bn)bn.addEventListener('click',nextQ);
+  var QS=[{"topic": "Jasmine", "q": "Which Jasmine function runs setup code before every individual test case?", "opts": ["afterAll()", "afterEach()", "beforeAll()", "beforeEach()"], "a": 3, "exp": "beforeEach() runs before every it() block, setting up fresh state each time."}, {"topic": "HTTP testing", "q": "Why should you avoid real HTTP calls in Angular unit tests?", "opts": ["Angular does not support async in tests", "Real calls are slow, non-deterministic, and network-dependent", "HttpClient cannot be used inside TestBed", "Real calls fail behind a corporate proxy"], "a": 1, "exp": "Real HTTP calls make tests slow, brittle, and dependent on external services. Use HttpClientTestingModule instead."}, {"topic": "HttpTestingController", "q": "After req.flush(), which method asserts no unexpected HTTP requests were made?", "opts": ["httpMock.complete()", "httpMock.reset()", "httpMock.verify()", "httpMock.done()"], "a": 2, "exp": "httpMock.verify() asserts no outstanding unmatched requests exist. Always call in afterEach()."}, {"topic": "ATL", "q": "What is the main advantage of screen.getByRole() over querySelector('.my-class')?", "opts": ["getByRole() is faster", "getByRole() tests accessibility and is resilient to CSS class renames", "querySelector is not available in Angular tests", "getByRole() auto-waits for async rendering"], "a": 1, "exp": "getByRole queries by ARIA role \u2014 tests accessibility and is not coupled to CSS class names."}, {"topic": "Coverage", "q": "Istanbul measures four coverage metrics. Which is the correct set?", "opts": ["Statements, Branches, Functions, Lines", "Statements, Classes, Methods, Files", "Lines, Files, Components, Services", "Branches, Pipes, Directives, Modules"], "a": 0, "exp": "Istanbul measures Statements, Branches, Functions, and Lines \u2014 four separate metrics."}, {"topic": "TestBed", "q": "A test fails with 'NullInjectorError: No provider for PolicyService'. What is the fix?", "opts": ["Import PolicyService instead of providing it", "Add PolicyService or a stub to the providers array in TestBed.configureTestingModule", "Annotate the spec with @Injectable", "Run ng generate service to regenerate"], "a": 1, "exp": "Add the service or stub to providers: { provide: PolicyService, useValue: mockSvc }."}, {"topic": "HTTP testing", "q": "How do you simulate a 500 error with HttpTestingController?", "opts": ["req.flush(null, { status: 500, statusText: 'Server Error' })", "req.error(new Error('500'))", "Set httpMock.failNext = true", "Throw inside the subscribe callback"], "a": 0, "exp": "req.flush(null, { status: 500, statusText: 'Server Error' }) triggers the Observable error path."}, {"topic": "Test strategy", "q": "In the Xuber testing pyramid, which type should be most numerous?", "opts": ["End-to-end tests", "Integration tests using TestBed", "Unit tests using Jasmine and spies", "Manual exploratory tests"], "a": 2, "exp": "Unit tests sit at the base \u2014 most numerous, fastest, cheapest, and highest coverage per test written."}, {"topic": "Coverage CLI", "q": "Which CLI flag generates a coverage report when running tests?", "opts": ["--report-coverage", "--code-coverage", "--istanbul", "--coverage-output"], "a": 1, "exp": "ng test --no-watch --code-coverage generates Istanbul output in coverage/lcov-report/index.html."}, {"topic": "CI pipeline", "q": "The pipeline fails: 'Coverage threshold not met for Branches: 72%'. What should the developer do?", "opts": ["Lower the threshold to 70%", "Add tests covering the uncovered branches to reach 80%", "Re-run \u2014 it is a flaky test", "Skip with --no-coverage"], "a": 1, "exp": "Write tests that cover the missing branches. Never lower the threshold to hide gaps."}];
+  var qSet=[],qI=0,ans={},done=false,retry=false;
+  function startQ(ri){
+    retry=!!ri;qSet=[];done=false;
+    var src=ri||QS.map(function(_,i){return i;});
+    for(var i=0;i<src.length;i++){var q=Object.assign({},QS[src[i]]);q.orig=src[i];qSet.push(q);}
+    qI=0;
+    document.getElementById('qIntro').style.display='none';
+    document.getElementById('qScreen').style.display='block';
+    document.getElementById('qResults').style.display='none';
+    rQ();
+  }
+  function rQ(){
+    var q=qSet[qI],L=['A','B','C','D'];
+    document.getElementById('qCnt').textContent='Question '+(qI+1)+' of '+qSet.length+(retry?' (Retry)':'');
+    document.getElementById('qTop').textContent=q.topic;
+    document.getElementById('qTxt').textContent=q.q;
+    var c=document.getElementById('optsC');c.innerHTML='';
+    for(var i=0;i<q.opts.length;i++){(function(idx){
+      var b=document.createElement('button');b.className='opt';
+      b.innerHTML='<span class="opt-l">'+L[idx]+'</span><span>'+q.opts[idx]+'</span>';
+      b.addEventListener('click',function(){pick(idx);});c.appendChild(b);
+    })(i);}
+    document.getElementById('fbBox').className='fb';
+    document.getElementById('btnNext').style.display='none';
+    rD();
+  }
+  function pick(ch){
+    if(done)return;done=true;
+    var q=qSet[qI],ok=ch===q.a,L=['A','B','C','D'];
+    ans[q.orig]={chosen:ch,correct:ok};
+    document.querySelectorAll('button.opt').forEach(function(b,i){
+      b.disabled=true;
+      if(i===q.a)b.classList.add('correct');
+      if(i===ch&&!ok)b.classList.add('wrong');
+    });
+    var fb=document.getElementById('fbBox'),ic=document.getElementById('fbIcon'),tx=document.getElementById('fbTxt');
+    if(ok){fb.className='fb cfb show';ic.textContent='✓';tx.textContent='Correct! '+q.exp;}
+    else{fb.className='fb wfb show';ic.textContent='✗';tx.innerHTML='<strong>Incorrect.</strong> Right answer: <strong>'+L[q.a]+': '+q.opts[q.a]+'</strong>. '+q.exp;}
+    rD();
+    var btn=document.getElementById('btnNext');
+    btn.style.display='inline-flex';
+    btn.textContent=qI<qSet.length-1?'Next →':'See Results →';
+  }
+  function nextQ(){qI++;if(qI>=qSet.length)showR();else{done=false;rQ();}}
+  function rD(){
+    var row=document.getElementById('dotRow');row.innerHTML='';
+    for(var i=0;i<qSet.length;i++){
+      var d=document.createElement('div');d.className='dot';
+      var a=ans[qSet[i].orig];
+      if(i===qI)d.classList.add('cur');
+      else if(a&&a.correct)d.classList.add('c');
+      else if(a&&!a.correct)d.classList.add('w');
+      row.appendChild(d);
+    }
+  }
+  function cc(){var n=0,k=Object.keys(ans);for(var i=0;i<k.length;i++)if(ans[k[i]].correct)n++;return n;}
+  function showR(){
+    var tot=QS.length,cor=cc(),pct=Math.round((cor/tot)*100),pass=pct>=70;
+    document.getElementById('qScreen').style.display='none';
+    document.getElementById('qResults').style.display='block';
+    var ring=document.getElementById('ring');ring.className='ring '+(pass?'pass':'fail');
+    document.getElementById('rPct').textContent=pct+'%';
+    var st=document.getElementById('rStatus');st.textContent=pass?'🎉 Pass':'✗ Not yet';st.className='res-status '+(pass?'pass':'fail');
+    document.getElementById('rMsg').textContent=pass?'You scored '+cor+' out of '+tot+'. Well done — module complete.':'You scored '+cor+' out of '+tot+'. You need '+Math.ceil(tot*0.7)+' to pass. Review below and retry.';
+    ['bE','bP','bD','bF'].forEach(function(id){document.getElementById(id).classList.remove('on');});
+    if(pct>=90)document.getElementById('bE').classList.add('on');
+    else if(pct>=80)document.getElementById('bP').classList.add('on');
+    else if(pct>=70)document.getElementById('bD').classList.add('on');
+    else document.getElementById('bF').classList.add('on');
+    document.getElementById('stC').textContent=cor;
+    document.getElementById('stW').textContent=tot-cor;
+    bRev();
+    var act=document.getElementById('resAct');act.innerHTML='';
+    if(!pass){
+      var wr=[],ak=Object.keys(ans);
+      for(var k=0;k<ak.length;k++)if(!ans[ak[k]].correct)wr.push(parseInt(ak[k],10));
+      var rb=document.createElement('button');rb.className='btn p';
+      rb.textContent='Retry '+wr.length+' incorrect question'+(wr.length>1?'s':'')+' →';
+      (function(w){rb.addEventListener('click',function(){startQ(w);})})(wr);
+      act.appendChild(rb);
+    }
+    var rs=document.createElement('button');rs.className=pass?'btn p':'btn s';
+    rs.textContent='↺ Restart';
+    rs.addEventListener('click',function(){ans={};document.getElementById('qResults').style.display='none';document.getElementById('qIntro').style.display='block';});
+    act.appendChild(rs);
+    if(pass){var bk=document.createElement('button');bk.className='btn s';bk.textContent='← Back to training';bk.addEventListener('click',function(){go(0);});act.appendChild(bk);}
+  }
+  function bRev(){
+    var list=document.getElementById('revList');list.innerHTML='';
+    for(var i=0;i<QS.length;i++){
+      var a=ans[i];if(!a)continue;
+      var sc=a.correct?'c':'w',L=['A','B','C','D'];
+      var item=document.createElement('div');item.className='ri';
+      var wh=!a.correct?'<div>Your answer: <span class="ya">'+L[a.chosen]+': '+QS[i].opts[a.chosen]+'</span></div>':'';
+      item.innerHTML='<div class="rq"><div class="rdot '+sc+'"></div><div class="rqt">Q'+(i+1)+': '+QS[i].q+'</div><span class="rbadge '+sc+'">'+(a.correct?'&#10003; Correct':'&#10007; Wrong')+'</span><span class="rchev">&#9660;</span></div>'
+        +'<div class="rdetail">'+wh+'<div>Correct answer: <span class="ra">'+L[QS[i].a]+': '+QS[i].opts[QS[i].a]+'</span></div><div class="expl">'+QS[i].exp+'</div></div>';
+      item.querySelector('.rq').addEventListener('click',function(){this.closest('.ri').classList.toggle('open');});
+      list.appendChild(item);
+    }
+  }
+});</script>
+</body>
+</html>

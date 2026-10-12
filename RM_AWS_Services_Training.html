@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC Technology | AWS Services — S3, EC2, Security Groups, IAM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:root{
+  /* Official DXC Brand Colours - Brand Guidelines June 2021 */
+  --dxc-purple:    #5F249F;  /* DXC Bright Purple - Pantone 267C - PRIMARY */
+  --dxc-dark-pur:  #330072;  /* DXC Dark Purple - Pantone 2685C */
+  --dxc-teal:      #00968F;  /* DXC Bright Teal - Pantone 7716C */
+  --dxc-blue:      #00A3E1;  /* DXC Blue - Pantone 2191C */
+  --dxc-dark-teal: #006975;  /* DXC Dark Teal - Pantone 2238C */
+  --dxc-green:     #6CC24A;  /* DXC Green - Pantone 360C */
+  --dxc-orange:    #ED9B33;  /* DXC Orange - Pantone 2011C */
+  --dxc-gold:      #FFCD00;  /* DXC Gold - Pantone 116C */
+  --dxc-lt-gray:   #D9D9D6;  /* DXC Light Gray - Pantone Cool Gray 1C */
+  --dxc-mid-gray:  #969696;  /* DXC Medium Gray - Pantone Cool Gray 6C */
+  --dxc-dk-gray:   #63666A;  /* DXC Dark Gray - Pantone Cool Gray 10C */
+  --black:         #000000;
+  --white:         #FFFFFF;
+
+  /* Semantic aliases */
+  --dp:   var(--dxc-dark-pur);
+  --dm:   var(--dxc-purple);
+  --db:   #7B3BBC;            /* Lighter purple for hover states */
+  --dd:   #1a0a2e;            /* Very dark purple for gradients */
+  --teal: var(--dxc-teal);
+  --green: #1a7a4a;           /* Accessible dark green for pass states */
+  --red:  #c0392b;            /* Accessible red for fail/error states */
+  --white: #FFFFFF;
+  --off:  #F7F5FB;            /* Near-white with purple tint */
+  --text: #1A1A1A;
+  --muted: var(--dxc-dk-gray);
+  --border: #E0D9EE;
+  --code-bg: #1E1E2E;
+  --r: 10px;
+
+  /* Syntax highlighting */
+  --skw:  #569CD6;
+  --sstr: #CE9178;
+  --sfn:  #DCDCAA;
+  --styp: #4EC9B0;
+  --svar: #9CDCFE;
+  --scmt: #6A9955;
+  --snum: #B5CEA8;
+  --sbase:#D4D4D4;
+}
+
+/* ── RESET ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Open Sans',Arial,sans-serif;
+  background:var(--off);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+.hdr{
+  background:var(--dp);
+  padding:0 1.5rem;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:200;
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+.logo{display:flex;align-items:baseline;gap:.35rem}
+.logo-dxc{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--white);
+  font-family:'Open Sans',Arial,sans-serif;
+  letter-spacing:-.02em;
+}
+.logo-tech{
+  font-size:.62rem;
+  color:#c5b8e8;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-weight:400;
+}
+.hdr-r{display:flex;align-items:center;gap:1rem}
+.hdr-title{font-size:.75rem;color:#c5b8e8;font-weight:600}
+.hdr-mode{
+  font-size:.7rem;
+  background:var(--teal);
+  color:var(--white);
+  padding:.2rem .6rem;
+  border-radius:12px;
+  font-weight:700;
+}
+
+/* ── PROGRESS ────────────────────────────────────────────── */
+.prog-track{height:4px;background:var(--border)}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--teal),var(--dm));
+  transition:width .4s ease;
+  width:0%;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.app{display:flex;flex:1;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{
+  width:240px;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  padding:1rem 0;
+  flex-shrink:0;
+  overflow-y:auto;
+  position:sticky;
+  top:52px;
+  height:calc(100vh - 52px);
+}
+.nav-section{
+  padding:.4rem 1rem .2rem;
+  font-size:.62rem;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+button.nav-item{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:.5rem 1rem;
+  font-size:.82rem;
+  color:var(--muted);
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:all .15s;
+  width:100%;
+  background:none;
+  border-top:none;
+  border-right:none;
+  border-bottom:none;
+  text-align:left;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+button.nav-item:hover{background:var(--off);color:var(--text)}
+button.nav-item.active{
+  background:#f0ebfa;
+  color:var(--dm);
+  border-left-color:var(--dm);
+  font-weight:700;
+}
+button.nav-item.done .nav-dot{background:var(--green)}
+button.nav-item.active .nav-dot{background:var(--dm)}
+.nav-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--border);
+  flex-shrink:0;
+  transition:background .3s;
+}
+.nav-lbl{flex:1}
+.nav-chk{font-size:.7rem;color:var(--green);opacity:0;transition:opacity .2s}
+button.nav-item.done .nav-chk{opacity:1}
+.sidebar-footer{padding:1rem;border-top:1px solid var(--border)}
+.quiz-launch-btn{
+  width:100%;
+  background:var(--dm);
+  color:var(--white);
+  border:none;
+  padding:.7rem 1rem;
+  border-radius:7px;
+  font-size:.82rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .2s;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.quiz-launch-btn:hover{background:var(--db)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto}
+.slide{display:none}
+.slide.active{display:block;animation:fs .3s ease}
+@keyframes fs{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ────────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(135deg,var(--dd) 0%,var(--dp) 55%,var(--dm) 100%);
+  padding:3rem 2.5rem 2.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  bottom:-60px;right:-60px;
+  width:280px;height:280px;
+  border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+/* DXC tab box - brand element */
+.badge{
+  display:inline-block;
+  background:var(--teal);
+  color:var(--white);
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  padding:.28rem .75rem;
+  border-radius:0 6px 0 0; /* DXC tab box: rounded top-right only */
+  margin-bottom:1rem;
+}
+.badge.red{background:var(--red)}
+.badge.quiz{background:var(--dm)}
+.badge.gold{background:var(--dxc-gold);color:var(--text)}
+.hero h1{
+  font-size:2rem;
+  font-weight:800;
+  color:var(--white);
+  line-height:1.2;
+  margin-bottom:.75rem;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.hero-sub{color:#c5b8e8;font-size:1rem;line-height:1.6;max-width:600px}
+
+/* ── BODY ────────────────────────────────────────────────── */
+.body{padding:2rem 2.5rem}
+.intro{font-size:1rem;color:var(--text);line-height:1.7;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+h2{font-size:1.25rem;font-weight:800;color:var(--dp);margin-bottom:1rem}
+h3{font-size:1rem;font-weight:700;color:var(--dm);margin-bottom:.6rem}
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.grid{display:grid;gap:1rem;margin-bottom:1.5rem}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.2rem 1.2rem 1.2rem 1.4rem;
+  border-left:4px solid var(--dm);
+  box-shadow:0 2px 8px rgba(51,0,114,.06);
+}
+.card.t{border-left-color:var(--teal)}
+.card.g{border-left-color:var(--green)}
+.card.r{border-left-color:var(--red)}
+.card.b{border-left-color:var(--dxc-blue)}
+.card.o{border-left-color:var(--dxc-orange)}
+.card h3{font-size:.95rem;font-weight:700;color:var(--dp);margin-bottom:.4rem}
+.card p{font-size:.88rem;color:var(--text);line-height:1.6}
+.tag{
+  display:inline-block;
+  background:#f0ebfa;
+  color:var(--dm);
+  font-size:.68rem;
+  font-weight:700;
+  padding:.15rem .5rem;
+  border-radius:10px;
+  margin-bottom:.5rem;
+  font-family:'Open Sans',Arial,sans-serif;
+}
+.tag.t{background:#e0f5f4;color:var(--teal)}
+.tag.b{background:#e0f2fb;color:var(--dxc-blue)}
+.tag.g{background:#e8f5ee;color:var(--green)}
+
+/* ── TWO-COL ─────────────────────────────────────────────── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+.two.hl{grid-template-columns:3fr 2fr}
+.two.hr{grid-template-columns:2fr 3fr}
+
+/* ── STACK ───────────────────────────────────────────────── */
+.stack{display:flex;flex-direction:column;gap:.5rem}
+.stk{padding:.7rem 1rem;border-radius:7px;text-align:center;font-size:.88rem;font-weight:600;color:var(--white)}
+
+/* ── STATS ───────────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--white);border-radius:var(--r);padding:1.2rem;text-align:center;border:1px solid var(--border)}
+.stat .n{font-size:2.4rem;font-weight:800;line-height:1}
+.stat .n.red{color:var(--red)}.stat .n.pur{color:var(--dm)}.stat .n.teal{color:var(--teal)}
+.stat .l{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.4rem}
+
+/* ── ALERT ───────────────────────────────────────────────── */
+.alert{display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:var(--r);margin-bottom:1.5rem;align-items:flex-start}
+.alert.warn{background:#fff8e6;border-left:4px solid var(--dxc-gold)}
+.alert.info{background:#f0ebfa;border-left:4px solid var(--dm)}
+.alert.ok{background:#e8f5ee;border-left:4px solid var(--green)}
+.alert.blue{background:#e0f2fb;border-left:4px solid var(--dxc-blue)}
+.alert-icon{font-size:1.2rem;flex-shrink:0}
+.alert-body strong{font-size:.92rem;color:var(--text)}
+.alert-body p{font-size:.85rem;color:var(--muted);margin-top:.2rem;line-height:1.5}
+
+/* ── CODE ────────────────────────────────────────────────── */
+.code{background:var(--code-bg);border-radius:var(--r);overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.code-hdr{display:flex;align-items:center;justify-content:space-between;padding:.5rem 1rem;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.08)}
+.code-fn{font-size:.75rem;color:#888;font-family:'Open Sans',monospace}
+.code-lg{font-size:.65rem;background:var(--dm);color:var(--white);padding:.15rem .5rem;border-radius:8px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.code-body{padding:1.2rem;overflow-x:auto}
+.code-body pre{font-family:Consolas,'Courier New',monospace;font-size:.85rem;line-height:1.7;color:var(--sbase);margin:0;white-space:pre}
+.kw{color:var(--skw)}.str{color:var(--sstr)}.fn{color:var(--sfn)}.typ{color:var(--styp)}.var{color:var(--svar)}.cmt{color:var(--scmt)}.num{color:var(--snum)}
+
+/* ── CALLOUT ─────────────────────────────────────────────── */
+.callout{background:#f0ebfa;border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:1.5rem;font-size:.88rem;line-height:1.6;border-left:3px solid var(--dm)}
+.callout strong{color:var(--dp)}
+.callout.teal{background:#e0f5f4;border-left-color:var(--teal)}
+.callout.blue{background:#e0f2fb;border-left-color:var(--dxc-blue)}
+
+/* ── STEP LIST ───────────────────────────────────────────── */
+.step-list{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.step{display:flex;gap:.85rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.step-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.25rem}
+.step-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+
+/* ── LAB ─────────────────────────────────────────────────── */
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-bottom:1.5rem}
+.lab-step{display:flex;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;align-items:flex-start}
+.lab-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:var(--white);flex-shrink:0}
+.lab-body h4{font-size:.9rem;font-weight:700;color:var(--dp);margin-bottom:.3rem}
+.lab-body p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.lab-time{font-size:.7rem;font-weight:700;margin-top:.3rem}
+
+/* ── OPS LIST ────────────────────────────────────────────── */
+.ops{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.op{display:flex;align-items:flex-start;gap:.75rem;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem}
+.op-name{font-family:Consolas,monospace;font-size:.85rem;font-weight:700;min-width:160px;color:var(--teal);flex-shrink:0}
+.op-desc{font-size:.85rem;color:var(--text);line-height:1.5}
+
+/* ── COMPARE ─────────────────────────────────────────────── */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.comp-box{border-radius:var(--r);overflow:hidden;border:1px solid var(--border)}
+.comp-head{padding:.6rem 1rem;font-size:.88rem;font-weight:700;color:var(--white)}
+.comp-body{padding:.85rem 1rem;font-size:.85rem;line-height:1.6}
+
+/* ── SLIDE NAV ───────────────────────────────────────────── */
+.slide-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2.5rem;border-top:1px solid var(--border);margin-top:.5rem}
+.nb{display:inline-flex;align-items:center;gap:.4rem;padding:.65rem 1.4rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:'Open Sans',Arial,sans-serif}
+.nb.prev{background:var(--off);color:var(--text);border:1px solid var(--border)}
+.nb.prev:hover{background:var(--border)}
+.nb.next{background:var(--dm);color:var(--white)}
+.nb.next:hover{background:var(--db)}
+.nb:disabled{opacity:.4;cursor:not-allowed}
+.slide-pos{font-size:.8rem;color:var(--muted);font-weight:600}
+
+/* ── QUIZ ────────────────────────────────────────────────── */
+.q-hdr{display:flex;align-items:center;gap:.75rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.q-cnt{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.q-topic{display:inline-block;background:#f0ebfa;color:var(--dm);font-size:.7rem;font-weight:700;padding:.22rem .65rem;border-radius:20px}
+.q-text{font-size:1.1rem;font-weight:700;color:var(--dp);line-height:1.5;margin-bottom:1.2rem}
+.opts{display:flex;flex-direction:column;gap:.6rem}
+button.opt{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 1rem;border:2px solid var(--border);border-radius:9px;cursor:pointer;background:var(--white);text-align:left;width:100%;font-size:.9rem;line-height:1.5;color:var(--text);transition:border-color .15s,background .15s,transform .1s;font-family:'Open Sans',Arial,sans-serif}
+button.opt:hover:not(:disabled){border-color:var(--dm);background:#f9f6ff;transform:translateX(3px)}
+button.opt:disabled{cursor:default}
+.opt-l{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--off);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.75rem;color:var(--muted);transition:all .15s}
+button.opt:hover:not(:disabled) .opt-l{background:var(--dm);border-color:var(--dm);color:var(--white)}
+button.opt.correct{border-color:var(--green);background:#edf7f1}
+button.opt.correct .opt-l{background:var(--green);border-color:var(--green);color:var(--white)}
+button.opt.wrong{border-color:var(--red);background:#fdf0ee}
+button.opt.wrong .opt-l{background:var(--red);border-color:var(--red);color:var(--white)}
+.fb{display:none;margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.85rem;line-height:1.6;align-items:flex-start;gap:.6rem}
+.fb.show{display:flex}
+.fb.cfb{background:#edf7f1;border-left:4px solid var(--green);color:#0f4d2a}
+.fb.wfb{background:#fdf0ee;border-left:4px solid var(--red);color:#7a1e14}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)}
+.dots{display:flex;gap:.35rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background .3s}
+.dot.c{background:var(--green)}.dot.w{background:var(--red)}.dot.cur{background:var(--dm)}
+
+/* ── RESULTS ─────────────────────────────────────────────── */
+.res-hero{padding:2rem 2.5rem 1.5rem;text-align:center}
+.ring{width:120px;height:120px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:7px solid;margin:0 auto 1rem}
+.ring.pass{border-color:var(--green);background:#f0faf5}
+.ring.fail{border-color:var(--red);background:#fdf4f3}
+.ring-pct{font-size:2.2rem;font-weight:800;line-height:1}
+.ring.pass .ring-pct{color:var(--green)}.ring.fail .ring-pct{color:var(--red)}
+.ring-lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.25rem}
+.res-status{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.res-status.pass{color:var(--green)}.res-status.fail{color:var(--red)}
+.res-msg{color:var(--muted);font-size:.88rem;max-width:460px;margin:0 auto 1rem}
+.res-body{padding:0 2.5rem 2rem}
+.band-bar{display:flex;border-radius:8px;overflow:hidden;margin-bottom:1.2rem;height:28px}
+.bseg{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--white);opacity:.35;transition:opacity .3s;text-align:center;line-height:1.2}
+.bseg.on{opacity:1}
+.be{background:var(--green);flex:2}.bp{background:var(--teal);flex:2}.bd{background:var(--dm);flex:3}.bf{background:var(--red);flex:3}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.2rem}
+.sb{background:var(--off);border:1px solid var(--border);border-radius:8px;padding:.8rem;text-align:center}
+.sb .sv{font-size:1.5rem;font-weight:800}.sv.g{color:var(--green)}.sv.r{color:var(--red)}
+.sb .sl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.rev-lbl{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem}
+.ri{border:1px solid var(--border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.rq{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;cursor:pointer;user-select:none;background:var(--white);transition:background .15s}
+.rq:hover{background:var(--off)}
+.rdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rdot.c{background:var(--green)}.rdot.w{background:var(--red)}
+.rqt{font-size:.82rem;font-weight:600;flex:1;color:var(--text)}
+.rbadge{font-size:.65rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;text-transform:uppercase}
+.rbadge.c{background:#edf7f1;color:var(--green)}.rbadge.w{background:#fdf0ee;color:var(--red)}
+.rchev{font-size:.65rem;color:var(--muted);transition:transform .2s}
+.ri.open .rchev{transform:rotate(180deg)}
+.rdetail{display:none;padding:.65rem .9rem .85rem;background:var(--off);border-top:1px solid var(--border);font-size:.82rem;line-height:1.55}
+.ri.open .rdetail{display:block}
+.ya{color:var(--red);font-weight:600}.ra{color:var(--green);font-weight:600}
+.expl{color:var(--muted);margin-top:.35rem}
+.res-acts{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* ── BUTTONS ─────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.7rem 1.5rem;border-radius:7px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;border:none;font-family:'Open Sans',Arial,sans-serif}
+.btn.p{background:var(--dm);color:var(--white)}.btn.p:hover{background:var(--db);transform:translateY(-1px)}
+.btn.s{background:transparent;color:var(--dm);border:2px solid var(--dm)}.btn.s:hover{background:#f0ebfa}
+.btn.teal{background:var(--teal);color:var(--white)}.btn.teal:hover{background:var(--dxc-dark-teal)}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .two,.two.hl,.two.hr,.grid.g2,.grid.g3,.lab,.compare{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .body,.res-body{padding:1.2rem}
+  .hero{padding:1.8rem 1.2rem 1.5rem}
+  .hero h1{font-size:1.4rem}
+  .slide-nav{padding:1rem 1.2rem}
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="logo"><span class="logo-dxc">DXC</span><span class="logo-tech">Technology</span></div>
+  <div class="hdr-r"><span class="hdr-title">AWS Services — S3, EC2, Security Groups, IAM</span><span class="hdr-mode" id="hdrMode">Training</span></div>
+</header>
+<div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-section">RM Team — Critical SPOF</div>
+        <button class="nav-item" data-slide="0"><div class="nav-dot"></div><span class="nav-lbl">Overview</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="1"><div class="nav-dot"></div><span class="nav-lbl">S3</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="2"><div class="nav-dot"></div><span class="nav-lbl">EC2</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="3"><div class="nav-dot"></div><span class="nav-lbl">Security Groups</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="4"><div class="nav-dot"></div><span class="nav-lbl">IAM</span><span class="nav-chk">&#10003;</span></button>
+    <button class="nav-item" data-slide="5"><div class="nav-dot"></div><span class="nav-lbl">CloudWatch</span><span class="nav-chk">&#10003;</span></button>
+
+    <div class="nav-section" style="margin-top:.5rem">Assessment</div>
+    <button class="nav-item" data-slide="6"><div class="nav-dot"></div><span class="nav-lbl">Knowledge Quiz</span><span class="nav-chk">&#10003;</span></button>
+    <div class="sidebar-footer"><button class="quiz-launch-btn" id="quizLaunchBtn">Take the Quiz &#8594;</button></div>
+  </nav>
+  <div class="content" id="contentArea">
+
+<div class="slide active" id="slide-0">
+  <div class="hero"><div class="badge">RM Team — CRITICAL SPOF</div><h1>AWS Services</h1><div class="hero-sub">S3 Buckets, EC2 Instances, Security Groups, IAM and CloudWatch for the Xuber platform</div></div>
+  <div class="body">
+<div class="alert" style="background:#fdf0ee;border-left:4px solid var(--red);display:flex;gap:.75rem;padding:1rem 1.2rem;border-radius:var(--r);margin-bottom:1.5rem;align-items:flex-start">
+  <span style="font-size:1.2rem">&#9888;</span>
+  <div><strong>Critical SPOF — 0 SMEs</strong><p style="font-size:.85rem;color:var(--muted);margin-top:.2rem">No RM team member can operate the Xuber AWS infrastructure. One team member leaving would create a complete operational gap.</p></div>
+</div>
+<div class="grid g3">
+  <div class="card"><div class="tag">S3</div><h3>Simple Storage Service</h3><p>Document storage, backup archives, and static asset hosting for Xuber.</p></div>
+  <div class="card t"><div class="tag t">EC2</div><h3>Elastic Compute Cloud</h3><p>Virtual servers running Xuber application and database workloads.</p></div>
+  <div class="card"><div class="tag">Security Groups</div><h3>Network Firewalls</h3><p>Port-level access control rules governing what traffic can reach Xuber EC2 instances.</p></div>
+  <div class="card t"><div class="tag t">IAM</div><h3>Identity &amp; Access Management</h3><p>User accounts, roles and policies controlling who can do what in the Xuber AWS account.</p></div>
+  <div class="card"><div class="tag">CloudWatch</div><h3>Monitoring &amp; Alerts</h3><p>Logs, metrics and alarms for Xuber application health and infrastructure events.</p></div>
+  <div class="card t"><div class="tag t">Console</div><h3>AWS Console Navigation</h3><p>Finding and operating Xuber resources in the AWS Management Console.</p></div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" disabled>&#8592; Previous</button><span class="slide-pos">1 / 7</span><button class="nb next" data-goto="1">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-1">
+  <div class="hero"><div class="badge">Concept 1</div><h1>Amazon S3 — Simple Storage Service</h1><div class="hero-sub">How Xuber uses S3 for document storage, backups and static assets</div></div>
+  <div class="body">
+<p class="intro">S3 stores objects (files) in buckets. In Xuber, S3 holds claim documents, policy attachments, DB backup archives, and application logs. Understanding S3 is essential for backup/restore and document workflows.</p>
+<div class="two hl">
+  <div>
+    <h2>Xuber S3 bucket layout</h2>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:1rem;margin-bottom:1.5rem">
+      <div class="card"><div class="tag">xuber-documents-prod</div><h3>Claim &amp; Policy documents</h3><p>PDF attachments, photos, correspondence. Objects keyed by <code>claims/{claimId}/{docId}.pdf</code></p></div>
+      <div class="card t"><div class="tag t">xuber-backups-prod</div><h3>Database backups</h3><p>Nightly SQL Server .bak files. 30-day retention via S3 Lifecycle policy. Encrypted with AES-256.</p></div>
+      <div class="card"><div class="tag">xuber-logs-prod</div><h3>Application logs</h3><p>CloudWatch Logs exported to S3 for long-term retention and compliance. Gzip compressed.</p></div>
+    </div>
+  </div>
+  <div>
+    <h2>Key S3 operations</h2>
+    <div class="ops" style="margin-top:1rem">
+      <div class="op"><span class="op-name">List bucket</span><span class="op-desc">S3 Console &#8594; Buckets &#8594; Click bucket name. Lists all objects with size and last modified date.</span></div>
+      <div class="op"><span class="op-name">Download object</span><span class="op-desc">Click object &#8594; Download, or use Actions &#8594; Download. For bulk: select multiple &#8594; Actions &#8594; Download.</span></div>
+      <div class="op"><span class="op-name">Check lifecycle</span><span class="op-desc">Bucket &#8594; Management tab &#8594; Lifecycle rules. Shows retention and transition policies.</span></div>
+      <div class="op"><span class="op-name">Verify encryption</span><span class="op-desc">Bucket &#8594; Properties tab &#8594; Default encryption. All Xuber buckets must show AES-256 or KMS.</span></div>
+    </div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="0">&#8592; Previous</button><span class="slide-pos">2 / 7</span><button class="nb next" data-goto="2">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-2">
+  <div class="hero"><div class="badge">Concept 2</div><h1>Amazon EC2 — Xuber Servers</h1><div class="hero-sub">Managing the virtual machines that run Xuber application and database tiers</div></div>
+  <div class="body">
+<p class="intro">Xuber runs on EC2 instances — virtual machines in AWS. The RM team must be able to start, stop, check status and connect to these instances for maintenance and incident response.</p>
+<div class="grid g2" style="margin-bottom:1.5rem">
+  <div class="card"><div class="tag">xuber-app-prod</div><h3>Application servers</h3><p>Windows Server 2019, m5.2xlarge. Runs the Xuber application tier. 2 instances behind ALB for HA.</p></div>
+  <div class="card t"><div class="tag t">xuber-db-prod</div><h3>Database server</h3><p>Windows Server 2019, r5.4xlarge. SQL Server 2019 Enterprise. Single instance — DB backups critical.</p></div>
+  <div class="card"><div class="tag">xuber-iseries</div><h3>iSeries gateway</h3><p>Linux, c5.xlarge. Hosts the iSeries connectivity layer for AS400 communication.</p></div>
+  <div class="card t"><div class="tag t">xuber-bastion</div><h3>Bastion host</h3><p>Amazon Linux, t3.micro. The jump server — all RDP/SSH to Xuber instances goes through the bastion.</p></div>
+</div>
+<div class="alert warn"><span class="alert-icon">&#9888;&#65039;</span><div class="alert-body"><strong>Never connect directly to production EC2</strong><p>Always use the bastion host. Direct Security Group rules block RDP/SSH from the internet. Access is: VPN &#8594; Bastion &#8594; Target instance.</p></div></div>
+<div class="callout"><strong>EC2 Console:</strong> EC2 &#8594; Instances &#8594; Filter by Name tag "xuber". Green circle = Running. Stop/Start via Instance State menu. Always check CloudWatch metrics before stopping.</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="1">&#8592; Previous</button><span class="slide-pos">3 / 7</span><button class="nb next" data-goto="3">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-3">
+  <div class="hero"><div class="badge">Concept 3</div><h1>Security Groups</h1><div class="hero-sub">Controlling network access to Xuber EC2 instances with port-level firewall rules</div></div>
+  <div class="body">
+<p class="intro">A Security Group is a stateful firewall attached to an EC2 instance. It defines which IP addresses and ports can connect inbound, and which outbound connections are allowed. Wrong rules = production outage or security breach.</p>
+<div class="two hl">
+  <div>
+    <h2>Xuber Security Group rules</h2>
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:1rem">
+      <div class="card"><div class="tag">sg-xuber-app</div><h3>Application tier</h3><p>Inbound: Port 443 (HTTPS) from ALB only. Port 3389 (RDP) from bastion only.<br>Outbound: Port 1433 to sg-xuber-db.</p></div>
+      <div class="card t"><div class="tag t">sg-xuber-db</div><h3>Database tier</h3><p>Inbound: Port 1433 (SQL) from sg-xuber-app only. Port 3389 (RDP) from bastion only.<br>Outbound: Port 443 to S3 VPC endpoint.</p></div>
+      <div class="card"><div class="tag">sg-xuber-bastion</div><h3>Bastion host</h3><p>Inbound: Port 22 (SSH) from DXC office IPs and VPN CIDR only.<br>Outbound: Port 3389 to xuber-app and xuber-db.</p></div>
+    </div>
+  </div>
+  <div>
+    <div class="alert warn" style="margin-top:1rem"><span class="alert-icon">&#9888;&#65039;</span><div class="alert-body"><strong>Never add 0.0.0.0/0 rules</strong><p>Opening a port to all IPs on a production Security Group is a critical security incident. Always scope rules to specific IP CIDRs or other Security Group IDs.</p></div></div>
+    <div class="callout"><strong>To check rules:</strong> EC2 &#8594; Security Groups &#8594; Find by name &#8594; Inbound/Outbound rules tabs. Changes take effect immediately — no restart needed.</div>
+    <div class="callout teal"><strong>Troubleshooting:</strong> If an application can&#39;t connect to the DB, check sg-xuber-app outbound port 1433 is allowed to sg-xuber-db. If a user can&#39;t RDP, check their IP is in sg-xuber-bastion inbound rule.</div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="2">&#8592; Previous</button><span class="slide-pos">4 / 7</span><button class="nb next" data-goto="4">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-4">
+  <div class="hero"><div class="badge">Concept 4</div><h1>IAM — Identity &amp; Access Management</h1><div class="hero-sub">Users, roles and policies controlling Xuber AWS access</div></div>
+  <div class="body">
+<p class="intro">IAM controls who can do what in the Xuber AWS account. Every person and every application has an IAM identity with specific permissions. Principle of least privilege — only the minimum access needed.</p>
+<div class="two">
+  <div>
+    <h2>IAM concepts</h2>
+    <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:1rem">
+      <div class="card"><div class="tag">Users</div><h3>Human identities</h3><p>One IAM user per person. Used for Console access and CLI. Must have MFA enabled on all Xuber accounts.</p></div>
+      <div class="card t"><div class="tag t">Roles</div><h3>Service identities</h3><p>EC2 instances use IAM Roles (not user credentials) to access S3, CloudWatch etc. Roles are assumed temporarily.</p></div>
+      <div class="card"><div class="tag">Policies</div><h3>Permission documents</h3><p>JSON documents defining Allow/Deny for specific AWS actions and resources. Attached to users or roles.</p></div>
+      <div class="card t"><div class="tag t">Groups</div><h3>Collections of users</h3><p>Xuber uses groups: xuber-admins, xuber-read-only, xuber-developers. Policies attached to groups, not individuals.</p></div>
+    </div>
+  </div>
+  <div>
+    <div class="code"><div class="code-hdr"><span class="code-fn">Xuber S3 read-only policy (example)</span><span class="code-lg">JSON</span></div><div class="code-body"><pre>{
+  <span class="str">"Version"</span>: <span class="str">"2012-10-17"</span>,
+  <span class="str">"Statement"</span>: [{
+    <span class="str">"Effect"</span>: <span class="str">"Allow"</span>,
+    <span class="str">"Action"</span>: [
+      <span class="str">"s3:GetObject"</span>,
+      <span class="str">"s3:ListBucket"</span>
+    ],
+    <span class="str">"Resource"</span>: [
+      <span class="str">"arn:aws:s3:::xuber-documents-prod"</span>,
+      <span class="str">"arn:aws:s3:::xuber-documents-prod/*"</span>
+    ]
+  }]
+}</pre></div></div>
+    <div class="callout"><strong>To check permissions:</strong> IAM &#8594; Users &#8594; Select user &#8594; Permissions tab. Or use IAM Policy Simulator to test a specific action before applying changes.</div>
+  </div>
+</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="3">&#8592; Previous</button><span class="slide-pos">5 / 7</span><button class="nb next" data-goto="5">Next &#8594;</button></div>
+</div>
+<div class="slide" id="slide-5">
+  <div class="hero"><div class="badge">Concept 5</div><h1>CloudWatch — Monitoring &amp; Alarms</h1><div class="hero-sub">Monitoring Xuber health and responding to infrastructure alerts</div></div>
+  <div class="body">
+<p class="intro">CloudWatch collects metrics, logs and events from every Xuber AWS resource. The RM team uses it to monitor health, investigate incidents and respond to alarms before they become outages.</p>
+<div class="grid g2" style="margin-bottom:1.5rem">
+  <div class="card"><h3>&#128200; Key metrics to watch</h3><p><strong>EC2:</strong> CPU &gt;80% sustained, Memory &gt;90%, Disk &gt;85%<br><strong>RDS:</strong> DatabaseConnections, ReadLatency, FreeStorageSpace<br><strong>ALB:</strong> TargetResponseTime, HTTPCode_Target_5XX_Count</p></div>
+  <div class="card t"><h3>&#128680; Xuber alarms</h3><p><strong>xuber-cpu-high:</strong> App server CPU &gt;80% for 5 min &#8594; Notify RM team<br><strong>xuber-db-disk:</strong> DB disk &lt;20GB free &#8594; Page on-call<br><strong>xuber-5xx:</strong> &gt;10 HTTP 500s per minute &#8594; PagerDuty</p></div>
+  <div class="card"><h3>&#128203; Log Insights queries</h3><p>CloudWatch &#8594; Log Insights &#8594; Select /xuber/application. Query: <code>fields @timestamp, @message | filter @message like /ERROR/ | sort @timestamp desc | limit 50</code></p></div>
+  <div class="card t"><h3>&#9989; Health check</h3><p>CloudWatch &#8594; Dashboards &#8594; Xuber-Production. Shows all key metrics in one view. Check this first for any Xuber incident.</p></div>
+</div>
+<div class="callout teal"><strong>Responding to an alarm:</strong> 1) Open CloudWatch dashboard. 2) Identify the spiking metric. 3) Open relevant EC2 instance. 4) Check system logs. 5) Engage on-call DBA or app team as needed.</div></div>
+  <div class="slide-nav"><button class="nb prev" data-goto="4">&#8592; Previous</button><span class="slide-pos">6 / 7</span><button class="nb next" data-goto="6">Take Quiz &#8594;</button></div>
+</div>
+<div class="slide" id="slide-6">
+  <div id="qIntro">
+    <div class="hero"><div class="badge quiz">RM Team — Critical SPOF Assessment</div><h1>Knowledge Quiz</h1>
+    <div class="hero-sub">10 questions covering all module concepts. Score 70% or above to pass. Instant feedback on every answer.</div></div>
+    <div class="body">
+      <div class="grid g3" style="margin-bottom:1.5rem">
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--dm)">10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Questions</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--dm)">70%</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Pass Mark</div></div>
+        <div class="card" style="text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--dm)">~10</div><div style="font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Minutes</div></div>
+      </div>
+      <div class="callout" style="margin-bottom:1.5rem"><strong>How it works:</strong> Select your answer for instant feedback. At the end you see a full score breakdown with a band rating. If you don&#39;t pass, retry only the incorrect questions &#8212; your score accumulates across retries.</div>
+      <button class="btn p" id="startQuizBtn">Start Quiz &#8594;</button>
+    </div>
+  </div>
+  <div id="qScreen" style="display:none">
+    <div class="hero" style="padding:1.5rem 2.5rem">
+      <div class="q-hdr"><span class="q-cnt" id="qCnt"></span><span class="q-topic" id="qTop"></span></div>
+      <div class="q-text" id="qTxt"></div>
+    </div>
+    <div class="body">
+      <div class="opts" id="optsC"></div>
+      <div class="fb" id="fbBox"><span id="fbIcon" style="font-size:1rem;flex-shrink:0;margin-top:.1rem"></span><span id="fbTxt"></span></div>
+      <div class="q-foot"><div class="dots" id="dotRow"></div><button class="btn p" id="btnNext" style="display:none">Next &#8594;</button></div>
+    </div>
+  </div>
+  <div id="qResults" style="display:none">
+    <div class="res-hero">
+      <div class="ring" id="ring"><div class="ring-pct" id="rPct">--</div><div class="ring-lbl">Score</div></div>
+      <div class="res-status" id="rStatus"></div><div class="res-msg" id="rMsg"></div>
+    </div>
+    <div class="res-body">
+      <div class="band-bar"><div class="bseg be" id="bE">Expert 90-100%</div><div class="bseg bp" id="bP">Proficient 80-89%</div><div class="bseg bd" id="bD">Developing 70-79%</div><div class="bseg bf" id="bF">Foundation &lt;70%</div></div>
+      <div class="sg"><div class="sb"><div class="sv g" id="stC">-</div><div class="sl">Correct</div></div><div class="sb"><div class="sv r" id="stW">-</div><div class="sl">Incorrect</div></div></div>
+      <div class="rev-lbl">Question Review &#8212; click to expand</div>
+      <div id="revList"></div><div class="res-acts" id="resAct"></div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+<script>document.addEventListener('DOMContentLoaded',function(){
+  var cur=0,TOT=7;
+  function go(n){
+    document.getElementById('slide-'+cur).classList.remove('active');
+    document.getElementById('slide-'+n).classList.add('active');
+    document.querySelectorAll('button.nav-item').forEach(function(b){
+      var s=parseInt(b.getAttribute('data-slide'),10);
+      b.classList.remove('active');
+      if(s===n)b.classList.add('active');
+      if(s<n)b.classList.add('done');
+    });
+    cur=n;
+    document.getElementById('pf').style.width=((n/(TOT-1))*100)+'%';
+    document.getElementById('hdrMode').textContent=n===TOT-1?'Quiz':'Training';
+    var ca=document.getElementById('contentArea');if(ca)ca.scrollTop=0;
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('button.nav-item').forEach(function(b){b.addEventListener('click',function(){go(parseInt(b.getAttribute('data-slide'),10));});});
+  document.querySelectorAll('button[data-goto]').forEach(function(b){b.addEventListener('click',function(){go(parseInt(b.getAttribute('data-goto'),10));});});
+  var ql=document.getElementById('quizLaunchBtn');if(ql)ql.addEventListener('click',function(){go(TOT-1);});
+  var sq=document.getElementById('startQuizBtn');if(sq)sq.addEventListener('click',function(){startQ();});
+  var bn=document.getElementById('btnNext');if(bn)bn.addEventListener('click',nextQ);
+  var QS=[{"topic": "S3", "q": "Which Xuber S3 bucket stores nightly database backup files?", "opts": ["xuber-documents-prod", "xuber-logs-prod", "xuber-backups-prod", "xuber-assets-prod"], "a": 2, "exp": "xuber-backups-prod holds nightly SQL Server .bak files with 30-day retention via S3 Lifecycle policy."}, {"topic": "EC2", "q": "How should the RM team connect to a Xuber production EC2 instance for RDP access?", "opts": ["Directly from their workstation using the public IP", "Via VPN then through the bastion host", "Using AWS Systems Manager Session Manager only", "By requesting a temporary public IP from AWS Support"], "a": 1, "exp": "The access path is VPN \u2192 Bastion host \u2192 Target instance. Direct RDP is blocked by Security Group rules."}, {"topic": "Security Groups", "q": "A developer reports the application cannot connect to the database. Which Security Group rule should you check first?", "opts": ["sg-xuber-bastion inbound port 22", "sg-xuber-app outbound port 1433 to sg-xuber-db", "sg-xuber-db inbound port 443", "sg-xuber-app inbound port 3389"], "a": 1, "exp": "App-to-DB connectivity requires sg-xuber-app to allow outbound port 1433 (SQL Server) to sg-xuber-db."}, {"topic": "Security Groups", "q": "An engineer suggests adding inbound rule: Port 3389, Source 0.0.0.0/0 to sg-xuber-app. What should you do?", "opts": ["Apply it \u2014 RDP needs to be accessible for maintenance", "Apply it temporarily and remove it after the maintenance window", "Refuse \u2014 opening 0.0.0.0/0 on any port is a critical security incident", "Check with the security team first, but it is probably fine"], "a": 2, "exp": "Never add 0.0.0.0/0 (all IPs) rules to production Security Groups. This is a critical security incident."}, {"topic": "IAM", "q": "Which IAM identity type should an EC2 instance use to access S3 buckets \u2014 never hardcoded credentials?", "opts": ["An IAM User with an access key", "An IAM Group", "An IAM Role assumed by the instance", "The root account"], "a": 2, "exp": "EC2 instances use IAM Roles. Roles are assumed temporarily and rotated automatically \u2014 never embed user credentials in EC2."}, {"topic": "IAM", "q": "Where should you look to find out what AWS actions a specific IAM user is allowed to perform?", "opts": ["EC2 \u2192 Security Groups", "IAM \u2192 Users \u2192 Select user \u2192 Permissions tab", "CloudWatch \u2192 Logs \u2192 Access logs", "S3 \u2192 Bucket policy"], "a": 1, "exp": "IAM \u2192 Users \u2192 Permissions tab shows all policies attached directly or via groups, listing every allowed action."}, {"topic": "CloudWatch", "q": "The xuber-cpu-high alarm fires. What is the first action in the Xuber incident response process?", "opts": ["Immediately restart the EC2 instance", "Open the CloudWatch Xuber-Production dashboard to identify the spiking metric", "Call the Xuber application vendor", "Increase the EC2 instance size"], "a": 1, "exp": "Always check the CloudWatch dashboard first to understand the full picture before taking any action."}, {"topic": "S3", "q": "You need to verify that the xuber-backups-prod bucket encrypts data at rest. Where do you check?", "opts": ["EC2 \u2192 Security Groups", "S3 \u2192 xuber-backups-prod \u2192 Properties tab \u2192 Default encryption", "IAM \u2192 Encryption policies", "CloudWatch \u2192 Encryption metrics"], "a": 1, "exp": "Bucket encryption settings are in S3 \u2192 Bucket \u2192 Properties tab \u2192 Default encryption. Must show AES-256 or KMS."}, {"topic": "EC2", "q": "Which EC2 instance type hosts the SQL Server 2019 database for Xuber production?", "opts": ["xuber-app-prod (m5.2xlarge)", "xuber-bastion (t3.micro)", "xuber-iseries (c5.xlarge)", "xuber-db-prod (r5.4xlarge)"], "a": 3, "exp": "xuber-db-prod is an r5.4xlarge \u2014 the r-family is memory-optimised, suited for database workloads."}, {"topic": "CloudWatch", "q": "Which CloudWatch Log Insights query finds recent ERROR messages in Xuber application logs?", "opts": ["SELECT errors FROM xuber WHERE level = ERROR", "fields @timestamp, @message | filter @message like /ERROR/ | sort @timestamp desc | limit 50", "GET /xuber/application?filter=ERROR&limit=50", "SHOW ERRORS FROM /xuber/application"], "a": 1, "exp": "CloudWatch Insights uses its own query language. The fields/filter/sort/limit pattern is correct."}];
+  var qSet=[],qI=0,ans={},done=false,retry=false;
+  function startQ(ri){
+    retry=!!ri;qSet=[];done=false;
+    var src=ri||QS.map(function(_,i){return i;});
+    for(var i=0;i<src.length;i++){var q=Object.assign({},QS[src[i]]);q.orig=src[i];qSet.push(q);}
+    qI=0;
+    document.getElementById('qIntro').style.display='none';
+    document.getElementById('qScreen').style.display='block';
+    document.getElementById('qResults').style.display='none';
+    rQ();
+  }
+  function rQ(){
+    var q=qSet[qI],L=['A','B','C','D'];
+    document.getElementById('qCnt').textContent='Question '+(qI+1)+' of '+qSet.length+(retry?' (Retry)':'');
+    document.getElementById('qTop').textContent=q.topic;
+    document.getElementById('qTxt').textContent=q.q;
+    var c=document.getElementById('optsC');c.innerHTML='';
+    for(var i=0;i<q.opts.length;i++){(function(idx){
+      var b=document.createElement('button');b.className='opt';
+      b.innerHTML='<span class="opt-l">'+L[idx]+'</span><span>'+q.opts[idx]+'</span>';
+      b.addEventListener('click',function(){pick(idx);});c.appendChild(b);
+    })(i);}
+    document.getElementById('fbBox').className='fb';
+    document.getElementById('btnNext').style.display='none';
+    rD();
+  }
+  function pick(ch){
+    if(done)return;done=true;
+    var q=qSet[qI],ok=ch===q.a,L=['A','B','C','D'];
+    ans[q.orig]={chosen:ch,correct:ok};
+    document.querySelectorAll('button.opt').forEach(function(b,i){
+      b.disabled=true;
+      if(i===q.a)b.classList.add('correct');
+      if(i===ch&&!ok)b.classList.add('wrong');
+    });
+    var fb=document.getElementById('fbBox'),ic=document.getElementById('fbIcon'),tx=document.getElementById('fbTxt');
+    if(ok){fb.className='fb cfb show';ic.textContent='✓';tx.textContent='Correct! '+q.exp;}
+    else{fb.className='fb wfb show';ic.textContent='✗';tx.innerHTML='<strong>Incorrect.</strong> Right answer: <strong>'+L[q.a]+': '+q.opts[q.a]+'</strong>. '+q.exp;}
+    rD();
+    var btn=document.getElementById('btnNext');
+    btn.style.display='inline-flex';
+    btn.textContent=qI<qSet.length-1?'Next →':'See Results →';
+  }
+  function nextQ(){qI++;if(qI>=qSet.length)showR();else{done=false;rQ();}}
+  function rD(){
+    var row=document.getElementById('dotRow');row.innerHTML='';
+    for(var i=0;i<qSet.length;i++){
+      var d=document.createElement('div');d.className='dot';
+      var a=ans[qSet[i].orig];
+      if(i===qI)d.classList.add('cur');
+      else if(a&&a.correct)d.classList.add('c');
+      else if(a&&!a.correct)d.classList.add('w');
+      row.appendChild(d);
+    }
+  }
+  function cc(){var n=0,k=Object.keys(ans);for(var i=0;i<k.length;i++)if(ans[k[i]].correct)n++;return n;}
+  function showR(){
+    var tot=QS.length,cor=cc(),pct=Math.round((cor/tot)*100),pass=pct>=70;
+    document.getElementById('qScreen').style.display='none';
+    document.getElementById('qResults').style.display='block';
+    var ring=document.getElementById('ring');ring.className='ring '+(pass?'pass':'fail');
+    document.getElementById('rPct').textContent=pct+'%';
+    var st=document.getElementById('rStatus');
+    st.textContent=pass?'🎉 Pass':'✗ Not yet';
+    st.className='res-status '+(pass?'pass':'fail');
+    document.getElementById('rMsg').textContent=pass
+      ?'You scored '+cor+' out of '+tot+'. Well done — module complete.'
+      :'You scored '+cor+' out of '+tot+'. You need '+Math.ceil(tot*0.7)+' to pass. Review below and retry.';
+    ['bE','bP','bD','bF'].forEach(function(id){document.getElementById(id).classList.remove('on');});
+    if(pct>=90)document.getElementById('bE').classList.add('on');
+    else if(pct>=80)document.getElementById('bP').classList.add('on');
+    else if(pct>=70)document.getElementById('bD').classList.add('on');
+    else document.getElementById('bF').classList.add('on');
+    document.getElementById('stC').textContent=cor;
+    document.getElementById('stW').textContent=tot-cor;
+    bRev();
+    var act=document.getElementById('resAct');act.innerHTML='';
+    if(!pass){
+      var wr=[],ak=Object.keys(ans);
+      for(var k=0;k<ak.length;k++)if(!ans[ak[k]].correct)wr.push(parseInt(ak[k],10));
+      var rb=document.createElement('button');rb.className='btn p';
+      rb.textContent='Retry '+wr.length+' incorrect question'+(wr.length>1?'s':'')+' →';
+      (function(w){rb.addEventListener('click',function(){startQ(w);})})(wr);
+      act.appendChild(rb);
+    }
+    var rs=document.createElement('button');rs.className=pass?'btn p':'btn s';
+    rs.textContent='↺ Restart';
+    rs.addEventListener('click',function(){ans={};document.getElementById('qResults').style.display='none';document.getElementById('qIntro').style.display='block';});
+    act.appendChild(rs);
+    if(pass){var bk=document.createElement('button');bk.className='btn s';bk.textContent='← Back to training';bk.addEventListener('click',function(){go(0);});act.appendChild(bk);}
+  }
+  function bRev(){
+    var list=document.getElementById('revList');list.innerHTML='';
+    for(var i=0;i<QS.length;i++){
+      var a=ans[i];if(!a)continue;
+      var sc=a.correct?'c':'w',L=['A','B','C','D'];
+      var item=document.createElement('div');item.className='ri';
+      var wh=!a.correct?'<div>Your answer: <span class="ya">'+L[a.chosen]+': '+QS[i].opts[a.chosen]+'</span></div>':'';
+      item.innerHTML='<div class="rq"><div class="rdot '+sc+'"></div><div class="rqt">Q'+(i+1)+': '+QS[i].q+'</div><span class="rbadge '+sc+'">'+(a.correct?'&#10003; Correct':'&#10007; Wrong')+'</span><span class="rchev">&#9660;</span></div>'
+        +'<div class="rdetail">'+wh+'<div>Correct answer: <span class="ra">'+L[QS[i].a]+': '+QS[i].opts[QS[i].a]+'</span></div><div class="expl">'+QS[i].exp+'</div></div>';
+      item.querySelector('.rq').addEventListener('click',function(){this.closest('.ri').classList.toggle('open');});
+      list.appendChild(item);
+    }
+  }
+});</script>
+</body>
+</html>
