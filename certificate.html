@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXC | SPOF Training Certificate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root{--dp:#330072;--dm:#5F249F;--teal:#00968F;--gold:#C9A227;--off:#F7F5FB;--text:#1a1a2e;--muted:#63666A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Open Sans',Arial,sans-serif;background:#ebe6f3;color:var(--text);min-height:100vh}
+.toolbar{background:var(--dp);color:#fff;padding:.9rem 1.5rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between}
+.toolbar .brand{font-weight:800;font-size:1.2rem}.toolbar .brand span{font-weight:600;font-size:.8rem;color:#d4c8f0;margin-left:.6rem}
+.toolbar form{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.toolbar label{font-size:.82rem;color:#d4c8f0;font-weight:600}
+.toolbar input{padding:.55rem .8rem;border-radius:7px;border:none;font-family:inherit;font-size:.9rem;width:260px;max-width:70vw}
+.btn{padding:.6rem 1.2rem;border-radius:7px;border:none;font-family:inherit;font-weight:700;font-size:.88rem;cursor:pointer}
+.btn-p{background:var(--teal);color:#fff}.btn-p:hover{background:#007a74}
+.btn-s{background:rgba(255,255,255,.15);color:#fff;text-decoration:none;display:inline-block}
+.hint{width:100%;font-size:.75rem;color:#d4c8f0}
+.stage{padding:2rem 1rem;display:flex;justify-content:center}
+.cert{width:297mm;max-width:100%;aspect-ratio:297/210;background:#fff;position:relative;box-shadow:0 10px 40px rgba(51,0,114,.25);overflow:hidden}
+.cert-inner{position:absolute;inset:9mm;border:2px solid var(--dm);outline:1px solid var(--gold);outline-offset:-6px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10mm 16mm 8mm;text-align:center}
+.cert::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9mm;background:linear-gradient(180deg,var(--dp),var(--dm),var(--teal))}
+.cert::after{content:'';position:absolute;right:0;top:0;bottom:0;width:9mm;background:linear-gradient(180deg,var(--teal),var(--dm),var(--dp))}
+.top{display:flex;width:100%;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:26pt;color:var(--dp);letter-spacing:-.02em}
+.logo small{display:block;font-size:7.5pt;font-weight:700;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;margin-top:-2pt}
+.suite{font-size:8.5pt;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);text-align:right}
+.title{font-family:'Playfair Display',Georgia,serif;font-size:34pt;font-weight:600;color:var(--dp);line-height:1.1}
+.subtitle{font-size:9pt;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:3mm}
+.certify{font-size:11pt;color:var(--muted);margin-top:4mm}
+.name{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:30pt;color:var(--text);border-bottom:1.5px solid var(--gold);padding:0 10mm 1.5mm;margin-top:2mm;min-width:60%}
+.name.empty{color:#b9b0c9}
+.completed{font-size:11pt;color:var(--muted);margin-top:4mm}
+.module{font-size:18pt;font-weight:800;color:var(--dm);margin-top:2mm;line-height:1.25}
+.meta{display:flex;gap:10mm;justify-content:center;margin-top:4mm;flex-wrap:wrap}
+.meta div{font-size:9pt;color:var(--muted)}.meta b{display:block;font-size:13pt;color:var(--text)}
+.bottom{display:flex;width:100%;justify-content:space-between;align-items:flex-end;gap:10mm}
+.sig{width:70mm;text-align:center}
+.sig .line{border-top:1.2px solid var(--text);padding-top:1.5mm;font-weight:700;font-size:10pt}
+.sig .role{font-size:8.5pt;color:var(--muted)}
+.sig .issuer{font-size:8pt;color:var(--muted);line-height:1.5}.sig .issuer b{color:var(--text);font-size:10pt}
+.seal{width:28mm;height:28mm;border-radius:50%;background:radial-gradient(circle,var(--dm) 0 55%,var(--dp) 56% 100%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:7pt;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--gold)}
+.seal b{font-size:13pt;letter-spacing:0}
+.certid{font-size:7.5pt;color:var(--muted);width:70mm;text-align:center}
+.missing{max-width:640px;margin:3rem auto;background:#fff;padding:2rem;border-radius:12px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.1)}
+.missing h2{color:var(--dp);margin-bottom:.6rem}
+@page{size:A4 landscape;margin:0}
+@media print{
+  body{background:#fff}
+  .toolbar,.missing{display:none!important}
+  .stage{padding:0}
+  .cert{width:297mm;height:210mm;max-width:none;box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="brand">DXC<span>SPOF Training &#8212; Certificate</span></div>
+  <form id="nameForm" onsubmit="return false">
+    <label for="learner">Your full name</label>
+    <input id="learner" autocomplete="name" placeholder="Type your name as it should appear">
+    <button class="btn btn-p" type="button" id="printBtn">&#128424; Print / Save as PDF</button>
+    <a class="btn btn-s" href="index.html">Portal</a>
+    <div class="hint">Your name is remembered on this computer. In the print window choose "Save as PDF" to keep a copy, and switch on "Background graphics" for full colour.</div>
+  </form>
+</div>
+
+<div class="stage" id="stage">
+  <div class="cert">
+    <div class="cert-inner">
+      <div class="top">
+        <div class="logo">DXC<small>Technology</small></div>
+        <div class="suite">SPOF Training Suite<br><span id="cTeam" style="color:#63666A"></span></div>
+      </div>
+      <div>
+        <div class="title">Certificate of Completion</div>
+        <div class="subtitle">Single Point of Failure Knowledge Programme</div>
+        <div class="certify">This is to certify that</div>
+        <div class="name empty" id="cName">Your Name</div>
+        <div class="completed">has successfully completed the training module and passed the knowledge assessment</div>
+        <div class="module" id="cModule"></div>
+        <div class="meta">
+          <div>Level<b id="cLevel">&#8212;</b></div>
+          <div>Score<b id="cScore">&#8212;</b></div>
+          <div>Date completed<b id="cDate">&#8212;</b></div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="certid">Certificate ID<br><b id="cId"></b></div>
+        <div class="seal"><span>Passed</span><b id="cSeal">&#8212;</b><span>SPOF</span></div>
+        <div class="sig"><div class="issuer">Issued by<br><b>DXC Technology</b><br>SPOF Training Suite</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="missing" id="missing" style="display:none">
+  <h2>No completed module found</h2>
+  <p>Open a training module, pass its Knowledge Quiz (70% or more), then use the <b>Print certificate</b> button on the results screen.</p>
+  <p style="margin-top:1rem"><a class="btn btn-p" href="index.html" style="text-decoration:none">Go to the portal</a></p>
+</div>
+
+<script>
+(function(){
+  var P = new URLSearchParams(location.search);
+  var mod = P.get('module') || '', level = P.get('level') || '', score = P.get('score') || '', team = P.get('team') || '';
+  var date = P.get('date') ? new Date(P.get('date')) : new Date();
+  if (!mod || !score) { document.getElementById('stage').style.display = 'none'; document.getElementById('missing').style.display = 'block'; document.getElementById('nameForm').style.display = 'none'; return; }
+  function set(id, v){ document.getElementById(id).textContent = v; }
+  set('cModule', mod);
+  set('cLevel', level || 'Completed');
+  set('cScore', score + '%');
+  set('cSeal', score + '%');
+  set('cTeam', team);
+  set('cDate', date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }));
+  var input = document.getElementById('learner'), nameEl = document.getElementById('cName');
+  function makeId(){
+    var s = (input.value.trim().toLowerCase()) + '|' + mod + '|' + score + '|' + date.toISOString().slice(0,10), h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    return 'SPOF-' + date.toISOString().slice(0,10).replace(/-/g,'') + '-' + h.toString(16).toUpperCase().padStart(8,'0');
+  }
+  function render(){
+    var v = input.value.trim();
+    nameEl.textContent = v || 'Your Name';
+    nameEl.classList.toggle('empty', !v);
+    set('cId', makeId());
+    try { if (v) localStorage.setItem('spof_learner_name', v); } catch(e){}
+  }
+  try { input.value = localStorage.getItem('spof_learner_name') || ''; } catch(e){}
+  input.addEventListener('input', render);
+  render();
+  if (!input.value) input.focus();
+  document.getElementById('printBtn').addEventListener('click', function(){
+    if (!input.value.trim()) { input.focus(); input.style.outline = '3px solid #ED9B33'; return; }
+    input.style.outline = ''; window.print();
+  });
+})();
+</script>
+</body>
+</html>
